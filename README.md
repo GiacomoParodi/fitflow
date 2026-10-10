@@ -1,4 +1,4 @@
-# Gestione Corsi Ginnastica
+# FitFlow
 
 Web app per gestire corsi di ginnastica, iscritti, presenze, pagamenti, iscrizioni annuali e certificati medici.
 Gira sul tuo PC: un piccolo server Node salva tutto in un database SQLite e i certificati in una cartella, quindi i dati restano anche chiudendo il browser o spegnendo il computer.
@@ -16,6 +16,8 @@ npm install
 npm run build
 npm start
 ```
+
+Per sviluppatori: la struttura del codice e il sistema a moduli sono descritti in [docs/ARCHITETTURA.md](docs/ARCHITETTURA.md).
 
 Poi apri **http://localhost:3000** nel browser.
 
@@ -42,10 +44,10 @@ Variabili facoltative: `PORT` (default 3000), `DATA_DIR` (default `data/`), `HOS
 
 Tutto sta in `data/`:
 
-- `gestione-corsi.sqlite`: corsi, abbonamenti, iscritti, pagamenti, lezioni, presenze, impostazioni;
+- `fitflow.sqlite`: corsi, abbonamenti, iscritti, pagamenti, lezioni, presenze, impostazioni;
 - `certificati/`: i file PNG, JPEG o PDF dei certificati medici (max 15 MB ciascuno).
 
-**Backup:** chiudi l'app e copia l'intera cartella `data/`. Per ripristinare, rimettila al suo posto.
+**Backup:** chiudi l'app e copia l'intera cartella `data/`. Per ripristinare, rimettila al suo posto. Prima di ogni aggiornamento del database l'app salva da sola una copia in `data/backup/`.
 
 ## Sicurezza
 

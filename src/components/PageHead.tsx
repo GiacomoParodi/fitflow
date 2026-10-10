@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
+import { kickerFor } from '../modules';
 
-export function PageHead({ kicker, title, aside }: { kicker: string; title: string; aside?: ReactNode }) {
+/** Page title with its numbered kicker ("02 / Gestione"), derived from the page's position in the top bar. */
+export function PageHead({ page, title, aside }: { page: string; title: string; aside?: ReactNode }) {
   const head = (
     <div>
-      <div className="kicker">{kicker}</div>
+      <div className="kicker">{kickerFor(page)}</div>
       <h1 className="page-title">{title}</h1>
     </div>
   );

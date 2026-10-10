@@ -4,14 +4,17 @@ import type { AppState } from '../shared/types';
 import { ApiFailure, api } from './api';
 import { decorate, type DecoratedParticipant } from './derive';
 
-export type Tab = 'dashboard' | 'corsi' | 'statistiche' | 'impostazioni';
+import { pages } from './modules';
+
+/** Id of a page (module) in the top bar. */
+export type Tab = string;
 
 interface Route { tab: Tab; courseId: number | null }
 
 function parseHash(): Route {
   const [, tab, id] = window.location.hash.replace(/^#/, '').split('/');
-  const known: Tab[] = ['dashboard', 'corsi', 'statistiche', 'impostazioni'];
-  return { tab: known.includes(tab as Tab) ? tab as Tab : 'dashboard', courseId: id ? Number(id) || null : null };
+  const known = pages.some(p => p.id === tab);
+  return { tab: known ? tab : pages[0].id, courseId: id ? Number(id) || null : null };
 }
 
 interface Ctx {
@@ -24,6 +27,10 @@ interface Ctx {
   run: (fn: () => Promise<AppState>) => Promise<string | null>;
   /** Like run, but shows failures as a toast. */
   act: (fn: () => Promise<AppState>) => Promise<boolean>;
+  /** Reloads the core state (e.g. after a module changed core data). */
+  refresh: () => Promise<void>;
+  /** Shows a short message at the bottom of the screen. */
+  notify: (message: string) => void;
   openParticipant: (id: number | null) => void;
   participantId: number | null;
 }
@@ -78,11 +85,13 @@ export function AppProvider({ children }: { children: (ready: boolean, error: st
     return !err;
   }, [run]);
 
+  const refresh = useCallback(async () => { await run(api.state); }, [run]);
+
   const people = useMemo(() => (state ? decorate(state, today) : []), [state, today]);
 
   const value = useMemo<Ctx | null>(() => state && {
-    state, people, today, route, go, run, act, participantId, openParticipant: setParticipantId,
-  }, [state, people, today, route, go, run, act, participantId]);
+    state, people, today, route, go, run, act, refresh, notify: setToast, participantId, openParticipant: setParticipantId,
+  }, [state, people, today, route, go, run, act, refresh, participantId]);
 
   return (
     <>

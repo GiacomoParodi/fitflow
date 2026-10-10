@@ -3,6 +3,7 @@ import { fmt, fmtShort } from '../../shared/dates';
 import { euro, mesiLabel, paymentPeriod } from '../../shared/rules';
 import { api } from '../api';
 import { groupLessons } from '../derive';
+import { modules } from '../modules';
 import * as I from '../icons';
 import { useApp } from '../store';
 import { CertViewer } from './CertViewer';
@@ -225,6 +226,8 @@ export function ParticipantDialog({ id }: { id: number }) {
           </div>
           {lessons.length === 0 && <div className="text-muted" style={{ fontSize: 13 }}>Nessuna lezione registrata.</div>}
         </section>
+
+        {modules.flatMap(m => m.participantSections ?? []).map((Section, i) => <Section key={i} participantId={p.id} />)}
 
         <section>
           <div className="label text-muted" style={{ marginBottom: 6 }}>Note</div>

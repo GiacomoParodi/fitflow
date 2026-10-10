@@ -15,7 +15,7 @@ export function Corsi() {
 
   return (
     <div className="page">
-      <PageHead kicker="02 / Gestione" title="Corsi" />
+      <PageHead page="corsi" title="Corsi" />
       {courses.length === 0 ? (
         <div className="text-muted" style={{ fontSize: 14 }}>
           Nessun corso ancora. <a href="#/impostazioni">Crea il primo corso in Impostazioni</a>.

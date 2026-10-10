@@ -1,5 +1,5 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
-import { ALLOWED_CERT_TYPES, ApiError, Store } from './store';
+import { ALLOWED_CERT_TYPES, ApiError, type Store } from './store';
 
 const MAX_CERT_BYTES = 15 * 1024 * 1024;
 
@@ -9,7 +9,7 @@ function id(req: Request, name = 'id'): number {
   return n;
 }
 
-/** JSON API. Every mutation answers with the full, fresh state so the client never drifts. */
+/** Core JSON API. Every mutation answers with the full, fresh state so the client never drifts. */
 export function createApi(store: Store) {
   const api = express.Router();
   api.use(express.json({ limit: '100kb' }));
@@ -63,16 +63,15 @@ export function createApi(store: Store) {
   api.post('/lessons/:id/toggle', (req, res) => { store.toggleAttendance(id(req), Number(req.body?.participantId)); send(res); });
   api.post('/lessons/:id/mark-all', (req, res) => { store.markAll(id(req)); send(res); });
 
-  api.use((_req, res) => { res.status(404).json({ error: 'Risorsa non trovata.' }); });
-
-  api.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof ApiError) return res.status(err.status).json({ error: err.message });
-    const e = err as { type?: string; status?: number };
-    if (e?.type === 'entity.too.large') return res.status(413).json({ error: 'Il file supera i 15 MB.' });
-    if (e?.status && e.status < 500) return res.status(e.status).json({ error: 'Richiesta non valida.' });
-    console.error(err);
-    res.status(500).json({ error: 'Errore interno del server.' });
-  });
-
   return api;
+}
+
+/** Turns thrown errors into JSON answers ({ error }) for every module. */
+export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
+  if (err instanceof ApiError) return res.status(err.status).json({ error: err.message });
+  const e = err as { type?: string; status?: number };
+  if (e?.type === 'entity.too.large') return res.status(413).json({ error: 'Il file è troppo grande.' });
+  if (e?.status && e.status < 500) return res.status(e.status).json({ error: 'Richiesta non valida.' });
+  console.error(err);
+  res.status(500).json({ error: 'Errore interno del server.' });
 }

@@ -5,15 +5,18 @@ import type { Course, Settings } from '../../shared/types';
 import { api } from '../api';
 import { PageHead, SectionTitle } from '../components/PageHead';
 import { giorniLabel } from '../derive';
+import { modules } from '../modules';
 import * as I from '../icons';
 import { useApp } from '../store';
 
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
+/** Numbered sections on this page before the ones added by modules. */
+const CORE_SECTIONS = 5;
 
 export function Impostazioni() {
   return (
     <div className="page page-narrow">
-      <PageHead kicker="04 / Configurazione" title="Impostazioni" />
+      <PageHead page="impostazioni" title="Impostazioni" />
       <div className="settings-grid">
         <div className="col-left">
           <PlansTable />
@@ -42,6 +45,13 @@ export function Impostazioni() {
           </div>
         </div>
       </div>
+      {modules.flatMap(m => m.settings ?? []).map((sec, i) => (
+        <section key={sec.title}>
+          <hr className="hr" />
+          <SectionTitle num={String(CORE_SECTIONS + i + 1).padStart(2, '0')}>{sec.title}</SectionTitle>
+          <sec.Component />
+        </section>
+      ))}
     </div>
   );
 }

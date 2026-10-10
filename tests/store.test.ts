@@ -2,18 +2,20 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Store } from '../server/store';
+import { openData, type OpenedData } from '../server/app';
+import type { Store } from '../server/store';
 
 let dir: string;
 let store: Store;
+let data: OpenedData;
 
 beforeEach(() => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'corsi-test-'));
-  store = new Store(dir);
-  store.today = () => '2026-09-26';
+  data = openData(dir, undefined, () => '2026-09-26');
+  store = data.store;
 });
 afterEach(() => {
-  store.close();
+  data.close();
   fs.rmSync(dir, { recursive: true, force: true });
 });
 

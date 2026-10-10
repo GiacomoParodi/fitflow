@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { addDays, addMonths, daysBetween, todayISO } from '../shared/dates';
 import type { Livello } from '../shared/types';
-import { Store } from './store';
+import { openData } from './app';
 
 /** The prototype's "today". Every date below is shifted by whole weeks so weekdays still match. */
 const PROTO_TODAY = '2026-09-26';
@@ -52,7 +52,8 @@ const LESSONS: Record<string, string[]> = {
 };
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const store = new Store(path.resolve(process.env.DATA_DIR || path.join(root, 'data')));
+const data = openData(path.resolve(process.env.DATA_DIR || path.join(root, 'data')));
+const store = data.store;
 
 if (!store.isEmpty()) {
   console.error('Il database contiene già dei corsi: i dati di esempio si caricano solo su un database vuoto.');
@@ -99,5 +100,5 @@ for (const [course, dates] of Object.entries(LESSONS)) {
   });
 }
 store.db.exec('COMMIT');
-store.close();
+data.close();
 console.log(`Dati di esempio caricati: ${COURSES.length} corsi, ${ROWS.length} iscritti.`);

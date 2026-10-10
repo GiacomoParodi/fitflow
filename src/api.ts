@@ -2,7 +2,11 @@ import type { AppState, NewParticipantInput, Settings } from '../shared/types';
 
 export class ApiFailure extends Error {}
 
-async function call(method: string, url: string, body?: unknown, headers?: Record<string, string>): Promise<AppState> {
+/**
+ * JSON request to the local server (url relative to /api). Rejects with ApiFailure carrying the
+ * server's Italian error message. Modules use it for their own endpoints.
+ */
+export async function request<T>(method: string, url: string, body?: unknown, headers?: Record<string, string>): Promise<T> {
   let res: Response;
   try {
     res = await fetch('/api' + url, {
@@ -15,8 +19,11 @@ async function call(method: string, url: string, body?: unknown, headers?: Recor
   }
   const data = await res.json().catch(() => null);
   if (!res.ok) throw new ApiFailure(data?.error || `Errore ${res.status}`);
-  return data as AppState;
+  return data as T;
 }
+
+const call = (method: string, url: string, body?: unknown, headers?: Record<string, string>) =>
+  request<AppState>(method, url, body, headers);
 
 export const api = {
   state: () => call('GET', '/state'),

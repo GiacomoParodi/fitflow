@@ -23,7 +23,7 @@ export function Statistiche() {
 
   return (
     <div className="page page-narrow">
-      <PageHead kicker="03 / Numeri" title="Statistiche" />
+      <PageHead page="statistiche" title="Statistiche" />
 
       <div className="stats-top">
         <div className="col-left">

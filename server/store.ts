@@ -1,9 +1,7 @@
-import './quiet';
 import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
-import type { DatabaseSync as DatabaseSyncType } from 'node:sqlite';
 import path from 'node:path';
+import { transaction, type Database, type Migration } from './db';
 import { addDays, addMonths, endOfMonth, isISODate, todayISO } from '../shared/dates';
 import { paymentPeriod, renewedIscrizione } from '../shared/rules';
 import {
@@ -12,9 +10,6 @@ import {
   type Participant, type Payment, type Plan, type Settings,
 } from '../shared/types';
 
-// Loaded at runtime (not as a static import) so quiet.ts can silence its ExperimentalWarning first.
-const { DatabaseSync } = createRequire(import.meta.url)('node:sqlite') as typeof import('node:sqlite');
-
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
@@ -22,7 +17,7 @@ export class ApiError extends Error {
 const bad = (msg: string) => new ApiError(400, msg);
 const notFound = (what: string) => new ApiError(404, `${what} non trovato.`);
 
-const SCHEMA = `
+const CORE_SCHEMA = `
 CREATE TABLE IF NOT EXISTS courses (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
@@ -83,6 +78,11 @@ CREATE TABLE IF NOT EXISTS attendance (
 CREATE INDEX IF NOT EXISTS idx_participants_course ON participants(course_id);
 CREATE INDEX IF NOT EXISTS idx_payments_participant ON payments(participant_id);
 `;
+
+/** Schema history of the core module. Append new entries; never edit released ones. */
+export const coreMigrations: Migration[] = [
+  { id: 'core/001-schema-iniziale', up: db => db.exec(CORE_SCHEMA) },
+];
 
 const DEFAULT_SETTINGS: Settings = {
   instructorName: 'Marco',
@@ -159,32 +159,19 @@ function orario(v: unknown): string {
 }
 
 export class Store {
-  readonly db: DatabaseSyncType;
   readonly filesDir: string;
   /** Overridable for tests. */
   today: () => string = () => todayISO();
 
-  constructor(dataDir: string, dbFile = path.join(dataDir, 'gestione-corsi.sqlite')) {
+  /** `db` must already be migrated (see coreMigrations). */
+  constructor(readonly db: Database, dataDir: string) {
     this.filesDir = path.join(dataDir, 'certificati');
     fs.mkdirSync(this.filesDir, { recursive: true });
-    this.db = new DatabaseSync(dbFile);
-    this.db.exec('PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;');
-    this.db.exec(SCHEMA);
     this.ensureDefaults();
   }
 
-  close() { this.db.close(); }
-
   private tx<T>(fn: () => T): T {
-    this.db.exec('BEGIN');
-    try {
-      const out = fn();
-      this.db.exec('COMMIT');
-      return out;
-    } catch (e) {
-      this.db.exec('ROLLBACK');
-      throw e;
-    }
+    return transaction(this.db, fn);
   }
 
   private ensureDefaults() {

@@ -46,7 +46,7 @@ export function Dashboard() {
   return (
     <div className="page page-narrow">
       <PageHead
-        kicker="01 / Dashboard"
+        page="dashboard"
         title="Panoramica"
         aside={
           <div className="greeting">
