@@ -1,6 +1,8 @@
 import { Impostazioni } from '../views/Impostazioni';
 import { assistente } from './assistente';
 import { coreModules } from './core';
+import { desktopModule } from './desktop';
+import { finanzeModule } from './finanze';
 import type { ClientModule } from './types';
 
 /**
@@ -9,12 +11,15 @@ import type { ClientModule } from './types';
  */
 export const modules: ClientModule[] = [
   ...coreModules,
+  finanzeModule,
+  desktopModule,
   assistente,
 ];
 
 const settingsPage: ClientModule = { id: 'impostazioni', label: 'Impostazioni', kicker: 'Configurazione', View: Impostazioni };
 
-export const pages: ClientModule[] = [...modules, settingsPage];
+/** Top-bar pages: only modules with a View. */
+export const pages: ClientModule[] = [...modules.filter(m => m.View), settingsPage];
 
 /** "02 / Gestione" */
 export function kickerFor(id: string): string {

@@ -82,6 +82,8 @@ CREATE INDEX IF NOT EXISTS idx_payments_participant ON payments(participant_id);
 /** Schema history of the core module. Append new entries; never edit released ones. */
 export const coreMigrations: Migration[] = [
   { id: 'core/001-schema-iniziale', up: db => db.exec(CORE_SCHEMA) },
+  // A deleted course with past members is archived instead, so their payments stay in the takings.
+  { id: 'core/002-corsi-archiviati', up: db => db.exec('ALTER TABLE courses ADD COLUMN archiviato_il TEXT') },
 ];
 
 const DEFAULT_SETTINGS: Settings = {
@@ -198,7 +200,7 @@ export class Store {
   }
 
   courses(): Course[] {
-    return (this.db.prepare('SELECT * FROM courses ORDER BY id').all() as Row[]).map(r => ({
+    return (this.db.prepare('SELECT * FROM courses WHERE archiviato_il IS NULL ORDER BY id').all() as Row[]).map(r => ({
       id: r.id as number, name: r.name as string, giorni: JSON.parse(r.giorni as string), orario: r.orario as string, capienza: r.capienza as number,
     }));
   }
@@ -327,13 +329,17 @@ export class Store {
     this.db.prepare('UPDATE courses SET name = ?, giorni = ?, orario = ?, capienza = ? WHERE id = ?').run(c.name, JSON.stringify(c.giorni), c.orario, c.capienza, id);
   }
 
+  /**
+   * Removes a course with no active members. If it ever had members it is archived (hidden but kept),
+   * so their payment history still counts in the takings; otherwise it is deleted with its lessons.
+   */
   deleteCourse(id: number) {
     this.course(id);
     const n = this.activeCount(id);
     if (n > 0) throw bad(`Non puoi eliminare un corso con ${n} ${n === 1 ? 'iscritto' : 'iscritti'}: prima disiscrivili.`);
-    const files = this.db.prepare('SELECT cert_file_path FROM participants WHERE course_id = ? AND cert_file_path IS NOT NULL').all(id) as Row[];
-    this.db.prepare('DELETE FROM courses WHERE id = ?').run(id);
-    for (const f of files) this.unlinkFile(f.cert_file_path as string);
+    const { past } = this.db.prepare('SELECT COUNT(*) AS past FROM participants WHERE course_id = ?').get(id) as { past: number };
+    if (past > 0) this.db.prepare('UPDATE courses SET archiviato_il = ? WHERE id = ?').run(this.today(), id);
+    else this.db.prepare('DELETE FROM courses WHERE id = ?').run(id);
   }
 
   // ─── Plans ─────────────────────────────────────────────────────────────

@@ -5,21 +5,32 @@ Gira sul tuo PC: un piccolo server Node salva tutto in un database SQLite e i ce
 
 Implementa il design `design/Gestione Corsi Ginnastica.dc.html` (specifiche in `design/SPECIFICHE.md`), versione "Modernist ammorbidita" con font Nunito.
 
-## Requisiti
+## App desktop (Mac e Windows)
 
-- **Node.js 22.13 o successivo** (usa il modulo SQLite integrato in Node, nessun database da installare). Scaricalo da nodejs.org, versione LTS.
+Per usare FitFlow non serve installare nient'altro: scarica l'app da **[GitHub Releases](https://github.com/GiacomoParodi/fitflow/releases/latest)** e segui la guida **[docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)** (Windows, Mac Apple Silicon e Intel, dove stanno i dati, backup, aggiornamenti).
+L'app si aggiorna da sola (Windows) o avvisa quando c'è una nuova versione (Mac). Per pubblicare una versione: [docs/RILASCIO.md](docs/RILASCIO.md).
 
-## Primo avvio
+## Sviluppo
+
+Serve **Node.js 22.13 o successivo** (usa il modulo SQLite integrato in Node, nessun database da installare). Scaricalo da nodejs.org, versione LTS.
 
 ```bash
 npm install
 npm run build
-npm start
+npm start          # nel browser, su http://localhost:3000
 ```
 
-Per sviluppatori: la struttura del codice e il sistema a moduli sono descritti in [docs/ARCHITETTURA.md](docs/ARCHITETTURA.md).
+oppure, come app desktop (Electron):
 
-Poi apri **http://localhost:3000** nel browser.
+```bash
+npm run desktop    # compila tutto e apre la finestra di FitFlow
+npm run dist       # crea il pacchetto per il sistema in uso in release/, senza pubblicarlo
+```
+
+L'app desktop avvia lo stesso server su una porta libera di `127.0.0.1` e salva i dati nella cartella utente del sistema (vedi [docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)); lanciata con `npm run desktop` usa invece una cartella separata `FitFlow-sviluppo`, per non toccare i dati veri.
+Il codice dell'app desktop è in `electron/` (processo principale, preload, aggiornamenti), la configurazione dei pacchetti in `electron-builder.yml`.
+
+Per sviluppatori: la struttura del codice e il sistema a moduli sono descritti in [docs/ARCHITETTURA.md](docs/ARCHITETTURA.md).
 
 Al primo avvio il database è vuoto, con i quattro abbonamenti predefiniti. Crea i corsi da **Impostazioni → Corsi**.
 Per provare l'app con i dati di esempio del prototipo (4 corsi, 22 iscritti), prima di inserire dati tuoi esegui:
@@ -36,13 +47,15 @@ npm run demo
 | `npm run dev` | Avvia in modalità sviluppo, con ricarica automatica delle modifiche al codice |
 | `npm run build` | Controlla i tipi e compila l'interfaccia in `dist/` |
 | `npm run demo` | Carica i dati di esempio (solo su database vuoto) |
+| `npm run desktop` | Compila e avvia l'app desktop (Electron) |
+| `npm run dist` | Crea il pacchetto dell'app desktop in `release/` (senza pubblicare) |
 | `npm test` | Esegue i test |
 
 Variabili facoltative: `PORT` (default 3000), `DATA_DIR` (default `data/`), `HOST` (default `127.0.0.1`).
 
 ## Dove sono i dati
 
-Tutto sta in `data/`:
+Nell'app desktop: vedi [docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md). Con `npm start`, tutto sta in `data/`:
 
 - `fitflow.sqlite`: corsi, abbonamenti, iscritti, pagamenti, lezioni, presenze, impostazioni;
 - `certificati/`: i file PNG, JPEG o PDF dei certificati medici (max 15 MB ciascuno).

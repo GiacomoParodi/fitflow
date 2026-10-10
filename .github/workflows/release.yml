@@ -1,0 +1,78 @@
+# Pubblica una nuova versione dell'app desktop quando si fa push di un tag vX.Y.Z (vedi docs/RILASCIO.md).
+# 1. prepara: controlla che il tag corrisponda a "version" in package.json e crea la release in bozza;
+# 2. pacchetti: costruisce in parallelo Mac (Apple Silicon + Intel) e Windows e carica i file nella bozza;
+# 3. pubblica: rende pubblica la release solo se tutti i pacchetti sono andati a buon fine.
+name: Rilascio
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rilascio-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  prepara:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Controlla che il tag corrisponda alla versione
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Il tag $GITHUB_REF_NAME non corrisponde alla versione $version di package.json"
+            exit 1
+          fi
+      - name: Crea la release in bozza
+        run: |
+          if ! gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release create "$GITHUB_REF_NAME" --draft --verify-tag \
+              --title "FitFlow ${GITHUB_REF_NAME#v}" \
+              --notes "Come installare o aggiornare: https://github.com/${{ github.repository }}/blob/main/docs/INSTALLAZIONE.md
+
+          - **Windows**: FitFlow-Setup-${GITHUB_REF_NAME#v}.exe
+          - **Mac con chip Apple (M1, M2, M3…)**: FitFlow-${GITHUB_REF_NAME#v}-arm64.dmg
+          - **Mac con processore Intel**: FitFlow-${GITHUB_REF_NAME#v}-x64.dmg" \
+              --generate-notes
+          fi
+
+  pacchetti:
+    needs: prepara
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: --mac --arm64 --x64
+          - os: windows-latest
+            target: --win --x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run build:electron
+      - name: Crea i pacchetti e caricali nella release
+        run: npx electron-builder ${{ matrix.target }} --publish always
+        env:
+          # Nessun certificato a pagamento: su Mac firma ad-hoc (identity "-" in electron-builder.yml).
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+  pubblica:
+    needs: pacchetti
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pubblica la release
+        run: gh release edit "$GITHUB_REF_NAME" --repo "${{ github.repository }}" --draft=false --latest

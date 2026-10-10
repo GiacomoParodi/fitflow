@@ -114,6 +114,18 @@ describe('Store', () => {
     expect(trend.map(m => m.count)).toEqual([0, 0, 0, 0, 0, 1]);
   });
 
+  it('archives a deleted course that had members, keeping its takings', () => {
+    const c = course();
+    const id = enrol(c);
+    store.unsubscribe(id);
+    store.deleteCourse(c);
+    expect(store.courses()).toHaveLength(0);
+    expect(store.state().incassoMese).toBe(45);
+    const empty = course();
+    store.deleteCourse(empty);
+    expect(store.db.prepare('SELECT COUNT(*) AS n FROM courses').get()).toEqual({ n: 1 });
+  });
+
   it('validates input', () => {
     expect(() => store.createCourse({ name: 'X', giorni: [], orario: '09:00', capienza: 5 })).toThrow(/almeno un giorno/);
     expect(() => store.createCourse({ name: 'X', giorni: [1], orario: '9', capienza: 5 })).toThrow(/Orario/);
