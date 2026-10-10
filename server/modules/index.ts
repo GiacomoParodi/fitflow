@@ -1,4 +1,5 @@
 import { coreMigrations } from '../store';
+import { finanzeModule } from './finanze';
 import type { ServerModule } from './types';
 
 const core: ServerModule = { id: 'core', migrations: coreMigrations };
@@ -9,4 +10,5 @@ const core: ServerModule = { id: 'core', migrations: coreMigrations };
  */
 export const serverModules: ServerModule[] = [
   core,
+  finanzeModule,
 ];

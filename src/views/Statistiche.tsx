@@ -80,6 +80,7 @@ export function Statistiche() {
               </div>
             ))}
           </div>
+          <div className="hint"><a href="#/finanze">Incassi e pagamenti nel dettaglio in Finanze →</a></div>
         </div>
       </div>
     </div>

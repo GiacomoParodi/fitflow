@@ -1,5 +1,6 @@
 import { Impostazioni } from '../views/Impostazioni';
 import { coreModules } from './core';
+import { finanzeModule } from './finanze';
 import type { ClientModule } from './types';
 
 /**
@@ -8,6 +9,7 @@ import type { ClientModule } from './types';
  */
 export const modules: ClientModule[] = [
   ...coreModules,
+  finanzeModule,
 ];
 
 const settingsPage: ClientModule = { id: 'impostazioni', label: 'Impostazioni', kicker: 'Configurazione', View: Impostazioni };
