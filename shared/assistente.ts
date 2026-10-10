@@ -91,6 +91,9 @@ export interface StatoMotore {
   modelli: ModelloInstallato[];
   impostazioni: ImpostazioniAssistente;
   modelloChatInstallato: boolean;
+  /** Modello chat effettivo (risolto se "automatico"). */
+  modelloChatEffettivo: string | null;
+  modelloEmbeddingEffettivo: string | null;
   modelloEmbeddingInstallato: boolean;
   ramGb: number;
   indicizzazione: { inCoda: number; inCorso: string | null };

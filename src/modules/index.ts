@@ -1,4 +1,5 @@
 import { Impostazioni } from '../views/Impostazioni';
+import { assistente } from './assistente';
 import { coreModules } from './core';
 import type { ClientModule } from './types';
 
@@ -8,6 +9,7 @@ import type { ClientModule } from './types';
  */
 export const modules: ClientModule[] = [
   ...coreModules,
+  assistente,
 ];
 
 const settingsPage: ClientModule = { id: 'impostazioni', label: 'Impostazioni', kicker: 'Configurazione', View: Impostazioni };

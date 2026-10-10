@@ -78,8 +78,8 @@ describe('base di conoscenza', () => {
   it('carica la libreria esercizi e la cerca per testo, attrezzi, livello, obiettivo', () => {
     expect(a.libreria.conta()).toBe(5);
     expect(a.libreria.cerca({ q: 'glutei' }).map(e => e.id)).toEqual(expect.arrayContaining(['ponte-glutei', 'squat-a-corpo-libero']));
-    // senza attrezzi: solo corpo libero
-    expect(a.libreria.cerca({ attrezzi: [] }).map(e => e.id).sort()).toEqual(['burpee', 'squat-a-corpo-libero']);
+    // senza attrezzi: solo corpo libero (il tappetino si dà per scontato)
+    expect(a.libreria.cerca({ attrezzi: [] }).map(e => e.id).sort()).toEqual(['burpee', 'gatto-mucca', 'ponte-glutei', 'squat-a-corpo-libero']);
     expect(a.libreria.cerca({ attrezzi: ['tappetino'], livello: 'Base' }).map(e => e.id).sort()).toEqual(['gatto-mucca', 'ponte-glutei', 'squat-a-corpo-libero']);
     const lomb = a.libreria.cerca({ obiettivo: 'lombalgia', attrezzi: ['tappetino', 'manubri'], livello: 'intermedio', limitazioni: 'lombalgia acuta' });
     expect(lomb.slice(0, 2).map(e => e.id).sort()).toEqual(['gatto-mucca', 'ponte-glutei']);

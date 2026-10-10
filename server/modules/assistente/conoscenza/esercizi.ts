@@ -153,7 +153,8 @@ export class LibreriaEsercizi {
    */
   cerca(f: FiltroEsercizi & { limitazioni?: string }): EsercizioTrovato[] {
     const lv = livelloLibreria(f.livello);
-    const disp = f.attrezzi ? new Set(f.attrezzi.map(normalizza)) : null;
+    // Il tappetino si dà per scontato: è sempre disponibile.
+    const disp = f.attrezzi ? new Set([...f.attrezzi, 'tappetino'].map(normalizza)) : null;
     const q = [f.q, f.obiettivo].filter(Boolean).join(' ');
     const pert = q.trim() ? this.pertinenza(q) : null;
     const limWords = paroleChiave(f.limitazioni ?? '');

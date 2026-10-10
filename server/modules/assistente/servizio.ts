@@ -109,7 +109,7 @@ export class Assistente {
     const s = this.impostazioni.get();
     const base: StatoMotore = {
       provider: s.provider, url: s.url, raggiungibile: false, versione: null, errore: null, modelli: [], impostazioni: s,
-      modelloChatInstallato: false, modelloEmbeddingInstallato: false, ramGb: this.ram,
+      modelloChatInstallato: false, modelloEmbeddingInstallato: false, modelloChatEffettivo: null, modelloEmbeddingEffettivo: null, ramGb: this.ram,
       indicizzazione: this.documenti.stato(), eserciziInLibreria: this.libreria.conta(),
     };
     try {
@@ -118,8 +118,10 @@ export class Assistente {
       base.modelli = await this.modelli(true);
       base.raggiungibile = true;
       const chat = risolviChat(s.modelloChat, base.modelli, this.ram);
+      base.modelloChatEffettivo = chat;
       base.modelloChatInstallato = !!chat && base.modelli.some(m => stessoModello(m.nome, chat));
       const emb = risolviEmbedding(s.modelloEmbedding, base.modelli);
+      base.modelloEmbeddingEffettivo = emb;
       base.modelloEmbeddingInstallato = !!emb && base.modelli.some(m => stessoModello(m.nome, emb));
     } catch (e) {
       base.errore = e instanceof ApiError ? e.message : 'Motore AI non raggiungibile.';
