@@ -12,6 +12,7 @@ import { ass, avvisaCambio, generaStream, messaggio } from './api';
 import { EditorContenuto, Stampa, VistaContenuto } from './Contenuto';
 import { SchedaEsercizio } from './Libreria';
 import { useAgenti, useDati } from './hooks';
+import * as X from './icone';
 
 const OBIETTIVI = ['Tonificazione generale', 'Mobilità e postura', 'Forza degli arti inferiori', 'Core e stabilità', 'Resistenza cardiovascolare', 'Equilibrio e prevenzione cadute', 'Schiena: lombalgia aspecifica'];
 
@@ -71,9 +72,9 @@ export function useGenerazione() {
 }
 
 /** Pannello del risultato: streaming, avvisi, modifica, salvataggio, stampa. */
-export function Risultato({ out, compito, iscritto, input, agente, onContenuto, onSalvato, onInterrompi, extra }: {
+export function Risultato({ out, compito, iscritto, input, agente, onContenuto, onSalvato, onInterrompi, onRigenera, extra }: {
   out: Uscita; compito: Agente['compito']; iscritto: { id: number; name: string } | null; input: Partial<InputGenerazione>; agente: Agente | null;
-  onContenuto: (c: Contenuto) => void; onSalvato?: () => void; onInterrompi: () => void; extra?: React.ReactNode;
+  onContenuto: (c: Contenuto) => void; onSalvato?: () => void; onInterrompi: () => void; onRigenera?: () => void; extra?: React.ReactNode;
 }) {
   const { notify } = useApp();
   const [modifica, setModifica] = useState(false);
@@ -85,6 +86,7 @@ export function Risultato({ out, compito, iscritto, input, agente, onContenuto, 
 
   const live = useMemo(() => (out.stato === 'in_corso' ? anteprima(out.testo, compito) : null), [out.testo, out.stato, compito]);
   const c = out.contenuto;
+  const busy = out.stato === 'in_corso';
 
   const salva = async () => {
     if (!c) return;
@@ -107,39 +109,58 @@ export function Risultato({ out, compito, iscritto, input, agente, onContenuto, 
   };
 
   return (
-    <div className="ass-output" aria-busy={out.stato === 'in_corso'}>
-      <div className="ass-row ass-output-head">
-        <div className="ass-small" role="status" aria-live="polite">
-          {out.stato === 'in_corso' && <><span className="ass-pulse" aria-hidden="true" /> {out.ragionamento ? 'Il modello sta ragionando…' : out.testo ? 'Sta scrivendo…' : 'Preparo il contesto…'}</>}
-          {out.stato === 'fatto' && (salvatoId ? 'Salvato tra i programmi' : 'Bozza pronta: rivedila prima di usarla')}
-          {out.stato === 'interrotto' && 'Interrotto.'}
-          {out.stato === 'errore' && 'Non completato.'}
-          {out.modello && <span className="text-muted"> · {out.modello}</span>}
+    <div className="ass-doc" data-busy={busy} aria-busy={busy}>
+      <div className="ass-doc-bar">
+        <div className="ass-doc-status" role="status" aria-live="polite">
+          {busy && <><span className="ass-pulse" aria-hidden="true" />{out.ragionamento ? 'Il modello sta ragionando…' : out.testo ? 'Sta scrivendo…' : 'Preparo il contesto…'}</>}
+          {out.stato === 'fatto' && (salvatoId
+            ? <><span className="ass-dot" data-stato="ok" aria-hidden="true" />Salvato tra i programmi</>
+            : <><span className="ass-dot" data-stato="accento" aria-hidden="true" />Bozza pronta: rivedila prima di usarla</>)}
+          {out.stato === 'interrotto' && <><span className="ass-dot" data-stato="spento" aria-hidden="true" />Interrotto</>}
+          {out.stato === 'errore' && <><span className="ass-dot" data-stato="errore" aria-hidden="true" />Non completato</>}
         </div>
-        <div className="btn-row">
-          {out.stato === 'in_corso' && <button type="button" className="btn btn-secondary" onClick={onInterrompi}><I.X /> Interrompi</button>}
+        <div className="ass-doc-actions">
+          {busy && <button type="button" className="btn btn-secondary" onClick={onInterrompi}><I.X /> Interrompi</button>}
+          {!busy && onRigenera && (out.stato !== 'fatto' || c) && (
+            <button type="button" className="btn btn-ghost" onClick={onRigenera} title="Genera una nuova proposta con la stessa richiesta"><X.Rigenera size={15} /> Rigenera</button>
+          )}
           {out.stato === 'fatto' && c && (
             <>
-              <button type="button" className="btn btn-secondary" aria-pressed={modifica} onClick={() => setModifica(m => !m)}>{modifica ? 'Anteprima' : 'Modifica'}</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setStampa(true)}>Stampa</button>
+              <button type="button" className="btn btn-secondary" aria-pressed={modifica} onClick={() => setModifica(m => !m)}>
+                {modifica ? <><X.Occhio size={15} /> Anteprima</> : <><X.Matita size={15} /> Modifica</>}
+              </button>
+              <button type="button" className="btn btn-secondary btn-icon" onClick={() => setStampa(true)} aria-label="Stampa" title="Stampa"><X.Stampante size={16} /></button>
               <button type="button" className="btn btn-primary" onClick={salva} disabled={salvando}>{salvatoId ? 'Salva modifiche' : 'Salva'}</button>
             </>
           )}
         </div>
       </div>
-      {out.fonti.length > 0 && <div className="text-muted ass-small">Fonti nel contesto: {out.fonti.join(' · ')}</div>}
-      {out.errore && <div className="error-box" role="alert">{out.errore}</div>}
-      {out.avvisi.length > 0 && (
-        <div className="ass-callout" role="note">
-          <ul className="ass-list">{out.avvisi.map((a, i) => <li key={i}>{a}</li>)}</ul>
-        </div>
-      )}
-      {extra}
-      <div className="ass-output-body">
+      <div className="ass-doc-body">
+        {(out.fonti.length > 0 || out.modello) && (
+          <div className="ass-context"><X.Libro size={13} /><span>
+            {out.modello && <>Modello <span className="ass-doc-model">{out.modello}</span>{out.fonti.length > 0 && ' · '}</>}
+            {out.fonti.length > 0 && <>Contesto: {out.fonti.join(' · ')}{out.tagliati > 0 ? ` · ${out.tagliati} estratti esclusi per spazio` : ''}</>}
+          </span></div>
+        )}
+        {out.errore && <div className="error-box" role="alert">{out.errore}</div>}
+        {out.avvisi.length > 0 && (
+          <div className="ass-callout" role="note">
+            <X.Avviso size={16} />
+            <ul className="ass-list">{out.avvisi.map((a, i) => <li key={i}>{a}</li>)}</ul>
+          </div>
+        )}
+        {extra}
         {c ? (modifica ? <EditorContenuto c={c} onChange={onContenuto} /> : <VistaContenuto c={c} onApri={setScheda} />)
           : live ? <div className="ass-live"><VistaContenuto c={live} /></div>
             : out.testo ? <pre className="ass-raw">{out.testo}</pre>
-              : out.stato === 'in_corso' ? <div className="text-muted ass-small">Con un modello locale la prima risposta può richiedere qualche decina di secondi.</div> : null}
+              : busy ? (
+                <div className="ass-skeleton" aria-hidden="true">
+                  <div className="ass-sk ass-sk-title" /><div className="ass-sk" style={{ width: '45%' }} />
+                  <div className="ass-sk-gap" />
+                  <div className="ass-sk" /><div className="ass-sk" style={{ width: '88%' }} /><div className="ass-sk" style={{ width: '72%' }} />
+                  <div className="ass-sk-hint">Con un modello locale la prima risposta può richiedere qualche decina di secondi.</div>
+                </div>
+              ) : null}
       </div>
       {stampa && c && <Stampa c={c} iscritto={iscritto?.name ?? null} data={fmt(todayISO())} onDone={() => setStampa(false)} />}
       {scheda && <SchedaEsercizio id={scheda} onClose={() => setScheda(null)} />}
@@ -150,6 +171,29 @@ export function Risultato({ out, compito, iscritto, input, agente, onContenuto, 
 function iscrittoDaHash(): number | null {
   const m = window.location.hash.match(/[?&]iscritto=(\d+)/);
   return m ? Number(m[1]) : null;
+}
+
+const DURATE = ['30 minuti', '45 minuti', '60 minuti', '75 minuti', '90 minuti'];
+
+/** Stato vuoto dell'area risultato. */
+function RisultatoVuoto({ libero }: { libero: boolean }) {
+  return (
+    <div className="ass-doc ass-doc-empty">
+      <div className="ass-empty-icon" aria-hidden="true"><X.Scintille size={28} /></div>
+      <h3 className="ass-empty-title">{libero ? 'La risposta comparirà qui' : 'Il programma comparirà qui'}</h3>
+      <p className="ass-empty-text">
+        {libero ? 'Scrivi la domanda e premi Chiedi: la risposta arriva mentre il modello la scrive.'
+          : 'Descrivi la seduta a sinistra e premi Genera programma: la proposta arriva mentre il modello la scrive.'}
+      </p>
+      {!libero && (
+        <ol className="ass-empty-steps">
+          <li><span className="ass-step-n">1</span><span><strong>Descrivi</strong> obiettivo, durata, attrezzi e limitazioni</span></li>
+          <li><span className="ass-step-n">2</span><span><strong>Genera</strong> una bozza con riscaldamento, parte centrale e defaticamento</span></li>
+          <li><span className="ass-step-n">3</span><span><strong>Rivedi</strong>, modifica, salva o stampa</span></li>
+        </ol>
+      )}
+    </div>
+  );
 }
 
 export function Genera() {
@@ -185,94 +229,97 @@ export function Genera() {
     void g.avvia(input);
   };
   const toggle = (a: string) => setAttrezzi(l => (l.includes(a) ? l.filter(x => x !== a) : [...l, a]));
+  const libero = compito === 'libero';
 
   return (
     <div className="ass-genera">
-      <form className="ass-form ass-stack" onSubmit={e => { e.preventDefault(); avvia(); }} aria-label="Richiesta all'assistente">
-        <div className="form-2">
-          <div className="field">
-            <label htmlFor={`${id}-p`}>Iscritto (facoltativo)</label>
-            <select id={`${id}-p`} className="input" value={pid ?? ''} onChange={e => { setPid(e.target.value ? Number(e.target.value) : null); setDocs([]); }}>
-              <option value="">Nessuno: seduta generica</option>
-              {people.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-          </div>
-          <div className="field">
-            <label htmlFor={`${id}-a`}>Agente</label>
-            <select id={`${id}-a`} className="input" value={agente?.id ?? ''} onChange={e => setAgenteId(Number(e.target.value))}>
-              {usabili.map(a => <option key={a.id} value={a.id}>{a.nome}</option>)}
-            </select>
-          </div>
+      <form className="card ass-form" onSubmit={e => { e.preventDefault(); avvia(); }} aria-label="Richiesta all'assistente">
+        <div className="ass-form-head">
+          <h2 className="card-title">{libero ? 'Domanda' : 'Nuova seduta'}</h2>
+          <div className="card-sub">{libero ? 'Chiedi un consiglio all\'assistente.' : 'Descrivi la lezione: l\'assistente propone una bozza da rivedere.'}</div>
         </div>
-        {compito !== 'libero' ? (
+        <div className="field">
+          <label htmlFor={`${id}-p`}>Iscritto</label>
+          <select id={`${id}-p`} className="input" value={pid ?? ''} onChange={e => { setPid(e.target.value ? Number(e.target.value) : null); setDocs([]); }}>
+            <option value="">Nessuno: seduta generica</option>
+            {people.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </div>
+        {!libero && (
           <>
-            <div className="form-2">
-              <div className="field">
-                <label htmlFor={`${id}-o`}>Obiettivo</label>
-                <input id={`${id}-o`} className="input" list={`${id}-ol`} value={f.obiettivo} onChange={e => setF({ ...f, obiettivo: e.target.value })} placeholder="Es. mobilità e postura" />
-                <datalist id={`${id}-ol`}>{OBIETTIVI.map(o => <option key={o} value={o} />)}</datalist>
-              </div>
-              <div className="field">
-                <label htmlFor={`${id}-d`}>Durata</label>
-                <select id={`${id}-d`} className="input" value={f.durata} onChange={e => setF({ ...f, durata: e.target.value })}>
-                  {['30 minuti', '45 minuti', '60 minuti', '75 minuti', '90 minuti'].map(d => <option key={d}>{d}</option>)}
-                </select>
-              </div>
-            </div>
             <div className="field">
-              <label id={`${id}-l`}>Livello</label>
-              <div className="seg" role="group" aria-labelledby={`${id}-l`}>
-                {LIVELLI.map(l => <button key={l} type="button" className="seg-opt" aria-pressed={f.livello === l} onClick={() => setF({ ...f, livello: l })}>{l}</button>)}
+              <label htmlFor={`${id}-o`}>Obiettivo</label>
+              <input id={`${id}-o`} className="input" list={`${id}-ol`} value={f.obiettivo} onChange={e => setF({ ...f, obiettivo: e.target.value })} placeholder="Es. mobilità e postura" />
+              <datalist id={`${id}-ol`}>{OBIETTIVI.map(o => <option key={o} value={o} />)}</datalist>
+            </div>
+            <div className="ass-form-pair">
+              <div className="field">
+                <span className="field-label" id={`${id}-d`}>Durata</span>
+                <div className="seg ass-seg-fill" role="group" aria-labelledby={`${id}-d`}>
+                  {DURATE.map(d => (
+                    <button key={d} type="button" className="seg-opt" aria-pressed={f.durata === d} aria-label={d} onClick={() => setF({ ...f, durata: d })}>
+                      {d.replace(' minuti', '′')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="field">
+                <span className="field-label" id={`${id}-l`}>Livello</span>
+                <div className="seg ass-seg-fill" role="group" aria-labelledby={`${id}-l`}>
+                  {LIVELLI.map(l => <button key={l} type="button" className="seg-opt" aria-pressed={f.livello === l} onClick={() => setF({ ...f, livello: l })}>{l}</button>)}
+                </div>
               </div>
             </div>
             <fieldset className="ass-fieldset">
-              <legend className="ass-legend">Attrezzi disponibili <span className="text-muted">— nessuno = solo corpo libero (il tappetino si dà per scontato)</span></legend>
+              <legend className="field-label">Attrezzi disponibili</legend>
               <div className="ass-chips">
-                {ATTREZZI.filter(a => a !== 'tappetino').map(a => <button key={a} type="button" className="ass-chip" aria-pressed={attrezzi.includes(a)} onClick={() => toggle(a)}>{a}</button>)}
+                {ATTREZZI.filter(a => a !== 'tappetino').map(a => <button key={a} type="button" className="chip" aria-pressed={attrezzi.includes(a)} onClick={() => toggle(a)}>{a}</button>)}
               </div>
+              <div className="ass-help">{attrezzi.length ? `${attrezzi.length} selezionati · il tappetino si dà per scontato` : 'Nessuno = solo corpo libero (il tappetino si dà per scontato).'}</div>
             </fieldset>
             <div className="field">
               <label htmlFor={`${id}-lim`}>Limitazioni o problemi</label>
               <textarea id={`${id}-lim`} className="input ass-short" value={f.limitazioni} onChange={e => setF({ ...f, limitazioni: e.target.value })} placeholder="Es. fastidio al ginocchio destro, evitare salti" />
             </div>
           </>
-        ) : null}
-        <div className="field">
-          <label htmlFor={`${id}-n`}>{compito === 'libero' ? 'Domanda' : 'Note'}</label>
-          <textarea id={`${id}-n`} className="input ass-short" value={f.note} onChange={e => setF({ ...f, note: e.target.value })}
-            placeholder={compito === 'libero' ? 'Es. Come adatto il plank per chi ha mal di schiena?' : 'Es. lezione di gruppo, spazio ridotto'} />
-        </div>
-        {disponibili.length > 0 && (
-          <details className="ass-details">
-            <summary>Documenti da considerare {docs.length > 0 && <span className="tag tag-accent">{docs.length}</span>}</summary>
-            <div className="ass-stack-sm">
-              {disponibili.map(d => (
-                <label key={d.id} className="ass-check">
-                  <input type="checkbox" checked={docs.includes(d.id)} onChange={e => setDocs(l => (e.target.checked ? [...l, d.id] : l.filter(x => x !== d.id)))} />
-                  <span>{d.titolo} <span className="text-muted">— {d.partecipanteId ? 'cartella' : 'libreria'}</span></span>
-                </label>
-              ))}
-              <div className="text-muted ass-small">Anche senza selezione l'assistente cerca i passaggi pertinenti nelle fonti dell'agente.</div>
-            </div>
-          </details>
         )}
-        {errore && <div className="error-box" role="alert">{errore}</div>}
-        <div className="btn-row-8">
-          <button type="submit" className="btn btn-primary" disabled={g.out?.stato === 'in_corso'}>
-            {compito === 'libero' ? 'Chiedi' : g.out?.contenuto ? 'Genera di nuovo' : 'Genera programma'}
-          </button>
+        <div className="field">
+          <label htmlFor={`${id}-n`}>{libero ? 'Domanda' : 'Note'}</label>
+          <textarea id={`${id}-n`} className={`input ${libero ? 'ass-prompt-q' : 'ass-short'}`} value={f.note} onChange={e => setF({ ...f, note: e.target.value })}
+            placeholder={libero ? 'Es. Come adatto il plank per chi ha mal di schiena?' : 'Es. lezione di gruppo, spazio ridotto'} />
         </div>
+        <div className="ass-form-more">
+          <div className="field">
+            <label htmlFor={`${id}-a`}>Agente</label>
+            <select id={`${id}-a`} className="input" value={agente?.id ?? ''} onChange={e => setAgenteId(Number(e.target.value))}>
+              {usabili.map(a => <option key={a.id} value={a.id}>{a.nome}</option>)}
+            </select>
+          </div>
+          {disponibili.length > 0 && (
+            <details className="ass-details">
+              <summary><X.Freccia size={14} /> Documenti da considerare {docs.length > 0 && <span className="tag tag-accent">{docs.length}</span>}</summary>
+              <div className="ass-checks">
+                {disponibili.map(d => (
+                  <label key={d.id} className="ass-check">
+                    <input type="checkbox" checked={docs.includes(d.id)} onChange={e => setDocs(l => (e.target.checked ? [...l, d.id] : l.filter(x => x !== d.id)))} />
+                    <span>{d.titolo} <span className="text-muted">· {d.partecipanteId ? 'cartella' : 'libreria'}</span></span>
+                  </label>
+                ))}
+                <div className="ass-help">Anche senza selezione l'assistente cerca i passaggi pertinenti nelle fonti dell'agente.</div>
+              </div>
+            </details>
+          )}
+        </div>
+        {errore && <div className="error-box" role="alert">{errore}</div>}
+        <button type="submit" className="btn btn-primary btn-lg btn-block ass-submit" disabled={g.out?.stato === 'in_corso'}>
+          <X.Scintille size={16} /> {libero ? 'Chiedi' : g.out?.contenuto ? 'Genera di nuovo' : 'Genera programma'}
+        </button>
       </form>
       <div className="ass-result">
         {g.out
-          ? <Risultato out={g.out} compito={compito} iscritto={persona} input={input} agente={agente} onInterrompi={g.interrompi}
+          ? <Risultato out={g.out} compito={compito} iscritto={persona} input={input} agente={agente} onInterrompi={g.interrompi} onRigenera={avvia}
               onContenuto={c => g.setOut(o => o && { ...o, contenuto: c })} />
-          : (
-            <div className="ass-empty text-muted">
-              <div className="label">Risultato</div>
-              <p>Compila la richiesta e premi <strong>Genera programma</strong>: la proposta comparirà qui mentre il modello la scrive, poi potrai modificarla, salvarla e stamparla.</p>
-            </div>
-          )}
+          : <RisultatoVuoto libero={libero} />}
       </div>
     </div>
   );

@@ -3,10 +3,12 @@ import type { Contenuto } from '../../../shared/assistente';
 import { api } from '../../api';
 import { useApp } from '../../store';
 import { ass } from './api';
+import { Avviso } from './Contenuto';
 import { Risultato, useGenerazione } from './Genera';
 import { useAgenti, useDati } from './hooks';
+import * as X from './icone';
 import { ListaDocumenti } from './Libreria';
-import { TabellaProgrammi } from './Programmi';
+import { ElencoProgrammi } from './Programmi';
 
 /** Testo da aggiungere alle note dell'iscritto a partire da un'analisi. */
 function comeNota(c: Contenuto, data: string): string {
@@ -45,39 +47,47 @@ export function CartellaIscritto({ participantId }: { participantId: number }) {
     const err = await run(() => api.updateParticipant(participantId, { note: p.note ? `${p.note}\n\n${nota}` : nota }));
     notify(err ?? 'Aggiunto alle note dell\'iscritto.');
   };
+  const programmi = progs.data ?? [];
 
   return (
-    <section className="ass-cartella" aria-label="Cartella e programmi">
-      <div className="label text-muted ass-sub">Cartella e programmi</div>
-      <div className="box">
-        <ListaDocumenti partecipanteId={participantId} compatta />
-        <div className="ass-row">
-          <div className="btn-row-8 ass-wrap">
-            <button type="button" className="btn btn-primary" onClick={analizza} disabled={g.out?.stato === 'in_corso'}>Analizza cartella</button>
-            <button type="button" className="btn btn-secondary" onClick={generaProgramma}>Genera programma</button>
-          </div>
+    <section className="box ass-cartella" aria-label="Cartella e programmi">
+      <div className="ass-cartella-head">
+        <div className="box-title">
+          <span className="ass-cartella-icon" aria-hidden="true"><X.Scintille size={14} /></span>
+          <div className="label text-muted">Cartella e programmi</div>
+        </div>
+        <div className="ass-cartella-actions">
           {analisti.length > 1 && (
-            <select className="input ass-auto" aria-label="Agente di analisi" value={agente?.id ?? ''} onChange={e => setAgenteId(Number(e.target.value))}>
+            <select className="input ass-auto ass-input-sm" aria-label="Agente di analisi" value={agente?.id ?? ''} onChange={e => setAgenteId(Number(e.target.value))}>
               {analisti.map(a => <option key={a.id} value={a.id}>{a.nome}</option>)}
             </select>
           )}
+          <button type="button" className="btn btn-secondary" onClick={generaProgramma}>Genera programma</button>
+          <button type="button" className="btn btn-primary" onClick={analizza} disabled={g.out?.stato === 'in_corso'}><X.Scintille size={14} /> Analizza cartella</button>
         </div>
-        {errore && <div className="error-box" role="alert">{errore}</div>}
-        {g.out && (
-          <Risultato out={g.out} compito="analizza_cartella" iscritto={{ id: p.id, name: p.name }} input={{ partecipanteId: participantId }} agente={agente}
-            onInterrompi={g.interrompi} onContenuto={c => g.setOut(o => o && { ...o, contenuto: c })}
-            extra={g.out.stato === 'fatto' && g.out.contenuto ? (
-              <div><button type="button" className="btn btn-ghost" onClick={() => aggiungiNote(g.out!.contenuto!)}>Aggiungi la sintesi alle note</button></div>
-            ) : null} />
-        )}
-        {(progs.data?.length ?? 0) > 0 && (
-          <div>
-            <div className="label text-muted ass-sub">Programmi salvati</div>
-            <TabellaProgrammi list={progs.data!} mostraIscritto={false} />
-          </div>
-        )}
-        <div className="text-muted ass-small">Suggerimenti generati da un modello locale: la valutazione resta del professionista.</div>
       </div>
+
+      <div className="ass-cartella-group">
+        <div className="ass-cartella-sub">Documenti</div>
+        <ListaDocumenti partecipanteId={participantId} compatta />
+      </div>
+
+      {errore && <div className="error-box" role="alert">{errore}</div>}
+      {g.out && (
+        <Risultato out={g.out} compito="analizza_cartella" iscritto={{ id: p.id, name: p.name }} input={{ partecipanteId: participantId }} agente={agente}
+          onInterrompi={g.interrompi} onRigenera={analizza} onContenuto={c => g.setOut(o => o && { ...o, contenuto: c })}
+          extra={g.out.stato === 'fatto' && g.out.contenuto ? (
+            <div><button type="button" className="btn btn-ghost" onClick={() => aggiungiNote(g.out!.contenuto!)}>Aggiungi la sintesi alle note</button></div>
+          ) : null} />
+      )}
+
+      {programmi.length > 0 && (
+        <div className="ass-cartella-group">
+          <div className="ass-cartella-sub">Programmi salvati <span className="ass-seg-count">{programmi.length}</span></div>
+          <ElencoProgrammi list={programmi} />
+        </div>
+      )}
+      <Avviso />
     </section>
   );
 }
