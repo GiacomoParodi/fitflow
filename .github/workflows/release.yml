@@ -7,6 +7,9 @@ name: Rilascio
 on:
   push:
     tags: ['v*.*.*']
+  # Pulsante "Run workflow" nella scheda Actions: rilascia la versione scritta in package.json
+  # dal commit scelto (il tag vX.Y.Z viene creato alla pubblicazione).
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -21,25 +24,37 @@ env:
 jobs:
   prepara:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v5
-      - name: Controlla che il tag corrisponda alla versione
+      - name: Determina il tag della versione
+        id: tag
         run: |
           version=$(node -p "require('./package.json').version")
-          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::Il tag $GITHUB_REF_NAME non corrisponde alla versione $version di package.json"
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+              echo "::error::Il tag $GITHUB_REF_NAME non corrisponde alla versione $version di package.json"
+              exit 1
+            fi
+          elif gh release view "v$version" --json isDraft -q '.isDraft' 2>/dev/null | grep -q false; then
+            echo "::error::La versione $version è già pubblicata: aumenta \"version\" in package.json"
             exit 1
           fi
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
       - name: Crea la release in bozza
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          if ! gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
-            gh release create "$GITHUB_REF_NAME" --draft --verify-tag \
-              --title "FitFlow ${GITHUB_REF_NAME#v}" \
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then target="--verify-tag"; else target="--target $GITHUB_SHA"; fi
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" --draft $target \
+              --title "FitFlow ${TAG#v}" \
               --notes "Come installare o aggiornare: https://github.com/${{ github.repository }}/blob/main/docs/INSTALLAZIONE.md
 
-          - **Windows**: FitFlow-Setup-${GITHUB_REF_NAME#v}.exe
-          - **Mac con chip Apple (M1, M2, M3…)**: FitFlow-${GITHUB_REF_NAME#v}-arm64.dmg
-          - **Mac con processore Intel**: FitFlow-${GITHUB_REF_NAME#v}-x64.dmg" \
+          - **Windows**: FitFlow-Setup-${TAG#v}.exe
+          - **Mac con chip Apple (M1, M2, M3…)**: FitFlow-${TAG#v}-arm64.dmg
+          - **Mac con processore Intel**: FitFlow-${TAG#v}-x64.dmg" \
               --generate-notes
           fi
 
@@ -71,8 +86,8 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
 
   pubblica:
-    needs: pacchetti
+    needs: [prepara, pacchetti]
     runs-on: ubuntu-latest
     steps:
       - name: Pubblica la release
-        run: gh release edit "$GITHUB_REF_NAME" --repo "${{ github.repository }}" --draft=false --latest
+        run: gh release edit "${{ needs.prepara.outputs.tag }}" --repo "${{ github.repository }}" --draft=false --latest

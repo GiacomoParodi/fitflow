@@ -2,7 +2,15 @@
 
 Le versioni dell'app desktop si pubblicano come **release GitHub** del repository pubblico `GiacomoParodi/fitflow`. Tutto il lavoro (pacchetti Mac e Windows, caricamento, pubblicazione) lo fa GitHub Actions: in locale basta creare un tag.
 
-## Passi
+## Il modo più semplice: il pulsante su GitHub
+
+1. Aggiorna `"version"` in `package.json` (es. da `1.0.0` a `1.0.1`) e manda il commit su `main`.
+2. Su GitHub apri **Actions** → **Rilascio** (nella colonna a sinistra) → **Run workflow** → lascia `main` → **Run workflow**.
+3. Dopo circa 15 minuti la nuova versione compare in **Releases**; il tag `vX.Y.Z` viene creato da GitHub alla pubblicazione.
+
+Se la versione indicata in `package.json` è già pubblicata, il rilascio si ferma con un messaggio: basta aumentare il numero.
+
+## In alternativa: con un tag dal terminale
 
 1. Assicurati che `main` sia a posto e che i controlli passino:
 
