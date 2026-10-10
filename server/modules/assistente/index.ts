@@ -8,7 +8,7 @@ export { Assistente } from './servizio';
 
 /**
  * Modulo "assistente": generatore di esercizi e analisi della cartella con un modello linguistico locale
- * (Ollama o un server compatibile OpenAI). Vedi README nella cartella del modulo.
+ * (Ollama o un server compatibile OpenAI).
  */
 export function creaModuloAssistente(opts: OpzioniAssistente = {}): ServerModule & { istanza: (db: Database) => Assistente | undefined } {
   // Un'istanza per database aperto (server, demo e test possono aprirne più d'uno).
