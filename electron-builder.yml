@@ -1,0 +1,68 @@
+# Pacchetti dell'app desktop. Locale: `npm run dist`. Rilascio: .github/workflows/release.yml (vedi docs/RILASCIO.md).
+appId: it.fitflow.app
+productName: FitFlow
+copyright: Copyright © Giacomo Parodi
+
+directories:
+  output: release
+  buildResources: build
+
+# Solo l'interfaccia compilata, il server, il processo Electron e i contenuti.
+# Le dipendenze di produzione (package.json → dependencies) vengono aggiunte da electron-builder.
+files:
+  - package.json
+  - dist/**/*
+  - dist-server/**/*
+  - dist-electron/**/*
+  - content/**/*
+
+asar: true
+
+publish:
+  provider: github
+  owner: GiacomoParodi
+  repo: fitflow
+
+mac:
+  category: public.app-category.productivity
+  icon: build/icon.png
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  artifactName: ${productName}-${version}-${arch}.${ext}
+  # Nessun certificato Apple a pagamento: firma ad-hoc ("-").
+  # Su Apple Silicon un'app senza alcuna firma risulta "danneggiata"; con la firma ad-hoc parte
+  # dopo l'"Apri comunque" (vedi docs/INSTALLAZIONE.md). Hardened runtime e notarizzazione
+  # richiedono un Developer ID, quindi sono disattivati.
+  identity: "-"
+  hardenedRuntime: false
+  gatekeeperAssess: false
+  notarize: false
+
+dmg:
+  title: ${productName} ${version}
+
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: ${productName}-Setup-${version}.${ext}
+
+# Installer semplice: un clic, per l'utente corrente (niente permessi di amministratore).
+# Disinstallando, i dati in %APPDATA%\FitFlow restano.
+nsis:
+  oneClick: true
+  perMachine: false
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: FitFlow
+  deleteAppDataOnUninstall: false
+
+# Solo per verificare il pacchetto su Linux (non distribuito).
+linux:
+  target: dir
+  category: Office
+  icon: build/icon.png

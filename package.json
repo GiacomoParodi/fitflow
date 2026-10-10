@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "dist-electron/main.mjs",
   "engines": {
     "node": ">=22.13"
   },
@@ -13,9 +14,13 @@
     "start": "node dist-server/index.mjs",
     "demo": "tsx server/demo.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:electron": "esbuild electron/main.ts --bundle --platform=node --format=esm --target=node24 --packages=external --outfile=dist-electron/main.mjs && esbuild electron/preload.ts --bundle --platform=node --format=cjs --target=node24 --external:electron --outfile=dist-electron/preload.cjs",
+    "desktop": "npm run build && npm run build:electron && electron .",
+    "dist": "npm run build && npm run build:electron && electron-builder --publish never"
   },
   "dependencies": {
+    "electron-updater": "^6.8.9",
     "express": "^5.1.0"
   },
   "devDependencies": {
@@ -24,6 +29,8 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "electron": "44.4.5",
+    "electron-builder": "26.15.3",
     "esbuild": "^0.25.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -33,5 +40,12 @@
     "vitest": "^3.2.0"
   },
   "productName": "FitFlow",
-  "description": "Gestione di corsi di ginnastica: iscritti, presenze, pagamenti, certificati e assistente AI locale."
+  "description": "Gestione di corsi di ginnastica: iscritti, presenze, pagamenti, certificati e assistente AI locale.",
+  "author": {
+    "name": "Giacomo Parodi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GiacomoParodi/fitflow.git"
+  }
 }
