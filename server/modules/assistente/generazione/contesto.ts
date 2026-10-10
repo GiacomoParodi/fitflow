@@ -106,7 +106,7 @@ export function costruisciPrompt(p: PromptInput): PromptCostruito {
   let budgetEsercizi = rest;
   if (p.estratti.length) budgetEsercizi = Math.min(totEsercizi, Math.max(Math.floor(rest * 0.45), rest - totEstratti));
 
-  const ex = riempi(p.esercizi, rigaEsercizio, Math.max(0, budgetEsercizi - 12), false);
+  const ex = riempi(p.esercizi, rigaEsercizio, Math.max(0, Math.min(budgetEsercizi, rest - 12)), false);
   tagliati += ex.tagliati;
   if (ex.out.length) {
     sezioni.push(`## Esercizi della libreria adatti (usa questi id)\n${ex.out.map(x => x.text).join('\n')}`);
