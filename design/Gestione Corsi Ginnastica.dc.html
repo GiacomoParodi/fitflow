@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/modernist-2f45727d-8b10-453c-9444-ddfa4347537c/styles.css">
+  <script src="_ds/modernist-2f45727d-8b10-453c-9444-ddfa4347537c/_ds_bundle.js"></script>
+  <style>
+    body{margin:0}
+    a{color:var(--color-accent)}
+    a:hover{color:var(--color-accent-600)}
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+    :root{--radius-sm:8px;--radius-md:12px;--radius-lg:18px;--font-heading:'Nunito',system-ui,sans-serif;--font-body:'Nunito',system-ui,sans-serif}
+    body,h1,h2,h3,h4,h5,h6,.btn,.input,.tag,.nav,.nav-brand,.table,.dialog-title{font-family:'Nunito',system-ui,sans-serif}
+    .tag{border-radius:9999px !important}
+    .seg{border-radius:9999px !important}
+    .seg-opt{border-radius:9999px}
+    .btn{border-radius:9999px}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)">
+
+  <div class="nav" style="background:var(--color-text);color:var(--color-bg);border-radius:0 0 var(--radius-lg) var(--radius-lg);margin:0 16px;padding:14px 28px;gap:28px">
+    <div class="nav-brand" style="display:flex;align-items:center;gap:10px;letter-spacing:-0.02em"><span style="width:14px;height:14px;border-radius:9999px;background:var(--color-accent);display:block"></span>GESTIONE CORSI</div>
+    <a onClick="{{ goDashboard }}" style="cursor:pointer;color:{{ navDashboardColor }}">Dashboard</a>
+    <a onClick="{{ goCorsi }}" style="cursor:pointer;color:{{ navCorsiColor }}">Corsi</a>
+    <a onClick="{{ goStats }}" style="cursor:pointer;color:{{ navStatsColor }}">Statistiche</a>
+    <a onClick="{{ goSettings }}" style="cursor:pointer;color:{{ navSettingsColor }}">Impostazioni</a>
+  </div>
+
+  <!-- DASHBOARD -->
+  <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:40px 44px;max-width:1180px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:24px;padding-bottom:8px">
+        <div>
+          <div style="font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent)">01 / Dashboard</div>
+          <h1 style="font-size:64px;line-height:1;letter-spacing:-0.03em;margin:6px 0 0">Panoramica</h1>
+        </div>
+        <div style="text-align:left;font-size:14px;line-height:1.4;flex-shrink:0">
+          <div style="font-weight:600">Ciao, {{ instructorName }}</div>
+          <div class="text-muted">Sabato 26 settembre</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;color:var(--color-bg)">
+        <div style="padding:24px;background:var(--color-accent);border-radius:var(--radius-lg)">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;color:var(--color-accent-100)">Iscritti totali</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:64px;line-height:1">{{ totaleIscritti }}</div>
+        </div>
+        <div style="padding:24px;border-radius:var(--radius-lg);background:var(--color-accent-600)">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;color:var(--color-accent-100)">Corsi attivi</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:64px;line-height:1">{{ corsiAttivi }}</div>
+        </div>
+        <div style="padding:24px;border-radius:var(--radius-lg);background:var(--color-text)">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;color:var(--color-accent-300)">Certificati da rinnovare</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:64px;line-height:1;color:var(--color-accent-500)">{{ certAvvisiCount }}</div>
+        </div>
+      </div>
+
+      <hr class="hr" data-soft="1" style="border-top-width:1px;margin:28px 0">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        <div style="padding-right:32px">
+          <h3 style="margin-bottom:14px;text-transform:uppercase;letter-spacing:-0.02em"><span style="color:var(--color-accent)">02</span> Lezioni di oggi</h3>
+          <sc-for list="{{ todayCourses }}" as="c" hint-placeholder-count="2">
+            <div onClick="{{ c.open }}" style="display:grid;grid-template-columns:88px 1fr;margin-bottom:8px;border-radius:var(--radius-md);overflow:hidden;background:var(--color-surface);cursor:pointer">
+              <div style="background:var(--color-accent-100);color:var(--color-accent-700);font-family:var(--font-heading);font-weight:800;font-size:22px;padding:14px 12px;border-radius:var(--radius-md) 0 0 var(--radius-md)">{{ c.orario }}</div>
+              <div style="padding:14px 16px">
+                <div style="font-weight:600">{{ c.name }}</div>
+                <div class="text-muted" style="font-size:13px;margin-top:2px">{{ c.countLabel }}</div>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noCoursesToday }}" hint-placeholder-val="{{ false }}">
+            <div class="text-muted" style="font-size:13px;padding:12px 0">Nessuna lezione in programma oggi.</div>
+          </sc-if>
+        </div>
+
+        <div style="padding-left:32px;border-left:1px solid var(--color-divider)">
+          <h3 style="margin-bottom:14px;text-transform:uppercase;letter-spacing:-0.02em"><span style="color:var(--color-accent)">03</span> Avvisi</h3>
+          <sc-if value="{{ showAvvisi }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ avvisi }}" as="a" hint-placeholder-count="3">
+              <div onClick="{{ a.open }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;margin-bottom:6px;border-radius:var(--radius-md);background:{{ a.rowBg }};cursor:pointer">
+                <div style="min-width:0">
+                  <div style="font-weight:600">{{ a.name }}</div>
+                  <div class="text-muted" style="font-size:13px;margin-top:2px">{{ a.desc }}</div>
+                </div>
+                <div class="{{ a.tagClass }}" style="flex-shrink:0;white-space:nowrap">{{ a.label }}</div>
+              </div>
+            </sc-for>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CORSI -->
+  <sc-if value="{{ isCorsi }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:40px 44px">
+      <div style="margin-bottom:24px;padding-bottom:8px">
+        <div style="font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent)">02 / Gestione</div>
+        <h1 style="font-size:64px;line-height:1;letter-spacing:-0.03em;margin:6px 0 0">Corsi</h1>
+      </div>
+      <div style="display:grid;grid-template-columns:280px minmax(0,1fr)">
+        <div style="border-right:1px solid var(--color-divider);padding-right:24px">
+          <sc-for list="{{ courses }}" as="c" hint-placeholder-count="4">
+            <div onClick="{{ c.select }}" style="padding:14px;margin-bottom:8px;border-radius:var(--radius-md);background:{{ c.rowBg }};color:{{ c.nameColor }};cursor:pointer">
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:16px">{{ c.name }}</div>
+              <div style="font-size:12px;margin-top:2px;opacity:0.8">{{ c.giorni }} · {{ c.orario }}</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+                <div style="flex:1;height:6px;border-radius:9999px;overflow:hidden;background:{{ c.trackColor }}"><div style="height:100%;border-radius:9999px;width:{{ c.pctWidth }};background:{{ c.barColor }}"></div></div>
+                <div style="font-size:12px;opacity:0.8">{{ c.countLabel }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="padding-left:32px;min-width:0">
+          <sc-if value="{{ selectedCourse }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap;margin-bottom:8px">
+              <h2 style="margin:0;font-size:44px;letter-spacing:-0.035em;line-height:1">{{ selectedCourse.name }}</h2>
+              <div class="text-muted" style="font-size:13px;white-space:nowrap">{{ selectedCourse.giorni }} · {{ selectedCourse.orario }}</div>
+            </div>
+            <div class="text-muted" style="font-size:13px;margin-bottom:18px">Posti occupati: {{ selectedCourse.countLabel }}</div>
+            <hr class="hr" data-soft="1" style="border-top-width:1px;margin:0 0 18px">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+              <div class="seg">
+                <div class="seg-opt" onClick="{{ showIscritti }}" style="background:{{ segIscrittiBg }};color:{{ segIscrittiColor }};font-weight:600">Iscritti</div>
+                <div class="seg-opt" onClick="{{ showPresenze }}" style="background:{{ segPresenzeBg }};color:{{ segPresenzeColor }};font-weight:600">Presenze</div>
+              </div>
+              <sc-if value="{{ isIscrittiView }}" hint-placeholder-val="{{ true }}">
+                <div class="btn btn-primary" onClick="{{ openNewForm }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+                  Nuovo iscritto
+                </div>
+              </sc-if>
+              <sc-if value="{{ isPresenzeView }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input class="input" type="date" value="{{ newDate }}" onChange="{{ onNewDate }}" style="width:170px">
+                  <div class="btn btn-primary" onClick="{{ addLesson }}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+                    Aggiungi data
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ isIscrittiView }}" hint-placeholder-val="{{ true }}">
+            <div style="overflow-x:auto">
+            <table class="table">
+              <thead>
+                <tr><th>Nome</th><th>Abbonamento</th><th>Iscrizione</th><th>Certificato</th><th>Presenze</th></tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ selectedCourse.participants }}" as="p" hint-placeholder-count="6">
+                  <tr onClick="{{ p.open }}" style="cursor:pointer">
+                    <td><div style="font-weight:600">{{ p.name }}</div><div class="text-muted" style="font-size:12px;white-space:nowrap">{{ p.phone }}</div></td>
+                    <td>
+                      <div style="display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="font-weight:600">{{ p.planName }}</span><span class="{{ p.paymentTagClass }}">{{ p.paymentLabel }}</span></div>
+                      <div class="text-muted" style="font-size:12px;white-space:nowrap">Pagato fino al {{ p.pagatoFinoLabel }}</div>
+                    </td>
+                    <td><span class="{{ p.iscrTagClass }}" style="white-space:nowrap">{{ p.iscrLabel }}</span><div class="text-muted" style="font-size:12px;white-space:nowrap;margin-top:2px">{{ p.iscrScadenzaLabel }}</div></td>
+                    <td><span class="{{ p.certTagClass }}" style="white-space:nowrap">{{ p.certLabel }}</span><div class="text-muted" style="font-size:12px;white-space:nowrap;margin-top:2px">{{ p.certScadenzaLabel }}</div></td>
+                    <td class="text-muted">{{ p.presenzePct }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ isPresenzeView }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ selectedCourse.noLessons }}" hint-placeholder-val="{{ false }}">
+                <div class="text-muted" style="padding:16px 0;font-size:13px">Nessuna lezione registrata. Aggiungi una data per iniziare a segnare le presenze.</div>
+              </sc-if>
+              <div style="overflow-x:auto">
+                <div style="display:inline-block;min-width:100%">
+                  <div style="display:flex;align-items:flex-end;border-bottom:1px solid var(--color-divider)">
+                    <div class="text-muted" style="width:190px;flex-shrink:0;padding:8px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase">Nome</div>
+                    <sc-for list="{{ selectedCourse.lessonsHeader }}" as="l" hint-placeholder-count="5">
+                      <div style="width:76px;flex-shrink:0;padding:8px 4px">
+                        <div class="text-muted" style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase">{{ l.day }}</div>
+                        <div style="font-family:var(--font-heading);font-weight:800;font-size:16px;color:{{ l.color }}">{{ l.label }}</div>
+                        <div class="btn btn-ghost" onClick="{{ l.markAll }}" style="font-size:11px;padding:2px 4px;margin-left:-4px;white-space:nowrap">Tutti {{ l.countLabel }}</div>
+                      </div>
+                    </sc-for>
+                    <div class="text-muted" style="width:64px;flex-shrink:0;padding:8px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase">Tot.</div>
+                  </div>
+                  <sc-for list="{{ selectedCourse.grid }}" as="r" hint-placeholder-count="6">
+                    <div style="display:flex;align-items:center;border-bottom:1px solid var(--color-divider)">
+                      <div onClick="{{ r.open }}" style="width:190px;flex-shrink:0;padding:10px 8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer">{{ r.name }}</div>
+                      <sc-for list="{{ r.cells }}" as="cell" hint-placeholder-count="5">
+                        <div style="width:76px;flex-shrink:0;padding:6px 4px">
+                          <div onClick="{{ cell.toggle }}" style="width:30px;height:30px;border:1.5px solid var(--color-neutral-500);border-radius:var(--radius-sm);background:{{ cell.bg }};display:flex;align-items:center;justify-content:center;cursor:pointer">
+                            <sc-if value="{{ cell.present }}" hint-placeholder-val="{{ false }}">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--color-bg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </sc-if>
+                          </div>
+                        </div>
+                      </sc-for>
+                      <div style="width:64px;flex-shrink:0;padding:8px;font-weight:600">{{ r.pct }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div class="text-muted" style="font-size:12px;margin-top:10px">Clicca un quadrato per segnare presente o assente. "Tutti" segna l'intera lezione.</div>
+            </sc-if>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- STATISTICHE -->
+  <sc-if value="{{ isStats }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:40px 44px;max-width:1180px">
+      <div style="margin-bottom:24px;padding-bottom:8px">
+        <div style="font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent)">03 / Numeri</div>
+        <h1 style="font-size:64px;line-height:1;letter-spacing:-0.03em;margin:6px 0 0">Statistiche</h1>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:0">
+        <div style="padding-right:32px">
+          <h5 style="margin-bottom:12px">Andamento iscritti</h5>
+          <div style="display:flex;align-items:flex-end;gap:14px;height:150px;border-bottom:1px solid var(--color-divider);padding-bottom:2px">
+            <sc-for list="{{ andamento }}" as="m" hint-placeholder-count="6">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end">
+                <div style="width:100%;background:{{ m.color }};border-radius:8px 8px 0 0;height:{{ m.pctHeight }}"></div>
+                <div class="text-muted" style="font-size:11px">{{ m.mese }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column">
+          <div style="background:var(--color-accent);color:var(--color-bg);padding:20px 24px;flex:1;border-radius:var(--radius-lg);margin-bottom:12px">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;color:var(--color-accent-100)">Incassato a settembre</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:40px;line-height:1">{{ incassiMese }}</div>
+          </div>
+          <div style="background:var(--color-text);color:var(--color-bg);padding:20px 24px;flex:1;border-radius:var(--radius-lg)">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;color:var(--color-accent-300)">Corso in testa</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:24px">{{ topCourseName }}</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr" data-soft="1" style="border-top-width:1px;margin:28px 0">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        <div style="padding-right:32px">
+          <h5 style="margin-bottom:14px">Iscritti per corso</h5>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ perCorso }}" as="pc" hint-placeholder-count="4">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+                  <span>{{ pc.name }}</span>
+                  <span style="font-weight:600">{{ pc.count }}</span>
+                </div>
+                <div style="height:8px;border-radius:9999px;overflow:hidden;background:var(--color-neutral-200)">
+                  <div style="height:100%;background:var(--color-accent);width:{{ pc.pctWidth }}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="padding-left:32px;border-left:1px solid var(--color-divider)">
+          <h5 style="margin-bottom:14px">Stato pagamenti</h5>
+          <div style="display:flex;height:14px;margin-bottom:14px;border-radius:9999px;overflow:hidden">
+            <sc-for list="{{ paymentDist }}" as="pd" hint-placeholder-count="3">
+              <div style="height:100%;background:{{ pd.color }};width:{{ pd.pctWidth }}"></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:16px">
+            <sc-for list="{{ paymentDist }}" as="pd2" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:6px;font-size:12px" class="text-muted">
+                <div style="width:10px;height:10px;border-radius:9999px;background:{{ pd2.color }}"></div>
+                {{ pd2.label }} · {{ pd2.count }}
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- VIEWER CERTIFICATO -->
+  <sc-if value="{{ viewerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:200;background:var(--color-neutral-900);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 20px;background:var(--color-text);color:var(--color-bg);border-radius:0 0 var(--radius-lg) var(--radius-lg)">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent-400)">Certificato medico · {{ viewerOwner }}</div>
+          <div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ certFile.name }}</div>
+        </div>
+        <a class="btn btn-secondary" onClick="{{ downloadCert }}" style="cursor:pointer;color:var(--color-bg);border-color:var(--color-neutral-600)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          Scarica
+        </a>
+        <div class="btn btn-primary" onClick="{{ closeViewer }}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+          Chiudi
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:24px">
+        {{ viewerMedia }}
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- IMPOSTAZIONI -->
+  <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:40px 44px;max-width:1180px">
+      <div style="margin-bottom:24px;padding-bottom:8px">
+        <div style="font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent)">04 / Configurazione</div>
+        <h1 style="font-size:64px;line-height:1;letter-spacing:-0.03em;margin:6px 0 0">Impostazioni</h1>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)">
+        <div style="padding-right:32px">
+          <h3 style="margin-bottom:6px;text-transform:uppercase;letter-spacing:-0.02em"><span style="color:var(--color-accent)">01</span> Abbonamenti</h3>
+          <div class="text-muted" style="font-size:13px;margin-bottom:14px">Si scelgono all'iscrizione e a ogni pagamento. La durata stabilisce fino a quando il pagamento copre l'iscritto.</div>
+          <table class="table">
+            <thead><tr><th>Nome</th><th>Durata</th><th>Prezzo</th><th>Iscritti</th><th></th></tr></thead>
+            <tbody>
+              <sc-for list="{{ plans }}" as="pl" hint-placeholder-count="4">
+                <tr>
+                  <td style="font-weight:600">{{ pl.name }}</td>
+                  <td class="text-muted" style="white-space:nowrap">{{ pl.durataLabel }}</td>
+                  <td style="font-weight:600;white-space:nowrap">{{ pl.priceLabel }}</td>
+                  <td class="text-muted">{{ pl.users }}</td>
+                  <td style="text-align:right"><div class="btn btn-ghost" onClick="{{ pl.remove }}">Elimina</div></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <sc-if value="{{ hasPlanError }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:12px;background:var(--color-accent-100);border:2px solid var(--color-accent);color:var(--color-accent-800);padding:10px 12px;font-size:13px">{{ planError }}</div>
+          </sc-if>
+        </div>
+        <div style="padding-left:32px;border-left:1px solid var(--color-divider)">
+          <h3 style="margin-bottom:14px;text-transform:uppercase;letter-spacing:-0.02em"><span style="color:var(--color-accent)">02</span> Nuovo abbonamento</h3>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="field"><label>Nome</label><input class="input" value="{{ newPlan.name }}" onChange="{{ onNpName }}" placeholder="Es. Semestrale"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="field"><label>Durata (mesi)</label><input class="input" type="number" min="1" value="{{ newPlan.mesi }}" onChange="{{ onNpMesi }}" placeholder="Es. 6"></div>
+              <div class="field"><label>Prezzo (€)</label><input class="input" type="number" min="0" value="{{ newPlan.prezzo }}" onChange="{{ onNpPrezzo }}" placeholder="Es. 220"></div>
+            </div>
+            <div class="btn btn-primary btn-block" onClick="{{ addPlan }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg> Aggiungi abbonamento</div>
+          </div>
+          <hr class="hr" data-soft="1" style="border-top-width:1px;margin:28px 0 20px">
+          <h3 style="margin-bottom:6px;text-transform:uppercase;letter-spacing:-0.02em"><span style="color:var(--color-accent)">03</span> Iscrizione annuale</h3>
+          <div class="text-muted" style="font-size:13px;margin-bottom:14px">La scadenza della stagione si propone in automatico ai nuovi iscritti.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="field"><label>Quota iscrizione (€)</label><input class="input" type="number" min="0" value="{{ settings.quotaIscrizione }}" onChange="{{ onQuotaIscr }}"></div>
+            <div class="field"><label>Scadenza stagione</label><input class="input" type="date" value="{{ settings.scadenzaStagione }}" onChange="{{ onScadStagione }}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- NUOVO ISCRITTO -->
+  <sc-if value="{{ showNewForm }}" hint-placeholder-val="{{ false }}">
+    <div class="dialog-backdrop" onClick="{{ closeNewForm }}" style="z-index:100">
+      <div class="dialog" onClick="{{ stop }}" style="width:min(600px,100%);max-height:92vh;overflow:auto">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent)">Nuovo iscritto</div>
+            <div class="dialog-title">{{ formCourseName }}</div>
+            <div class="text-muted" style="font-size:13px;margin-top:2px">{{ formSeatsLabel }}</div>
+          </div>
+          <div class="btn btn-icon" onClick="{{ closeNewForm }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></div>
+        </div>
+        <hr class="hr" data-soft="1" style="border-top-width:1px;margin:4px 0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field"><label>Nome e cognome</label><input class="input" value="{{ nf.name }}" onChange="{{ onNfName }}" placeholder="Es. Anna Bruni"></div>
+          <div class="field"><label>Telefono</label><input class="input" value="{{ nf.phone }}" onChange="{{ onNfPhone }}" placeholder="333 000 0000"></div>
+          <div class="field"><label>Abbonamento</label>
+            <select class="input" value="{{ nf.planId }}" onChange="{{ onNfPlan }}">
+              <sc-for list="{{ plans }}" as="pl" hint-placeholder-count="3"><option value="{{ pl.id }}">{{ pl.optionLabel }}</option></sc-for>
+            </select>
+          </div>
+          <div class="field"><label>Livello</label>
+            <select class="input" value="{{ nf.livello }}" onChange="{{ onNfLivello }}">
+              <option value="Base">Base</option><option value="Intermedio">Intermedio</option><option value="Avanzato">Avanzato</option>
+            </select>
+          </div>
+          <div class="field"><label>Scadenza iscrizione annuale</label><input class="input" type="date" value="{{ nf.iscrizioneScadenza }}" onChange="{{ onNfIscr }}"></div>
+          <div class="field"><label>Scadenza certificato medico</label><input class="input" type="date" value="{{ nf.certScadenza }}" onChange="{{ onNfCert }}"></div>
+        </div>
+        <div class="field"><label>Primo pagamento abbonamento</label>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div class="seg">
+              <div class="seg-opt" onClick="{{ setPaid }}" style="font-weight:600;background:{{ paidBg }};color:{{ paidColor }}">Pagato oggi</div>
+              <div class="seg-opt" onClick="{{ setUnpaid }}" style="font-weight:600;background:{{ unpaidBg }};color:{{ unpaidColor }}">Da pagare</div>
+            </div>
+            <div class="text-muted" style="font-size:13px">{{ nfPaidInfo }}</div>
+          </div>
+        </div>
+        <div class="field"><label>Note</label><textarea class="input" value="{{ nf.note }}" onChange="{{ onNfNote }}" placeholder="Informazioni utili per l'istruttore"></textarea></div>
+        <sc-if value="{{ hasNfError }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--color-accent-100);border:2px solid var(--color-accent);color:var(--color-accent-800);padding:10px 12px;font-size:13px">{{ nfError }}</div>
+        </sc-if>
+        <div class="dialog-actions" style="justify-content:flex-start">
+          <div class="btn btn-primary" onClick="{{ saveNew }}">Iscrivi al corso</div>
+          <div class="btn btn-secondary" onClick="{{ closeNewForm }}">Annulla</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- PARTICIPANT DIALOG -->
+  <sc-if value="{{ selectedParticipant }}" hint-placeholder-val="{{ false }}">
+    <div class="dialog-backdrop" onClick="{{ closeParticipant }}" style="z-index:99">
+      <div class="dialog" onClick="{{ stop }}" style="width:min(640px,100%);max-height:92vh;overflow:auto">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="dialog-title">{{ selectedParticipant.name }}</div>
+            <div class="text-muted" style="font-size:13px;margin-top:2px">{{ selectedParticipant.courseName }}</div>
+          </div>
+          <div class="btn btn-icon" onClick="{{ closeParticipant }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></div>
+        </div>
+
+        <hr class="hr" data-soft="1" style="border-top-width:1px;margin:4px 0">
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr)">
+          <div style="padding-right:12px">
+            <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Telefono</div>
+            <div style="font-weight:600;margin-top:4px;white-space:nowrap">{{ selectedParticipant.phone }}</div>
+          </div>
+          <div style="padding:0 12px;border-left:1px solid var(--color-divider)">
+            <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Livello</div>
+            <div style="font-weight:600;margin-top:4px">{{ selectedParticipant.livello }}</div>
+          </div>
+          <div style="padding-left:12px;border-left:1px solid var(--color-divider)">
+            <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Presenze</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:24px;line-height:1;margin-top:4px;color:var(--color-accent)">{{ selectedParticipant.presenzePct }}</div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--color-divider);border-radius:var(--radius-lg);background-clip:padding-box;padding:14px;display:flex;flex-direction:column;gap:12px;background:{{ selectedParticipant.payBoxBg }}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+            <div>
+              <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Abbonamento</div>
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.1;margin-top:4px">{{ selectedParticipant.planName }}</div>
+              <div class="text-muted" style="font-size:12px">{{ selectedParticipant.planDesc }}</div>
+            </div>
+            <div>
+              <span class="{{ selectedParticipant.paymentTagClass }}" style="white-space:nowrap">{{ selectedParticipant.paymentLabel }}</span>
+              <div style="font-size:13px;margin-top:6px">Pagato fino al <strong>{{ selectedParticipant.pagatoFinoLabel }}</strong></div>
+            </div>
+          </div>
+          <sc-if value="{{ noPayForm }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex"><div class="btn btn-primary" onClick="{{ openPayForm }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg> Registra pagamento</div></div>
+          </sc-if>
+          <sc-if value="{{ isPayForm }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--color-bg);border:1px solid var(--color-accent-300);border-radius:var(--radius-md);padding:12px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div class="field"><label>Data pagamento</label><input class="input" type="date" value="{{ payForm.date }}" onChange="{{ onPayDate }}"></div>
+                <div class="field"><label>Abbonamento</label>
+                  <select class="input" value="{{ payForm.planId }}" onChange="{{ onPayPlan }}">
+                    <sc-for list="{{ plans }}" as="pl" hint-placeholder-count="3"><option value="{{ pl.id }}">{{ pl.optionLabel }}</option></sc-for>
+                  </select>
+                </div>
+              </div>
+              <div style="font-size:13px">Importo <strong>{{ payPreview.importo }}</strong> · copre dal {{ payPreview.dal }} al <strong>{{ payPreview.al }}</strong></div>
+              <div style="display:flex;gap:8px">
+                <div class="btn btn-primary" onClick="{{ confirmPay }}">Conferma pagamento</div>
+                <div class="btn btn-secondary" onClick="{{ cancelPay }}">Annulla</div>
+              </div>
+            </div>
+          </sc-if>
+          <div>
+            <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em" style="margin-bottom:4px">Storico pagamenti</div>
+            <sc-for list="{{ selectedParticipant.paymentsList }}" as="py" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:10px;padding:7px 0;border-bottom:1px solid var(--color-divider);font-size:13px">
+                <div style="font-weight:600">{{ py.dateLabel }}</div>
+                <div class="text-muted">{{ py.planName }} · {{ py.periodo }}</div>
+                <div style="font-weight:600">{{ py.importoLabel }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ selectedParticipant.noPayments }}" hint-placeholder-val="{{ false }}">
+              <div class="text-muted" style="font-size:13px">Nessun pagamento registrato.</div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--color-divider);border-radius:var(--radius-lg);background-clip:padding-box;padding:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;background:{{ selectedParticipant.iscrBoxBg }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px"><div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Iscrizione annuale</div><span class="{{ selectedParticipant.iscrTagClass }}" style="white-space:nowrap">{{ selectedParticipant.iscrLabel }}</span></div>
+            <div class="field"><label>Data di scadenza</label><input class="input" type="date" value="{{ selectedParticipant.iscrizioneScadenza }}" onChange="{{ onIscrDate }}" style="width:180px"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+            <div class="text-muted" style="font-size:12px">Quota annuale {{ quotaIscrizioneLabel }}</div>
+            <div class="btn btn-secondary" onClick="{{ renewIscr }}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8 M21 3v5h-5 M21 12a9 9 0 0 1-15.5 6.3L3 16 M3 21v-5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              Rinnova per 1 anno
+            </div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--color-divider);border-radius:var(--radius-lg);background-clip:padding-box;padding:14px;display:flex;flex-direction:column;gap:12px;background:{{ selectedParticipant.certBoxBg }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px"><div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Certificato medico</div><span class="{{ selectedParticipant.certTagClass }}" style="white-space:nowrap">{{ selectedParticipant.certLabel }}</span></div>
+            <div class="field"><label>Data di scadenza</label><input class="input" type="date" value="{{ selectedParticipant.certScadenza }}" onChange="{{ onCertDate }}" style="width:180px"></div>
+            <sc-if value="{{ selectedParticipant.noCertDate }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12px;color:var(--color-accent-700)">Inserisci la data di scadenza riportata sul certificato.</div>
+            </sc-if>
+          </div>
+          <div style="border-top:1px solid var(--color-divider);padding-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div style="width:44px;height:44px;border-radius:var(--radius-md);background:{{ certFileIconBg }};color:{{ certFileIconColor }};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M9 15l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div style="flex:1;min-width:160px">
+              <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Documento</div>
+              <sc-if value="{{ hasCertFile }}" hint-placeholder-val="{{ false }}">
+                <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">{{ certFile.name }}</div>
+                <div class="text-muted" style="font-size:12px">{{ certFile.meta }}</div>
+              </sc-if>
+              <sc-if value="{{ noCertFile }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size:13px;margin-top:2px">Nessun file caricato · PNG, JPEG o PDF</div>
+              </sc-if>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <sc-if value="{{ hasCertFile }}" hint-placeholder-val="{{ false }}">
+                <div class="btn btn-primary" onClick="{{ openViewer }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  Visualizza
+                </div>
+              </sc-if>
+              <label class="btn btn-secondary" style="cursor:pointer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                {{ uploadLabel }}
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf" onChange="{{ onCertUpload }}" style="display:none">
+              </label>
+              <sc-if value="{{ hasCertFile }}" hint-placeholder-val="{{ false }}">
+                <div class="btn btn-icon btn-secondary" onClick="{{ removeCertFile }}" title="Rimuovi file">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18 M8 6V4h8v2 M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          <sc-if value="{{ hasCertUploadError }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--color-accent-100);border:2px solid var(--color-accent);color:var(--color-accent-800);padding:10px 12px;font-size:13px">{{ certUploadError }}</div>
+          </sc-if>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em">Registro presenze</div>
+            <div class="text-muted" style="font-size:12px">{{ selectedParticipant.presenzeFatte }}/{{ selectedParticipant.presenzeTotali }} lezioni</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ selectedParticipant.storico }}" as="s" hint-placeholder-count="5">
+              <div style="width:52px">
+                <div style="height:30px;border:1.5px solid var(--color-neutral-500);border-radius:var(--radius-sm);background:{{ s.bg }};display:flex;align-items:center;justify-content:center">
+                  <sc-if value="{{ s.present }}" hint-placeholder-val="{{ true }}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--color-bg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </sc-if>
+                  <sc-if value="{{ s.absent }}" hint-placeholder-val="{{ false }}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round"></path></svg>
+                  </sc-if>
+                </div>
+                <div class="text-muted" style="font-size:10px;margin-top:3px">{{ s.day }} {{ s.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ selectedParticipant.noStorico }}" hint-placeholder-val="{{ false }}">
+            <div class="text-muted" style="font-size:13px">Nessuna lezione registrata.</div>
+          </sc-if>
+        </div>
+
+        <div>
+          <div class="text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em" style="margin-bottom:6px">Note</div>
+          <div style="font-size:13px;line-height:1.5">{{ selectedParticipant.note }}</div>
+        </div>
+
+        <hr class="hr" data-soft="1" style="border-top-width:1px;margin:4px 0">
+
+        <sc-if value="{{ notConfirmUnsub }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div class="text-muted" style="font-size:12px">Iscritto a {{ selectedParticipant.courseName }}</div>
+            <div class="btn btn-secondary" onClick="{{ askUnsub }}" style="color:var(--color-accent-700)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M17 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              Disiscrivi dal corso
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isConfirmUnsub }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--color-accent-100);border:1px solid var(--color-accent-300);border-radius:var(--radius-md);padding:14px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-weight:600;color:var(--color-accent-800)">Disiscrivere {{ selectedParticipant.name }} da {{ selectedParticipant.courseName }}?</div>
+            <div style="font-size:13px;color:var(--color-accent-800)">Il partecipante verrà rimosso dal corso e dal registro presenze.</div>
+            <div style="display:flex;gap:8px">
+              <div class="btn btn-primary" onClick="{{ confirmUnsubscribe }}">Conferma disiscrizione</div>
+              <div class="btn btn-secondary" onClick="{{ cancelUnsub }}">Annulla</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;instructorName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Marco&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenuto&quot;},&quot;showComplianceAlerts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Comportamento&quot;},&quot;defaultTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dashboard&quot;,&quot;options&quot;:[&quot;dashboard&quot;,&quot;corsi&quot;,&quot;statistiche&quot;,&quot;impostazioni&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Comportamento&quot;}}">
+class Component extends DCLogic {
+  TODAY = '2026-09-26';
+
+  courses = [
+    { id: 'c1', name: 'PILATES MATTUTINO', giorni: 'Lun · Mer · Ven', orario: '09:00', capienza: 15, today: true },
+    { id: 'c2', name: 'FUNCTIONAL TRAINING', giorni: 'Mar · Gio', orario: '18:30', capienza: 20, today: false },
+    { id: 'c3', name: 'YOGA SERALE', giorni: 'Lun · Mer', orario: '20:00', capienza: 12, today: true },
+    { id: 'c4', name: 'ZUMBA', giorni: 'Sab', orario: '10:00', capienza: 25, today: false },
+  ];
+
+  seedPlans = [
+    { id: 'a1', name: 'Mensile', mesi: 1, prezzo: 45 },
+    { id: 'a2', name: 'Trimestrale', mesi: 3, prezzo: 120 },
+    { id: 'a3', name: 'Semestrale', mesi: 6, prezzo: 220 },
+    { id: 'a4', name: 'Annuale', mesi: 12, prezzo: 400 },
+  ];
+
+  // [id, nome, corso, telefono, abbonamento, pagato fino al, scadenza certificato, scadenza iscrizione, livello, note, presenze]
+  seedRows = [
+    ['p1', 'Giulia Rossi', 'c1', '333 111 2233', 'a1', '2026-10-01', '2027-03-14', '2027-08-31', 'Intermedio', 'Nessuna nota.', [1,1,1,1,1]],
+    ['p2', 'Marco Bianchi', 'c1', '333 222 4455', 'a1', '2026-09-29', '2027-05-02', '2027-08-31', 'Base', 'Preferisce lezioni in prima fila.', [1,1,0,1,1]],
+    ['p3', 'Elena Verdi', 'c1', '333 333 5566', 'a2', '2026-12-01', '2026-10-12', '2027-08-31', 'Avanzato', '', [1,1,1,1,1]],
+    ['p4', 'Paolo Neri', 'c1', '333 444 6677', 'a1', '2026-09-05', '2027-01-20', '2026-09-30', 'Base', 'Contattare per rinnovo quota.', [0,1,0,1,1]],
+    ['p5', 'Francesca Colombo', 'c1', '333 555 7788', 'a3', '2027-02-01', '2027-06-08', '2027-08-31', 'Intermedio', '', [1,0,1,1,1]],
+    ['p6', 'Davide Fontana', 'c1', '333 666 8899', 'a1', '2026-10-01', '2026-08-30', '2027-08-31', 'Base', 'Certificato da rinnovare urgentemente.', [1,1,1,0,1]],
+    ['p7', 'Chiara Ricci', 'c1', '333 777 9900', 'a4', '2027-09-01', '2026-11-19', '2027-08-31', 'Avanzato', '', [1,1,1,1,1]],
+    ['p8', 'Luca Moretti', 'c2', '334 111 2200', 'a2', '2026-11-03', '2027-04-11', '2027-08-31', 'Avanzato', '', [1,1,1,1,1]],
+    ['p9', 'Sara Gallo', 'c2', '334 222 3311', 'a1', '2026-09-28', '2027-07-25', '2027-08-31', 'Intermedio', '', [1,0,1,1,1]],
+    ['p10', 'Andrea Conti', 'c2', '334 333 4422', 'a1', '2026-10-03', '2026-10-09', '2027-08-31', 'Base', '', [1,1,1,1,0]],
+    ['p11', 'Valentina Barbieri', 'c2', '334 444 5533', 'a2', '2026-12-03', '2027-02-17', '2027-08-31', 'Avanzato', '', [1,1,1,1,1]],
+    ['p12', 'Simone Longo', 'c2', '334 555 6644', 'a1', '2026-09-10', '2026-12-03', '2026-09-15', 'Base', 'Ha saltato le ultime lezioni.', [0,0,1,0,1]],
+    ['p13', 'Alice Mancini', 'c2', '334 666 7755', 'a1', '2026-10-03', '2027-05-29', '2027-08-31', 'Intermedio', '', [1,1,1,1,1]],
+    ['p14', 'Federica Testa', 'c3', '335 111 8899', 'a2', '2026-11-05', '2027-08-21', '2027-08-31', 'Intermedio', '', [1,1,0,1,1]],
+    ['p15', 'Matteo Rinaldi', 'c3', '335 222 9900', 'a1', '2026-10-05', '2027-01-15', '2027-08-31', 'Avanzato', '', [1,1,1,1,1]],
+    ['p16', 'Laura Costa', 'c3', '335 333 0011', 'a1', '2026-09-27', '2027-06-06', '2027-08-31', 'Base', '', [1,0,1,1,0]],
+    ['p17', 'Nicola Ferri', 'c3', '335 444 1122', 'a1', '2026-10-05', '2026-09-02', '2027-08-31', 'Base', 'Certificato scaduto, non può allenarsi.', [0,1,1,0,1]],
+    ['p18', 'Martina Villa', 'c3', '335 555 2233', 'a4', '2027-09-05', '2027-03-28', '2027-08-31', 'Intermedio', '', [1,1,1,1,1]],
+    ['p19', 'Roberto Pini', 'c4', '336 111 3344', 'a1', '2026-10-02', '2026-12-18', '2027-08-31', 'Base', '', [1,1,0,1,1]],
+    ['p20', 'Ilaria Marino', 'c4', '336 222 4455', 'a2', '2026-12-02', '2027-09-09', '2027-08-31', 'Intermedio', '', [1,1,1,1,1]],
+    ['p21', 'Stefano Grasso', 'c4', '336 333 5566', 'a1', '2026-09-30', '2027-04-22', '2026-10-10', 'Base', '', [0,1,0,1,1]],
+    ['p22', 'Giorgia Leone', 'c4', '336 444 6677', 'a1', '2026-10-02', '2026-10-30', '2027-08-31', 'Avanzato', '', [1,1,1,1,1]],
+  ];
+
+  lessonDates = {
+    c1: ['2026-09-14', '2026-09-16', '2026-09-18', '2026-09-21', '2026-09-23'],
+    c2: ['2026-09-10', '2026-09-15', '2026-09-17', '2026-09-22', '2026-09-24'],
+    c3: ['2026-09-09', '2026-09-14', '2026-09-16', '2026-09-21', '2026-09-23'],
+    c4: ['2026-08-29', '2026-09-05', '2026-09-12', '2026-09-19', '2026-09-26'],
+  };
+
+  toUTC(iso) { const [y, m, d] = iso.split('-').map(Number); return Date.UTC(y, m - 1, d); }
+  addMonths(iso, n) { const [y, m, d] = iso.split('-').map(Number); return new Date(Date.UTC(y, m - 1 + n, d)).toISOString().slice(0, 10); }
+  addDays(iso, n) { return new Date(this.toUTC(iso) + n * 86400000).toISOString().slice(0, 10); }
+  daysUntil(iso) { return Math.round((this.toUTC(iso) - this.toUTC(this.TODAY)) / 86400000); }
+  fmt(iso) { return iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) + '/' + iso.slice(0, 4) : '—'; }
+  status(iso, warn) { if (!iso) return 'mancante'; const d = this.daysUntil(iso); return d < 0 ? 'scaduto' : d <= warn ? 'in_scadenza' : 'valido'; }
+  mesiLabel(n) { return n === 1 ? '1 mese' : n + ' mesi'; }
+
+  buildParticipants() {
+    return this.seedRows.map(r => {
+      const [id, name, courseId, phone, planId, pagatoFino, certScadenza, iscrizioneScadenza, livello, note, storico] = r;
+      const plan = this.seedPlans.find(x => x.id === planId);
+      const dal = this.addMonths(pagatoFino, -plan.mesi);
+      const prev = this.addMonths(dal, -plan.mesi);
+      const payments = [
+        { id: id + '-2', date: dal, dal: dal, al: pagatoFino, importo: plan.prezzo, planName: plan.name },
+        { id: id + '-1', date: prev, dal: prev, al: dal, importo: plan.prezzo, planName: plan.name },
+      ];
+      return { id, name, courseId, phone, planId, pagatoFino, certScadenza, iscrizioneScadenza, livello, note, storico, payments };
+    });
+  }
+  buildLessons() {
+    const out = {};
+    Object.keys(this.lessonDates).forEach(cid => {
+      const rows = this.seedRows.filter(r => r[2] === cid);
+      out[cid] = this.lessonDates[cid].map((d, i) => {
+        const present = {};
+        rows.forEach(r => { present[r[0]] = !!r[10][i]; });
+        return { id: cid + '-' + d, date: d, present };
+      });
+    });
+    return out;
+  }
+  emptyNf(planId, iscr) { return { name: '', phone: '', livello: 'Base', planId: planId || '', certScadenza: '', iscrizioneScadenza: iscr || '', paid: true, note: '' }; }
+
+  state = {
+    tab: 'dashboard', selectedCourseId: 'c1', selectedParticipantId: null,
+    participants: this.buildParticipants(), lessons: this.buildLessons(), plans: this.seedPlans,
+    settings: { quotaIscrizione: 30, scadenzaStagione: '2027-08-31' },
+    courseView: 'iscritti', newDate: '2026-09-28', confirmUnsub: false,
+    showNewForm: false, nf: this.emptyNf('a1', '2027-08-31'), nfError: '',
+    newPlan: { name: '', mesi: '', prezzo: '' }, planError: '',
+    certFiles: {}, viewerOpen: false, certUploadError: '',
+    payForm: null,
+  };
+
+  tagClassMap = { valido: 'tag tag-neutral', in_scadenza: 'tag tag-outline', scaduto: 'tag tag-accent', mancante: 'tag tag-accent' };
+  payLabels = { valido: 'In regola', in_scadenza: 'In scadenza', scaduto: 'Da pagare', mancante: 'Da pagare' };
+  certLabels = { valido: 'Valido', in_scadenza: 'In scadenza', scaduto: 'Scaduto', mancante: 'Mancante' };
+  iscrLabels = { valido: 'Attiva', in_scadenza: 'In scadenza', scaduto: 'Scaduta', mancante: 'Mancante' };
+
+  initials(name) { return name.split(' ').map(w => w[0]).join('').toUpperCase(); }
+  fmtDate(d) {
+    const dt = new Date(d + 'T00:00:00');
+    return { day: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'][dt.getDay()], label: d.slice(8, 10) + '/' + d.slice(5, 7) };
+  }
+  stop(e) { e && e.stopPropagation && e.stopPropagation(); }
+
+  componentDidMount() {
+    const dt = this.props.defaultTab;
+    if (dt && dt !== this.state.tab) this.setState({ tab: dt });
+  }
+
+  setTab(tab) { this.setState({ tab }); }
+  selectCourse(id) { this.setState({ selectedCourseId: id }); }
+  goToCourse(id) { this.setState({ tab: 'corsi', selectedCourseId: id }); }
+  openParticipant(id) { this.setState({ selectedParticipantId: id, confirmUnsub: false, certUploadError: '', payForm: null }); }
+  goToParticipant(id, courseId) { this.setState({ tab: 'corsi', selectedCourseId: courseId, selectedParticipantId: id, confirmUnsub: false, certUploadError: '', payForm: null }); }
+  closeParticipant() { this.setState({ selectedParticipantId: null, confirmUnsub: false, viewerOpen: false, certUploadError: '', payForm: null }); }
+  updateP(pid, patch) { this.setState(s => ({ participants: s.participants.map(p => p.id === pid ? { ...p, ...patch } : p) })); }
+  current() { return this.state.participants.find(p => p.id === this.state.selectedParticipantId); }
+
+  addLesson() {
+    const { newDate, selectedCourseId, lessons } = this.state;
+    if (!newDate) return;
+    const list = lessons[selectedCourseId] || [];
+    if (list.some(l => l.date === newDate)) return;
+    const next = [...list, { id: selectedCourseId + '-' + newDate, date: newDate, present: {} }].sort((x, y) => x.date.localeCompare(y.date));
+    this.setState({ lessons: { ...lessons, [selectedCourseId]: next } });
+  }
+  toggle(cid, lid, pid) {
+    this.setState(s => ({ lessons: { ...s.lessons, [cid]: s.lessons[cid].map(l => l.id !== lid ? l : { ...l, present: { ...l.present, [pid]: !l.present[pid] } }) } }));
+  }
+  markAll(cid, lid) {
+    const ids = this.state.participants.filter(p => p.courseId === cid).map(p => p.id);
+    this.setState(s => ({ lessons: { ...s.lessons, [cid]: s.lessons[cid].map(l => {
+      if (l.id !== lid) return l;
+      const all = ids.every(id => l.present[id]);
+      const present = { ...l.present };
+      ids.forEach(id => { present[id] = !all; });
+      return { ...l, present };
+    }) } }));
+  }
+  unsubscribe(pid) {
+    this.setState(s => ({ participants: s.participants.filter(p => p.id !== pid), selectedParticipantId: null, confirmUnsub: false }));
+  }
+
+  uploadCert(e) {
+    const input = e.target; const file = input.files && input.files[0];
+    const pid = this.state.selectedParticipantId;
+    if (!file || !pid) return;
+    const ok = ['image/png', 'image/jpeg', 'application/pdf'].includes(file.type) || /\.(png|jpe?g|pdf)$/i.test(file.name);
+    if (!ok) { input.value = ''; return this.setState({ certUploadError: 'Formato non supportato: carica un file PNG, JPEG o PDF.' }); }
+    const prev = this.state.certFiles[pid];
+    if (prev) URL.revokeObjectURL(prev.url);
+    const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+    const rec = { name: file.name, url: URL.createObjectURL(file), isPdf, isImage: !isPdf, size: file.size, date: new Date().toLocaleDateString('it-IT') };
+    input.value = '';
+    this.setState(s => ({ certFiles: { ...s.certFiles, [pid]: rec }, certUploadError: '' }));
+  }
+  removeCert() {
+    const pid = this.state.selectedParticipantId; const prev = this.state.certFiles[pid];
+    if (prev) URL.revokeObjectURL(prev.url);
+    this.setState(s => { const c = { ...s.certFiles }; delete c[pid]; return { certFiles: c, viewerOpen: false }; });
+  }
+
+  openNewForm() {
+    const first = this.state.plans[0];
+    this.setState({ showNewForm: true, nf: this.emptyNf(first ? first.id : '', this.state.settings.scadenzaStagione), nfError: '' });
+  }
+  saveNew() {
+    const { nf, selectedCourseId, participants, plans } = this.state;
+    if (!nf.name.trim() || !nf.phone.trim()) return this.setState({ nfError: 'Nome e telefono sono obbligatori.' });
+    const plan = plans.find(x => x.id === nf.planId);
+    if (!plan) return this.setState({ nfError: 'Scegli un abbonamento (puoi crearne uno in Impostazioni).' });
+    const course = this.courses.find(c => c.id === selectedCourseId);
+    if (participants.filter(p => p.courseId === selectedCourseId).length >= course.capienza) return this.setState({ nfError: 'Il corso è al completo.' });
+    const id = 'p' + Date.now();
+    const pagatoFino = nf.paid ? this.addMonths(this.TODAY, plan.mesi) : this.addDays(this.TODAY, -1);
+    const payments = nf.paid ? [{ id: id + '-1', date: this.TODAY, dal: this.TODAY, al: pagatoFino, importo: plan.prezzo, planName: plan.name }] : [];
+    const np = { id, name: nf.name.trim(), courseId: selectedCourseId, phone: nf.phone.trim(), planId: plan.id, pagatoFino, certScadenza: nf.certScadenza, iscrizioneScadenza: nf.iscrizioneScadenza, livello: nf.livello, note: nf.note.trim(), storico: [], payments };
+    this.setState({ participants: [...participants, np], showNewForm: false, nfError: '', courseView: 'iscritti' });
+  }
+
+  addPlan() {
+    const { newPlan, plans } = this.state;
+    const mesi = parseInt(newPlan.mesi, 10); const prezzo = Number(newPlan.prezzo);
+    if (!newPlan.name.trim() || !(mesi >= 1) || !(prezzo > 0)) return this.setState({ planError: 'Inserisci nome, durata in mesi e prezzo.' });
+    this.setState({ plans: [...plans, { id: 'a' + Date.now(), name: newPlan.name.trim(), mesi, prezzo }], newPlan: { name: '', mesi: '', prezzo: '' }, planError: '' });
+  }
+  removePlan(id) {
+    const n = this.state.participants.filter(p => p.planId === id).length;
+    if (n > 0) return this.setState({ planError: 'Non puoi eliminare un abbonamento usato da ' + n + (n === 1 ? ' iscritto.' : ' iscritti.') });
+    this.setState({ plans: this.state.plans.filter(x => x.id !== id), planError: '' });
+  }
+
+  payPreviewFor(p, form) {
+    if (!p || !form || !form.date) return null;
+    const plan = this.state.plans.find(x => x.id === form.planId);
+    if (!plan) return null;
+    const start = p.pagatoFino && p.pagatoFino >= form.date ? p.pagatoFino : form.date;
+    return { plan, start, al: this.addMonths(start, plan.mesi) };
+  }
+  openPayForm() { const p = this.current(); if (p) this.setState({ payForm: { date: this.TODAY, planId: this.state.plans.some(x => x.id === p.planId) ? p.planId : (this.state.plans[0] || {}).id } }); }
+  confirmPay() {
+    const p = this.current(); const pv = this.payPreviewFor(p, this.state.payForm);
+    if (!pv) return;
+    const pay = { id: 'pay' + Date.now(), date: this.state.payForm.date, dal: pv.start, al: pv.al, importo: pv.plan.prezzo, planName: pv.plan.name };
+    this.updateP(p.id, { pagatoFino: pv.al, planId: pv.plan.id, payments: [pay, ...(p.payments || [])] });
+    this.setState({ payForm: null });
+  }
+  renewIscr() {
+    const p = this.current(); if (!p) return;
+    const base = p.iscrizioneScadenza && p.iscrizioneScadenza > this.TODAY ? p.iscrizioneScadenza : this.TODAY;
+    this.updateP(p.id, { iscrizioneScadenza: this.addMonths(base, 12) });
+  }
+
+  decorateParticipant(p, lessons, plans) {
+    const ls = lessons[p.courseId] || [];
+    const fatte = ls.filter(l => l.present[p.id]).length;
+    const totali = ls.length;
+    const pct = totali ? Math.round((fatte / totali) * 100) : 0;
+    const course = this.courses.find(c => c.id === p.courseId);
+    const plan = plans.find(x => x.id === p.planId);
+    const pay = this.status(p.pagatoFino, 4), cert = this.status(p.certScadenza, 30), iscr = this.status(p.iscrizioneScadenza, 30);
+    const warnBg = s => (s === 'scaduto' || s === 'mancante') ? 'var(--color-accent-100)' : 'transparent';
+    const pays = p.payments || [];
+    return {
+      ...p,
+      initials: this.initials(p.name),
+      courseName: course ? course.name : '',
+      planName: plan ? plan.name : 'Nessuno', planDesc: plan ? this.mesiLabel(plan.mesi) + ' · €' + plan.prezzo : '',
+      pay, paymentTagClass: this.tagClassMap[pay], paymentLabel: this.payLabels[pay], pagatoFinoLabel: this.fmt(p.pagatoFino), payBoxBg: warnBg(pay),
+      cert, certTagClass: this.tagClassMap[cert], certLabel: this.certLabels[cert], certScadenzaLabel: this.fmt(p.certScadenza), certBoxBg: warnBg(cert), noCertDate: !p.certScadenza,
+      iscr, iscrTagClass: this.tagClassMap[iscr], iscrLabel: this.iscrLabels[iscr], iscrScadenzaLabel: this.fmt(p.iscrizioneScadenza), iscrBoxBg: warnBg(iscr),
+      paymentsList: pays.map(x => ({ dateLabel: this.fmt(x.date), periodo: this.fmt(x.dal) + ' → ' + this.fmt(x.al), importoLabel: '€' + x.importo, planName: x.planName })),
+      noPayments: pays.length === 0,
+      presenzePct: pct + '%', presenzeFatte: fatte, presenzeTotali: totali,
+      storico: ls.map(l => {
+        const f = this.fmtDate(l.date); const pr = !!l.present[p.id];
+        return { present: pr, absent: !pr, bg: pr ? 'var(--color-text)' : 'transparent', label: f.label, day: f.day };
+      }),
+      noStorico: ls.length === 0,
+      open: () => this.openParticipant(p.id),
+    };
+  }
+
+  renderVals() {
+    const { tab, selectedCourseId, selectedParticipantId, lessons, courseView, confirmUnsub, plans, settings, payForm } = this.state;
+    const decParticipants = this.state.participants.map(p => this.decorateParticipant(p, lessons, plans));
+
+    const decoratedCourses = this.courses.map(c => {
+      const list = decParticipants.filter(p => p.courseId === c.id);
+      const selected = c.id === selectedCourseId;
+      const ls = lessons[c.id] || [];
+      return {
+        ...c, participants: list, countLabel: list.length + '/' + c.capienza + ' iscritti',
+        select: () => this.selectCourse(c.id), open: () => this.goToCourse(c.id),
+        rowBg: selected ? 'var(--color-accent)' : 'var(--color-surface)',
+        nameColor: selected ? 'var(--color-bg)' : 'var(--color-text)',
+        trackColor: selected ? 'var(--color-accent-400)' : 'var(--color-neutral-300)',
+        barColor: selected ? 'var(--color-bg)' : 'var(--color-accent)',
+        pctWidth: Math.min(100, Math.round((list.length / c.capienza) * 100)) + '%',
+        noLessons: ls.length === 0,
+        lessonsHeader: ls.map(l => {
+          const f = this.fmtDate(l.date);
+          const n = list.filter(p => l.present[p.id]).length;
+          return { day: f.day, label: f.label, countLabel: n + '/' + list.length, color: n === 0 ? 'var(--color-accent)' : 'var(--color-text)', markAll: () => this.markAll(c.id, l.id) };
+        }),
+        grid: list.map(p => ({
+          name: p.name, open: p.open, pct: p.presenzePct,
+          cells: ls.map(l => ({ present: !!l.present[p.id], bg: l.present[p.id] ? 'var(--color-text)' : 'transparent', toggle: () => this.toggle(c.id, l.id, p.id) })),
+        })),
+      };
+    });
+
+    const selectedCourse = decoratedCourses.find(c => c.id === selectedCourseId) || null;
+    const selectedParticipant = selectedParticipantId ? decParticipants.find(p => p.id === selectedParticipantId) || null : null;
+    const rawSel = this.current();
+
+    const totaleIscritti = decParticipants.length;
+    const corsiAttivi = this.courses.length;
+    const month = this.TODAY.slice(0, 7);
+    const incassiMese = '€' + this.state.participants.reduce((s, p) => s + (p.payments || []).filter(x => x.date.slice(0, 7) === month).reduce((t, x) => t + x.importo, 0), 0);
+    const certAvvisiCount = decParticipants.filter(p => p.cert !== 'valido').length;
+    const todayCourses = decoratedCourses.filter(c => c.today);
+
+    const avvisi = [];
+    decParticipants.forEach(p => {
+      const open = () => this.goToParticipant(p.id, p.courseId);
+      if (p.cert !== 'valido') avvisi.push({ name: p.name, desc: p.certScadenza ? 'Certificato medico · scade il ' + p.certScadenzaLabel : 'Certificato medico mancante', label: p.certLabel, tagClass: p.certTagClass, rowBg: p.certBoxBg, open });
+      if (p.pay !== 'valido') avvisi.push({ name: p.name, desc: 'Abbonamento ' + p.planName + ' · pagato fino al ' + p.pagatoFinoLabel, label: p.paymentLabel, tagClass: p.paymentTagClass, rowBg: p.payBoxBg, open });
+      if (p.iscr !== 'valido') avvisi.push({ name: p.name, desc: p.iscrizioneScadenza ? 'Iscrizione annuale · scade il ' + p.iscrScadenzaLabel : 'Iscrizione annuale mancante', label: p.iscrLabel, tagClass: p.iscrTagClass, rowBg: p.iscrBoxBg, open });
+    });
+    avvisi.sort((x, y) => (y.rowBg !== 'transparent') - (x.rowBg !== 'transparent'));
+
+    const andamentoRaw = [
+      { mese: 'Apr', val: 14 }, { mese: 'Mag', val: 16 }, { mese: 'Giu', val: 18 },
+      { mese: 'Lug', val: 17 }, { mese: 'Ago', val: 20 }, { mese: 'Set', val: totaleIscritti },
+    ];
+    const maxVal = Math.max(...andamentoRaw.map(m => m.val));
+    const andamento = andamentoRaw.map((m, i) => ({ ...m, pctHeight: Math.round((m.val / maxVal) * 100) + '%', color: i === andamentoRaw.length - 1 ? 'var(--color-accent)' : 'var(--color-accent-300)' }));
+
+    const perCorso = decoratedCourses.map(c => ({ name: c.name, count: c.participants.length, pctWidth: (totaleIscritti ? Math.round((c.participants.length / totaleIscritti) * 100) : 0) + '%' }));
+    const topCourseName = decoratedCourses.reduce((x, y) => (y.participants.length > x.participants.length ? y : x)).name;
+
+    const payCounts = { valido: 0, in_scadenza: 0, scaduto: 0, mancante: 0 };
+    decParticipants.forEach(p => payCounts[p.pay]++);
+    const pw = n => (totaleIscritti ? Math.round((n / totaleIscritti) * 100) : 0) + '%';
+    const paymentDist = [
+      { label: 'In regola', count: payCounts.valido, color: 'var(--color-neutral-400)', pctWidth: pw(payCounts.valido) },
+      { label: 'In scadenza', count: payCounts.in_scadenza, color: 'var(--color-accent-300)', pctWidth: pw(payCounts.in_scadenza) },
+      { label: 'Da pagare', count: payCounts.scaduto + payCounts.mancante, color: 'var(--color-accent)', pctWidth: pw(payCounts.scaduto + payCounts.mancante) },
+    ];
+
+    const instructorName = this.props.instructorName ?? 'Marco';
+    const isIscrittiView = courseView === 'iscritti';
+    const certRec = selectedParticipant ? this.state.certFiles[selectedParticipant.id] : null;
+    const nfSet = (k) => (e) => { const v = e.target.value; this.setState(s => ({ nf: { ...s.nf, [k]: v } })); };
+    const npSet = (k) => (e) => { const v = e.target.value; this.setState(s => ({ newPlan: { ...s.newPlan, [k]: v } })); };
+    const nfPlan = plans.find(x => x.id === this.state.nf.planId);
+    const pv = this.payPreviewFor(rawSel, payForm);
+
+    return {
+      instructorName,
+      isDashboard: tab === 'dashboard', isCorsi: tab === 'corsi', isStats: tab === 'statistiche', isSettings: tab === 'impostazioni',
+      goDashboard: () => this.setTab('dashboard'), goCorsi: () => this.setTab('corsi'), goStats: () => this.setTab('statistiche'), goSettings: () => this.setTab('impostazioni'),
+      stop: (e) => this.stop(e),
+      navDashboardColor: tab === 'dashboard' ? 'var(--color-accent-500)' : 'var(--color-neutral-400)',
+      navCorsiColor: tab === 'corsi' ? 'var(--color-accent-500)' : 'var(--color-neutral-400)',
+      navStatsColor: tab === 'statistiche' ? 'var(--color-accent-500)' : 'var(--color-neutral-400)',
+      navSettingsColor: tab === 'impostazioni' ? 'var(--color-accent-500)' : 'var(--color-neutral-400)',
+
+      plans: plans.map(pl => ({
+        ...pl, priceLabel: '€' + pl.prezzo, durataLabel: this.mesiLabel(pl.mesi),
+        optionLabel: pl.name + ' · ' + this.mesiLabel(pl.mesi) + ' · €' + pl.prezzo,
+        users: this.state.participants.filter(p => p.planId === pl.id).length,
+        remove: () => this.removePlan(pl.id),
+      })),
+      planError: this.state.planError, hasPlanError: !!this.state.planError,
+      newPlan: this.state.newPlan, onNpName: npSet('name'), onNpMesi: npSet('mesi'), onNpPrezzo: npSet('prezzo'),
+      addPlan: () => this.addPlan(),
+      settings,
+      onQuotaIscr: (e) => { const v = e.target.value; this.setState(s => ({ settings: { ...s.settings, quotaIscrizione: v } })); },
+      onScadStagione: (e) => { const v = e.target.value; this.setState(s => ({ settings: { ...s.settings, scadenzaStagione: v } })); },
+      quotaIscrizioneLabel: '€' + (settings.quotaIscrizione || 0),
+
+      showNewForm: this.state.showNewForm, nf: this.state.nf,
+      nfError: this.state.nfError, hasNfError: !!this.state.nfError,
+      openNewForm: () => this.openNewForm(),
+      closeNewForm: () => this.setState({ showNewForm: false, nfError: '' }),
+      saveNew: () => this.saveNew(),
+      onNfName: nfSet('name'), onNfPhone: nfSet('phone'), onNfPlan: nfSet('planId'),
+      onNfLivello: nfSet('livello'), onNfCert: nfSet('certScadenza'), onNfIscr: nfSet('iscrizioneScadenza'), onNfNote: nfSet('note'),
+      setPaid: () => this.setState(s => ({ nf: { ...s.nf, paid: true } })),
+      setUnpaid: () => this.setState(s => ({ nf: { ...s.nf, paid: false } })),
+      paidBg: this.state.nf.paid ? 'var(--color-accent)' : 'transparent',
+      paidColor: this.state.nf.paid ? 'var(--color-bg)' : 'var(--color-text)',
+      unpaidBg: !this.state.nf.paid ? 'var(--color-accent)' : 'transparent',
+      unpaidColor: !this.state.nf.paid ? 'var(--color-bg)' : 'var(--color-text)',
+      nfPaidInfo: nfPlan ? (this.state.nf.paid ? '€' + nfPlan.prezzo + ' · coperto fino al ' + this.fmt(this.addMonths(this.TODAY, nfPlan.mesi)) : 'Risulterà da pagare') : '',
+      formCourseName: selectedCourse ? selectedCourse.name : '',
+      formSeatsLabel: selectedCourse ? 'Posti occupati ' + selectedCourse.countLabel : '',
+
+      payForm: payForm || { date: '', planId: '' }, isPayForm: !!payForm, noPayForm: !payForm,
+      openPayForm: () => this.openPayForm(), cancelPay: () => this.setState({ payForm: null }), confirmPay: () => this.confirmPay(),
+      onPayDate: (e) => { const v = e.target.value; this.setState(s => ({ payForm: { ...s.payForm, date: v } })); },
+      onPayPlan: (e) => { const v = e.target.value; this.setState(s => ({ payForm: { ...s.payForm, planId: v } })); },
+      payPreview: pv ? { importo: '€' + pv.plan.prezzo, dal: this.fmt(pv.start), al: this.fmt(pv.al) } : { importo: '—', dal: '—', al: '—' },
+      onIscrDate: (e) => { const v = e.target.value; rawSel && this.updateP(rawSel.id, { iscrizioneScadenza: v }); },
+      onCertDate: (e) => { const v = e.target.value; rawSel && this.updateP(rawSel.id, { certScadenza: v }); },
+      renewIscr: () => this.renewIscr(),
+
+      certFile: certRec ? { ...certRec, meta: (certRec.isPdf ? 'PDF' : 'Immagine') + ' · ' + Math.max(1, Math.round(certRec.size / 1024)) + ' KB · caricato il ' + certRec.date } : null,
+      hasCertFile: !!certRec, noCertFile: !certRec,
+      uploadLabel: certRec ? 'Sostituisci' : 'Carica file',
+      certFileIconBg: certRec ? 'var(--color-accent)' : 'var(--color-neutral-200)',
+      certFileIconColor: certRec ? 'var(--color-bg)' : 'var(--color-neutral-700)',
+      onCertUpload: (e) => this.uploadCert(e),
+      removeCertFile: () => this.removeCert(),
+      openViewer: () => this.setState({ viewerOpen: true }),
+      closeViewer: () => this.setState({ viewerOpen: false }),
+      viewerOpen: this.state.viewerOpen && !!certRec,
+      viewerMedia: certRec && this.state.viewerOpen ? (certRec.isPdf
+        ? React.createElement('iframe', { src: certRec.url, title: 'Certificato', style: { width: '100%', height: '100%', border: 0, background: 'var(--color-bg)' } })
+        : React.createElement('img', { src: certRec.url, alt: 'Certificato medico', style: { maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', background: 'var(--color-bg)' } })) : null,
+      downloadCert: () => { if (!certRec) return; const a = document.createElement('a'); a.href = certRec.url; a.download = certRec.name; document.body.appendChild(a); a.click(); a.remove(); },
+      viewerOwner: selectedParticipant ? selectedParticipant.name : '',
+      certUploadError: this.state.certUploadError, hasCertUploadError: !!this.state.certUploadError,
+
+      isIscrittiView, isPresenzeView: !isIscrittiView,
+      showIscritti: () => this.setState({ courseView: 'iscritti' }),
+      showPresenze: () => this.setState({ courseView: 'presenze' }),
+      segIscrittiBg: isIscrittiView ? 'var(--color-accent)' : 'transparent',
+      segIscrittiColor: isIscrittiView ? 'var(--color-bg)' : 'var(--color-text)',
+      segPresenzeBg: !isIscrittiView ? 'var(--color-accent)' : 'transparent',
+      segPresenzeColor: !isIscrittiView ? 'var(--color-bg)' : 'var(--color-text)',
+      newDate: this.state.newDate,
+      onNewDate: (e) => this.setState({ newDate: e.target.value }),
+      addLesson: () => this.addLesson(),
+      courses: decoratedCourses, selectedCourse,
+      selectedParticipant, closeParticipant: () => this.closeParticipant(),
+      isConfirmUnsub: confirmUnsub, notConfirmUnsub: !confirmUnsub,
+      askUnsub: () => this.setState({ confirmUnsub: true }),
+      cancelUnsub: () => this.setState({ confirmUnsub: false }),
+      confirmUnsubscribe: () => selectedParticipant && this.unsubscribe(selectedParticipant.id),
+      todayCourses, noCoursesToday: todayCourses.length === 0,
+      totaleIscritti, corsiAttivi, incassiMese, certAvvisiCount,
+      avvisi, showAvvisi: (this.props.showComplianceAlerts ?? true) && avvisi.length > 0,
+      andamento, perCorso, topCourseName, paymentDist,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
