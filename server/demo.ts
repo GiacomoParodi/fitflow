@@ -11,10 +11,10 @@ import { openData } from './app';
 const PROTO_TODAY = '2026-09-26';
 
 const COURSES = [
-  { key: 'c1', name: 'PILATES MATTUTINO', giorni: [1, 3, 5], orario: '09:00', capienza: 15 },
-  { key: 'c2', name: 'FUNCTIONAL TRAINING', giorni: [2, 4], orario: '18:30', capienza: 20 },
-  { key: 'c3', name: 'YOGA SERALE', giorni: [1, 3], orario: '20:00', capienza: 12 },
-  { key: 'c4', name: 'ZUMBA', giorni: [6], orario: '10:00', capienza: 25 },
+  { key: 'c1', name: 'Pilates mattutino', giorni: [1, 3, 5], orario: '09:00', capienza: 15 },
+  { key: 'c2', name: 'Functional training', giorni: [2, 4], orario: '18:30', capienza: 20 },
+  { key: 'c3', name: 'Yoga serale', giorni: [1, 3], orario: '20:00', capienza: 12 },
+  { key: 'c4', name: 'Zumba', giorni: [6], orario: '10:00', capienza: 25 },
 ];
 
 // [nome, corso, telefono, abbonamento, pagato fino al, scadenza certificato, scadenza iscrizione, livello, note, presenze, iscritto da (mesi fa)]
