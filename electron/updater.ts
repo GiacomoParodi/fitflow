@@ -3,13 +3,15 @@
 // - Mac (app non firmata, Squirrel.Mac non può aggiornarla) e sviluppo: controlla l'ultima release
 //   su GitHub e propone di aprire la pagina di download.
 // I dati stanno in userData, fuori dall'app: un aggiornamento non li tocca.
+// Se il repository è privato GitHub non risponde senza accesso: il controllo manuale apre allora la
+// pagina delle versioni nel browser (dove l'utente ha fatto l'accesso), quello all'avvio resta in silenzio.
 import { app, BrowserWindow, dialog, net, shell, type MessageBoxOptions } from 'electron';
 import electronUpdater from 'electron-updater';
 import { isNewer } from './version';
 
 const OWNER = 'GiacomoParodi';
 const REPO = 'fitflow';
-export const RELEASES_PAGE = `https://github.com/${OWNER}/${REPO}/releases/latest`;
+export const RELEASES_PAGE = `https://github.com/${OWNER}/${REPO}/releases`;
 const LATEST_API = `https://api.github.com/repos/${OWNER}/${REPO}/releases/latest`;
 
 let running: Promise<void> | null = null;
@@ -21,13 +23,7 @@ export function checkForUpdates(manual: boolean): Promise<void> {
     running = (useUpdater ? viaElectronUpdater(manual) : viaGitHubApi(manual))
       .catch(e => {
         console.error('Controllo aggiornamenti non riuscito:', e);
-        if (manual) {
-          return void message({
-            type: 'warning',
-            message: 'Impossibile controllare gli aggiornamenti.',
-            detail: 'Verifica la connessione a Internet e riprova più tardi. Puoi anche controllare a mano la pagina delle versioni:\n' + RELEASES_PAGE,
-          });
-        }
+        if (manual) return offerReleasesPage();
       })
       .finally(() => { running = null; });
   }
@@ -39,6 +35,20 @@ async function message(opts: MessageBoxOptions): Promise<number> {
   const options: MessageBoxOptions = { title: 'FitFlow', buttons: ['OK'], ...opts };
   const res = win ? await dialog.showMessageBox(win, options) : await dialog.showMessageBox(options);
   return res.response;
+}
+
+/** Used when GitHub can't be asked directly (private repository, no connection): check in the browser. */
+async function offerReleasesPage() {
+  const choice = await message({
+    type: 'info',
+    message: 'Controlla le nuove versioni sulla pagina di GitHub.',
+    detail: `Stai usando FitFlow ${app.getVersion()}. Si apre la pagina delle versioni (serve aver fatto l'accesso a GitHub): `
+      + `se ce n'è una più recente, scarica l'installer per il tuo computer e aprilo. I tuoi dati restano al loro posto.`,
+    buttons: ['Apri la pagina delle versioni', 'Annulla'],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (choice === 0) await shell.openExternal(RELEASES_PAGE);
 }
 
 function upToDate() {
@@ -96,8 +106,8 @@ async function viaElectronUpdater(manual: boolean) {
 async function viaGitHubApi(manual: boolean) {
   const res = await net.fetch(LATEST_API, { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'FitFlow' } });
   if (res.status === 404) {
-    // No published release yet.
-    if (manual) await upToDate();
+    // Private repository (or no release yet): GitHub won't tell us without signing in.
+    if (manual) await offerReleasesPage();
     return;
   }
   if (!res.ok) throw new Error(`GitHub ha risposto ${res.status}`);

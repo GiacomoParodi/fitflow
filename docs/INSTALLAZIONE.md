@@ -9,7 +9,7 @@ Funziona su:
 
 ## 1. Scaricare il programma
 
-1. Apri la pagina delle versioni: **https://github.com/GiacomoParodi/fitflow/releases/latest**
+1. Apri la pagina delle versioni: **https://github.com/GiacomoParodi/fitflow/releases/latest** (il repository è privato: serve aver fatto l'accesso a GitHub con l'account che lo possiede)
 2. In fondo alla pagina, nella sezione **Assets**, scarica il file giusto per il tuo computer:
 
 | Computer | File da scaricare |
@@ -111,9 +111,11 @@ Per spostare FitFlow su un altro computer: installalo sul nuovo computer, aprilo
 
 ## 5. Aggiornamenti
 
-FitFlow controlla da solo se c'è una nuova versione pochi secondi dopo l'avvio (serve Internet; senza connessione non succede nulla). Puoi controllare anche a mano: **Impostazioni → App desktop → Controlla aggiornamenti** oppure dal menu (Mac: **FitFlow → Controlla aggiornamenti…**; Windows: **Aiuto → Controlla aggiornamenti…**).
+Il repository è **privato**, quindi FitFlow non può vedere da solo se c'è una versione nuova: lo controlli tu.
 
-- **Windows:** compare la domanda *"È disponibile FitFlow X.Y.Z. Scaricare e installare?"*. Clicca **Scarica e installa**, poi **Riavvia ora**: FitFlow si chiude, si aggiorna e si riapre. Se scegli "Più tardi", l'aggiornamento si installa alla prossima chiusura.
-- **Mac:** compare un messaggio con il pulsante **Apri la pagina di download**. Scarica il nuovo file `.dmg` (lo stesso tipo che avevi scelto la prima volta), chiudi FitFlow, aprilo e trascina FitFlow in **Applicazioni** scegliendo **Sostituisci**. Se al primo avvio della nuova versione il Mac la blocca di nuovo, ripeti i passi del punto 2b.
+1. In FitFlow apri **Impostazioni → App desktop → Controlla aggiornamenti** (oppure dal menu: Mac **FitFlow → Controlla aggiornamenti…**, Windows **Aiuto → Controlla aggiornamenti…**). Si apre la pagina delle versioni su GitHub.
+2. Se c'è una versione più recente di quella che usi (la vedi in Impostazioni → App desktop), scarica l'installer per il tuo computer:
+   - **Windows:** scarica `FitFlow-Setup-X.Y.Z.exe`, chiudi FitFlow e aprilo: sostituisce la versione installata.
+   - **Mac:** scarica il `.dmg` (lo stesso tipo che avevi scelto la prima volta), chiudi FitFlow, aprilo e trascina FitFlow in **Applicazioni** scegliendo **Sostituisci**. Se al primo avvio della nuova versione il Mac la blocca di nuovo, ripeti i passi del punto 2b.
 
 In ogni caso **i tuoi dati restano dove sono**: gli aggiornamenti cambiano solo il programma. Se la nuova versione deve modificare il database, prima ne salva una copia in `dati/backup/`.
