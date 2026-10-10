@@ -3,3 +3,5 @@ dist/
 data/
 *.log
 dist-server/
+dist-electron/
+release/
