@@ -1,0 +1,51 @@
+/* Dialog.tsx extras: exit animation, round close button and the "sheet" variant (right-hand inspector panel).
+   Builds on .dialog / .dialog-backdrop from ui.css; candidates for the shared system. */
+
+/* Round, quiet close button (as in macOS sheets and Contacts). */
+.dialog-close { border-radius: var(--r-pill); background: var(--fill-2); color: var(--label-2); }
+.dialog-close:hover { background: var(--fill); color: var(--label); }
+
+/* Exit animation (centred windows). */
+.dialog-backdrop[data-closing] { animation: ff-fade-out 0.14s ease forwards; }
+.dialog-backdrop[data-closing] > .dialog { animation: ff-pop-out 0.14s ease forwards; }
+@keyframes ff-fade-out { to { opacity: 0; } }
+@keyframes ff-pop-out { to { opacity: 0; transform: scale(0.98) translateY(4px); } }
+
+/* ─── Sheet: full-height panel docked to the right ─── */
+.dialog-backdrop-sheet {
+  display: flex; justify-content: flex-end; align-items: stretch; padding: 10px;
+  background: var(--overlay);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+.dialog.dialog-sheet {
+  width: min(600px, 100%); max-height: none; height: 100%;
+  padding: 0; gap: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  background: var(--bg); border-radius: var(--r-xl); box-shadow: var(--shadow-pop);
+  animation: ff-sheet-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dialog-backdrop-sheet[data-closing] > .dialog-sheet { animation: ff-sheet-out 0.2s cubic-bezier(0.4, 0, 1, 1) forwards; }
+@keyframes ff-sheet-in { from { transform: translateX(48px); opacity: 0; } }
+@keyframes ff-sheet-out { to { transform: translateX(48px); opacity: 0; } }
+
+/* Sticky translucent title bar at the top of a sheet. */
+.dialog-sheet-bar {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  min-height: 52px; padding: 10px var(--sp-4) 10px var(--sp-5);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid transparent; transition: border-color 0.2s ease;
+}
+.dialog-sheet-bar[data-scrolled='true'] { border-bottom-color: var(--separator); }
+.dialog-sheet-body { display: flex; flex-direction: column; gap: var(--sp-6); padding: var(--sp-2) var(--sp-6) var(--sp-8); }
+
+@media (max-width: 700px) {
+  .dialog-backdrop-sheet { padding: 0; }
+  .dialog.dialog-sheet { border-radius: 0; }
+  .dialog-sheet-body { padding-inline: var(--sp-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog.dialog-sheet, .dialog-backdrop[data-closing], .dialog-backdrop[data-closing] > .dialog { animation: none; }
+  .dialog-sheet-bar { transition: none; }
+}

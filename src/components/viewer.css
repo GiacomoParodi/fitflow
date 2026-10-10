@@ -1,15 +1,42 @@
-/* Temporary: carried over from the Modernist look, to be redesigned. */
-/* Certificate viewer */
-.viewer { position: fixed; inset: 0; z-index: 200; background: var(--color-neutral-900); display: flex; flex-direction: column; }
-.viewer-bar {
-  display: flex; align-items: center; gap: 12px; padding: 12px 20px;
-  background: var(--color-text); color: var(--color-bg); border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+/* Certificate viewer: Preview-style translucent toolbar over a dark stage, in light and dark themes. */
+.viewer {
+  --viewer-stage: color-mix(in srgb, var(--bg) 16%, black);
+  position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column;
+  background: var(--viewer-stage); color: var(--label);
+  animation: viewer-in 0.18s ease;
 }
-.viewer-bar .kicker { color: var(--color-accent-400); font-size: 11px; }
-.viewer-bar .file-name { font-weight: 800; margin: 0; }
-.viewer-bar .btn-secondary { color: var(--color-bg); border-color: var(--color-neutral-600); }
-.viewer-bar .btn-secondary:hover { background: color-mix(in srgb, var(--color-bg) 10%, transparent); }
-.viewer-body { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 24px; }
-.viewer-body iframe { width: 100%; height: 100%; border: 0; background: var(--color-bg); }
-.viewer-body img { max-width: 100%; max-height: 100%; object-fit: contain; background: var(--color-bg); }
+@keyframes viewer-in { from { opacity: 0; } }
 
+.viewer-bar {
+  display: flex; align-items: center; gap: var(--sp-3); flex: none;
+  min-height: 56px; padding: 10px var(--sp-4) 10px var(--sp-5);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border-bottom: 1px solid var(--separator-strong);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--label) 4%, transparent);
+}
+.viewer-file-icon {
+  width: 34px; height: 34px; flex: none; display: grid; place-items: center;
+  border-radius: var(--r-md); background: var(--accent-soft); color: var(--accent);
+}
+.viewer-title { flex: 1; min-width: 0; }
+.viewer-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.viewer-meta { font-size: 12px; color: var(--label-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.viewer-actions { display: flex; gap: var(--sp-2); flex: none; }
+
+.viewer-stage {
+  flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+  padding: var(--sp-6);
+}
+.viewer-doc {
+  max-width: 100%; max-height: 100%; object-fit: contain;
+  background: var(--surface); border-radius: var(--r-xs);
+  box-shadow: 0 12px 40px color-mix(in srgb, black 55%, transparent), 0 0 0 0.5px color-mix(in srgb, white 12%, transparent);
+}
+.viewer-pdf { width: min(1100px, 100%); height: 100%; border: 0; }
+
+@media (max-width: 620px) {
+  .viewer-meta { display: none; }
+  .viewer-stage { padding: var(--sp-3); }
+}
+@media (prefers-reduced-motion: reduce) { .viewer { animation: none; } }
