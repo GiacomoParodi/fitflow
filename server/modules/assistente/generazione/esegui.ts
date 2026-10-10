@@ -97,7 +97,7 @@ export async function prepara(a: Assistente, body: Record<string, unknown>, toda
       attrezzi: compito === 'genera_programma' ? input.attrezzi : null,
       livello: livelloLibreria(livello) ? livello : undefined,
       limitazioni: [input.limitazioni, scheda?.note].filter(Boolean).join(' '),
-      limite: compito === 'genera_programma' ? 40 : 25,
+      limite: compito === 'genera_programma' ? 30 : 20,
     });
   } else if (agente.fonti.esercizi && compito === 'libero' && (input.note || input.obiettivo)) {
     esercizi = a.libreria.cerca({ q: `${input.obiettivo} ${input.note}`, limite: 15 });
@@ -155,7 +155,9 @@ export async function prepara(a: Assistente, body: Record<string, unknown>, toda
     esercizi,
     estratti,
   });
-  if (prompt.tagliati) avvisi.push(`Per stare nella finestra di contesto sono stati esclusi o accorciati ${prompt.tagliati} elementi meno pertinenti.`);
+  if (prompt.tagliati) avvisi.push(prompt.tagliati === 1
+    ? 'Per stare nella finestra di contesto è stato escluso o accorciato 1 elemento meno pertinente.'
+    : `Per stare nella finestra di contesto sono stati esclusi o accorciati ${prompt.tagliati} elementi meno pertinenti.`);
   const titoloNota = (input.note || input.obiettivo).split('\n')[0].slice(0, 80);
   return { agente, modello, provider, prompt, input, avvisi, titoloNota };
 }

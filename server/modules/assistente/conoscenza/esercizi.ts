@@ -22,6 +22,8 @@ export interface EsercizioTrovato extends Esercizio {
   cauteleRilevanti: string[];
 }
 
+const GENERICHE = new Set(['dolore', 'dolori', 'fastidio', 'fastidi', 'problema', 'problemi', 'evitare', 'leggero', 'lieve', 'forte', 'destro', 'destra', 'sinistro', 'sinistra', 'caso', 'casi']);
+
 const ORDINE_LIVELLO: Record<string, number> = { base: 0, intermedio: 1, avanzato: 2 };
 
 /** "Base"/"Intermedio"/"Avanzato" (livelli degli iscritti) → livello della libreria. */
@@ -157,7 +159,8 @@ export class LibreriaEsercizi {
     const disp = f.attrezzi ? new Set([...f.attrezzi, 'tappetino'].map(normalizza)) : null;
     const q = [f.q, f.obiettivo].filter(Boolean).join(' ');
     const pert = q.trim() ? this.pertinenza(q) : null;
-    const limWords = paroleChiave(f.limitazioni ?? '');
+    // Parole troppo generiche per collegare una limitazione a una cautela.
+    const limWords = paroleChiave(f.limitazioni ?? '').filter(w => !GENERICHE.has(w));
     const qObj = paroleChiave(f.obiettivo ?? '');
 
     const out: EsercizioTrovato[] = [];

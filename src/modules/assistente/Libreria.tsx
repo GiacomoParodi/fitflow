@@ -43,12 +43,10 @@ export function ListaDocumenti({ partecipanteId, compatta }: { partecipanteId: n
     try { await ass.eliminaDocumento(d.id); avvisaCambio('documenti'); } catch (e) { notify(messaggio(e)); }
   };
 
-  const list = docs.data ?? [];
-  return (
-    <div className="ass-stack-sm">
-      {list.length > 0 && (
-        <ul className="ass-docs" aria-label={partecipanteId ? 'Documenti della cartella' : 'Documenti della libreria'}>
-          {list.map(d => (
+  const tutti = docs.data ?? [];
+  const list = tutti.filter(d => d.origine === 'caricato');
+  const base = tutti.filter(d => d.origine === 'base');
+  const riga = (d: Documento) => (
             <li key={d.id} className="ass-doc">
               <div className="file-icon" data-has-file={d.stato === 'pronto'} aria-hidden="true"><I.FileCheck /></div>
               <div className="file-info">
@@ -67,8 +65,11 @@ export function ListaDocumenti({ partecipanteId, compatta }: { partecipanteId: n
                 </div>
               )}
             </li>
-          ))}
-        </ul>
+  );
+  return (
+    <div className="ass-stack-sm">
+      {list.length > 0 && (
+        <ul className="ass-docs" aria-label={partecipanteId ? 'Documenti della cartella' : 'Documenti della libreria'}>{list.map(riga)}</ul>
       )}
       {!docs.caricamento && list.length === 0 && (
         <div className="text-muted ass-small">{partecipanteId ? 'Nessun documento nella cartella.' : 'Nessun documento caricato.'}</div>
@@ -81,6 +82,12 @@ export function ListaDocumenti({ partecipanteId, compatta }: { partecipanteId: n
         <span className="text-muted ass-small">PDF con testo, Word (.docx), .txt o .md · max 20 MB</span>
       </div>
       {errore && <div className="error-box" role="alert">{errore}</div>}
+      {base.length > 0 && (
+        <details className="ass-details">
+          <summary>Schede di conoscenza incluse in FitFlow <span className="tag tag-neutral">{base.length}</span></summary>
+          <ul className="ass-docs" aria-label="Schede di conoscenza">{base.map(riga)}</ul>
+        </details>
+      )}
       {docs.errore && <div className="error-box" role="alert">{docs.errore}</div>}
     </div>
   );
@@ -149,6 +156,7 @@ function EsploraEsercizi() {
   const [cerca, setCerca] = useState('');
   const res = useDati(() => ass.esercizi({ q: cerca, categoria }), [cerca, categoria]);
   const [scheda, setScheda] = useState<string | null>(null);
+  const [quanti, setQuanti] = useState(48);
   const list = useMemo(() => (res.data ?? []).filter((e: Esercizio) => (!livello || e.livello === livello)
     && (!attrezzo || (attrezzo === ATTREZZO_LIBERO ? e.attrezzi.length === 0 : e.attrezzi.includes(attrezzo as Esercizio['attrezzi'][number])))), [res.data, livello, attrezzo]);
 
@@ -188,7 +196,7 @@ function EsploraEsercizi() {
       </form>
       <div className="text-muted ass-small" role="status">{res.caricamento ? 'Ricerca…' : `${list.length} esercizi${filtri.data ? ` su ${filtri.data.totale}` : ''}`}</div>
       <div className="ass-ex-grid">
-        {list.map(e => (
+        {list.slice(0, quanti).map(e => (
           <button key={e.id} type="button" className="clickable course-card ass-ex-card" onClick={() => setScheda(e.id)}>
             <div className="course-card-name">{e.nome}</div>
             <div className="course-card-meta">{e.categoria} · {e.livello} · {e.attrezzi.length ? e.attrezzi.join(', ') : 'corpo libero'}</div>
@@ -196,6 +204,9 @@ function EsploraEsercizi() {
           </button>
         ))}
       </div>
+      {list.length > quanti && (
+        <div><button type="button" className="btn btn-secondary" onClick={() => setQuanti(n => n + 48)}>Mostra altri ({list.length - quanti})</button></div>
+      )}
       {scheda && <SchedaEsercizio id={scheda} onClose={() => setScheda(null)} />}
     </div>
   );
