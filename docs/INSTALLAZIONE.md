@@ -5,6 +5,7 @@ FitFlow è un programma gratuito per gestire i corsi di ginnastica. Funziona sul
 Funziona su:
 
 - **Windows** 10 e 11;
+- **Ubuntu** 22.04 e 24.04 (e altre distribuzioni Debian a 64 bit);
 - **Mac** con chip Apple (M1, M2, M3, M4…) e Mac con processore Intel.
 
 ## 1. Scaricare il programma
@@ -17,6 +18,7 @@ Funziona su:
 | Windows | `FitFlow-Setup-X.Y.Z.exe` |
 | Mac con chip Apple (M1, M2, M3…) | `FitFlow-X.Y.Z-arm64.dmg` |
 | Mac con processore Intel | `FitFlow-X.Y.Z-x64.dmg` |
+| Ubuntu / Debian | `FitFlow-X.Y.Z-amd64.deb` |
 
 (`X.Y.Z` è il numero della versione, per esempio `1.2.0`.)
 
@@ -66,6 +68,22 @@ Non è davvero danneggiato: il Mac mette un "segno di quarantena" sui programmi 
    Non compare nessun messaggio: è normale, vuol dire che ha funzionato;
 5. chiudi il Terminale e apri di nuovo FitFlow da Applicazioni (se richiesto, segui anche i passi di "Apri comunque" qui sopra).
 
+## 2c. Installare su Ubuntu
+
+1. Scarica `FitFlow-X.Y.Z-amd64.deb`.
+2. Apri il **Terminale** nella cartella Scaricati e scrivi (ti chiede la password del computer):
+   ```
+   sudo apt install ./FitFlow-X.Y.Z-amd64.deb
+   ```
+   In alternativa fai doppio clic sul file e scegli **Installa** in "Centro software" / "App Center".
+3. Avvia **FitFlow** dall'elenco delle applicazioni (tasto Super, poi scrivi "FitFlow").
+
+Il pacchetto `.deb` installa anche il profilo di sicurezza richiesto da Ubuntu 24.04: senza, le app come FitFlow non partono.
+
+**Alternativa senza installazione:** il file `FitFlow-X.Y.Z-x86_64.AppImage` si avvia con un doppio clic dopo averlo reso eseguibile (clic destro → Proprietà → "Consenti l'esecuzione come programma"). Su Ubuntu 22.04 serve `sudo apt install libfuse2`; su 24.04 è più semplice usare il `.deb`.
+
+**Assistente AI su Ubuntu:** installa Ollama dal Terminale con `curl -fsSL https://ollama.com/install.sh | sh` (parte da solo all'avvio del computer).
+
 ## 3. Dove sono i miei dati
 
 Tutti i dati (corsi, iscritti, pagamenti, presenze, certificati medici) stanno in una cartella **dati** sul tuo computer, separata dal programma:
@@ -74,6 +92,7 @@ Tutti i dati (corsi, iscritti, pagamenti, presenze, certificati medici) stanno i
 | --- | --- |
 | Windows | `C:\Users\<il tuo nome>\AppData\Roaming\FitFlow\dati` |
 | Mac | `/Users/<il tuo nome>/Library/Application Support/FitFlow/dati` |
+| Ubuntu | `~/.config/FitFlow/dati` (cartella nascosta: in File premi Ctrl+H per vederla) |
 
 Il modo più semplice per aprirla: in FitFlow vai in **Impostazioni → App desktop → Apri cartella dati** (oppure dal menu **File → Apri cartella dati**).
 
@@ -116,6 +135,7 @@ Il repository è **privato**, quindi FitFlow non può vedere da solo se c'è una
 1. In FitFlow apri **Impostazioni → App desktop → Controlla aggiornamenti** (oppure dal menu: Mac **FitFlow → Controlla aggiornamenti…**, Windows **Aiuto → Controlla aggiornamenti…**). Si apre la pagina delle versioni su GitHub.
 2. Se c'è una versione più recente di quella che usi (la vedi in Impostazioni → App desktop), scarica l'installer per il tuo computer:
    - **Windows:** scarica `FitFlow-Setup-X.Y.Z.exe`, chiudi FitFlow e aprilo: sostituisce la versione installata.
+   - **Ubuntu:** scarica il nuovo `.deb` e installalo come la prima volta (`sudo apt install ./FitFlow-X.Y.Z-amd64.deb`): sostituisce la versione installata.
    - **Mac:** scarica il `.dmg` (lo stesso tipo che avevi scelto la prima volta), chiudi FitFlow, aprilo e trascina FitFlow in **Applicazioni** scegliendo **Sostituisci**. Se al primo avvio della nuova versione il Mac la blocca di nuovo, ripeti i passi del punto 2b.
 
 In ogni caso **i tuoi dati restano dove sono**: gli aggiornamenti cambiano solo il programma. Se la nuova versione deve modificare il database, prima ne salva una copia in `dati/backup/`.

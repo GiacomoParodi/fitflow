@@ -61,8 +61,24 @@ nsis:
   shortcutName: FitFlow
   deleteAppDataOnUninstall: false
 
-# Solo per verificare il pacchetto su Linux (non distribuito).
+# Linux (Ubuntu/Debian): .deb consigliato (installa anche la sandbox di Chromium con i permessi giusti,
+# necessari su Ubuntu 24.04) e AppImage portatile.
 linux:
-  target: dir
+  target:
+    - target: deb
+      arch: [x64]
+    - target: AppImage
+      arch: [x64]
   category: Office
   icon: build/icon.png
+  syncDesktopName: true
+  maintainer: Giacomo Parodi <GiacomoParodi@users.noreply.github.com>
+  synopsis: Gestione di corsi di ginnastica con assistente AI locale
+  artifactName: ${productName}-${version}-${arch}.${ext}
+  desktop:
+    entry:
+      Name: FitFlow
+      Comment: Gestione corsi di ginnastica
+
+deb:
+  artifactName: ${productName}-${version}-amd64.${ext}
