@@ -1,0 +1,54 @@
+/* Nuovo iscritto: macOS-style sheet with grouped fields, scrolling body and a fixed button bar. */
+
+.dialog.nf-dialog {
+  width: min(640px, 100%); max-height: min(860px, calc(100vh - 48px));
+  padding: 0; gap: 0; overflow: hidden; background: var(--bg);
+}
+.nf-form { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+
+.nf-head {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3);
+  padding: var(--sp-5) var(--sp-5) var(--sp-3) var(--sp-6);
+}
+.nf-sub { font-size: 13px; color: var(--label-2); margin-top: 2px; }
+.nf-sub [data-full='true'] { color: var(--danger-text); font-weight: 600; }
+
+.nf-body { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--sp-5); padding: var(--sp-2) var(--sp-6) var(--sp-5); }
+
+.nf-group { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.nf-legend { padding: 0 var(--sp-1); margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--label); float: left; width: 100%; }
+.nf-legend label { font: inherit; color: inherit; }
+.nf-legend + * { clear: both; }
+.nf-card {
+  display: flex; flex-direction: column; gap: var(--sp-4);
+  padding: var(--sp-4); background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-card);
+}
+.nf-card textarea.input { min-height: 72px; }
+.nf-seg { align-self: flex-start; }
+.nf-hint { font-size: 12px; color: var(--label-2); margin-top: calc(-1 * var(--sp-2)); }
+
+.nf-dialog .input[aria-invalid='true'] { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
+
+.nf-summary {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-4);
+  padding: 10px var(--sp-3); border-radius: var(--r-md); background: var(--fill-2);
+}
+.nf-summary-label { font-size: 11.5px; font-weight: 500; color: var(--label-2); }
+.nf-summary-value { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-top: 1px; }
+.nf-due { color: var(--warning-text); }
+.nf-full { color: var(--danger-text); background: var(--danger-soft); }
+
+.nf-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap;
+  padding: var(--sp-3) var(--sp-5) var(--sp-4) var(--sp-6);
+  border-top: 1px solid var(--separator); background: var(--surface);
+}
+.nf-error { flex: 1 1 240px; padding-block: 7px; }
+.nf-buttons { display: flex; gap: var(--sp-2); margin-left: auto; }
+.nf-buttons .btn { min-width: 96px; }
+
+@media (max-width: 560px) {
+  .nf-dialog .form-2 { grid-template-columns: minmax(0, 1fr); }
+  .nf-body { padding-inline: var(--sp-4); }
+  .nf-head, .nf-foot { padding-inline: var(--sp-4); }
+}

@@ -1,27 +1,144 @@
+/* Scheda iscritto: right-hand sheet (Dialog variant="sheet") laid out like Contacts / Health —
+   a monogram header, then titled groups of rows on the grouped background. */
 
-.facts { display: grid; grid-template-columns: repeat(3, 1fr); }
-.facts > div + div { border-left: 1px solid var(--color-divider); padding-left: 12px; }
-.facts > div:not(:last-child) { padding-right: 12px; }
-.fact-value { font-weight: 600; margin-top: 4px; }
-.fact-big { font-family: var(--font-heading); font-weight: 800; font-size: 24px; line-height: 1; margin-top: 4px; color: var(--color-accent); }
-.plan-name { font-family: var(--font-heading); font-weight: 800; font-size: 22px; line-height: 1.1; margin-top: 4px; }
-.date-input { width: 180px; }
-.cert-file { border-top: 1px solid var(--color-divider); padding-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.file-icon {
-  width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--color-neutral-200); color: var(--color-neutral-700);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+/* ─── Title bar ─── */
+.pd-bar-title {
+  display: flex; align-items: center; gap: var(--sp-2); min-width: 0;
+  opacity: 0; transform: translateY(4px); transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.file-icon[data-has-file='true'] { background: var(--color-accent); color: var(--color-bg); }
-.file-info { flex: 1; min-width: 160px; }
-.file-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-.register { display: flex; flex-wrap: wrap; gap: 6px; }
-.register-cell { width: 52px; }
-.register-box {
-  height: 30px; border: 1.5px solid var(--color-neutral-500); border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-}
-.register-box[data-present='true'] { background: var(--color-text); }
-.register-date { font-size: 10px; margin-top: 3px; }
-.note-text { font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
-.danger-btn { color: var(--color-accent-700); }
+.pd-bar-title[data-visible='true'] { opacity: 1; transform: none; }
+.pd-bar-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* ─── Monogram avatar ─── */
+.pd-avatar {
+  flex: none; display: grid; place-items: center; border-radius: 50%;
+  font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; line-height: 1;
+  color: color-mix(in srgb, var(--pd-hue) 78%, var(--label));
+  background: linear-gradient(160deg, color-mix(in srgb, var(--pd-hue) 14%, var(--surface)), color-mix(in srgb, var(--pd-hue) 30%, var(--surface)));
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--pd-hue) 30%, transparent);
+  user-select: none;
+}
+
+/* ─── Header ─── */
+.pd-hero { display: flex; align-items: center; gap: var(--sp-4); padding-top: var(--sp-1); }
+.pd-hero-text { min-width: 0; }
+.pd-name {
+  margin: 0; font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.022em; line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.pd-course { font-size: 14px; color: var(--label-2); margin-top: 2px; }
+
+/* Three quick facts in one rounded card, split by hairlines. */
+.pd-facts {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-card); margin-top: calc(-1 * var(--sp-2));
+}
+.pd-fact { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 12px var(--sp-4); }
+.pd-fact + .pd-fact { border-left: 1px solid var(--separator); }
+.pd-fact-label { font-size: 12px; font-weight: 500; color: var(--label-2); }
+.pd-fact-value { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--label); overflow: hidden; text-overflow: ellipsis; }
+a.pd-fact-link { color: inherit; text-decoration: none; border-radius: var(--r-lg) 0 0 var(--r-lg); transition: background-color 0.15s ease; }
+a.pd-fact-link .pd-fact-value { color: var(--accent); }
+a.pd-fact-link:hover { background: var(--fill-3); text-decoration: none; }
+.pd-meter { display: block; height: 4px; margin-top: 5px; border-radius: var(--r-pill); background: var(--fill); overflow: hidden; }
+.pd-meter > span { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+
+/* ─── Groups of rows ─── */
+.pd-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pd-group-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: 0 var(--sp-1) 0 var(--sp-1); min-height: 22px; }
+.pd-group-title { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.pd-group-aside { font-size: 12.5px; display: flex; align-items: center; gap: var(--sp-2); }
+.pd-group-foot { font-size: 12px; color: var(--label-2); padding: 0 var(--sp-1); }
+.pd-card { background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-card); overflow: hidden; }
+
+.pd-row {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  min-height: 46px; padding: 9px var(--sp-4); font-size: 13.5px;
+  position: relative;
+}
+/* Inset hairline between rows, as in grouped lists. */
+.pd-card:not(.pd-confirm) > * + *::before {
+  content: ''; position: absolute; top: 0; left: var(--sp-4); right: 0; height: 1px; background: var(--separator);
+}
+.pd-card > * { position: relative; }
+.pd-row-label { min-width: 0; color: var(--label); }
+.pd-row-label > label { font-weight: 400; color: var(--label); }
+.pd-row-sub { font-size: 12px; color: var(--label-2); margin-top: 1px; }
+.pd-row-value { display: flex; align-items: center; gap: var(--sp-2); flex: none; max-width: 65%; text-align: right; color: var(--label-2); }
+.pd-row-value [data-tone='danger'] { color: var(--danger-text); font-weight: 600; }
+.pd-strong { color: var(--label); font-weight: 600; }
+.pd-empty { color: var(--label-2); justify-content: flex-start; }
+.pd-grow { flex: 1; }
+.pd-date { width: 168px; min-height: 30px; padding-block: 4px; }
+
+/* Rows that are buttons ("Registra pagamento", "Disiscrivi"). */
+button.pd-row-action {
+  width: 100%; justify-content: flex-start; gap: var(--sp-2);
+  border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 500; color: var(--accent-text); cursor: pointer; text-align: left;
+  transition: background-color 0.12s ease;
+}
+button.pd-row-action:hover { background: var(--fill-3); }
+button.pd-row-action:active { background: var(--fill-2); }
+button.pd-row-action:disabled { color: var(--label-3); cursor: default; background: none; }
+button.pd-row-action:focus-visible { outline-offset: -3px; border-radius: var(--r-lg); }
+button.pd-row-danger { color: var(--danger-text); justify-content: center; }
+
+/* Payment sub-form inside the Abbonamento group. */
+.pd-subform { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-4); background: var(--surface-2); }
+.pd-summary {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-6);
+  padding: 10px var(--sp-3); border-radius: var(--r-md); background: var(--fill-2);
+}
+.pd-summary-label { font-size: 11.5px; font-weight: 500; color: var(--label-2); }
+.pd-summary-value { font-size: 14px; font-weight: 600; margin-top: 1px; }
+.pd-actions { display: flex; justify-content: flex-end; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* Certificate document row. */
+.pd-file { justify-content: flex-start; flex-wrap: wrap; padding-block: 12px; }
+.pd-file-icon {
+  width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+  border-radius: var(--r-md); background: var(--fill-2); color: var(--label-3);
+}
+.pd-file-icon[data-has-file='true'] { background: var(--accent-soft); color: var(--accent); }
+.pd-file-info { flex: 1; min-width: 150px; }
+.pd-file-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pd-file-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.pd-icon-danger { background: transparent; color: var(--danger-text); }
+.pd-icon-danger:hover { background: var(--danger-soft); }
+
+/* Attendance register: one dot per lesson, weekday and date below. */
+.pd-register {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: var(--sp-3) 4px;
+  padding: var(--sp-4);
+}
+.pd-reg-cell { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 0; }
+.pd-reg-dot {
+  width: 24px; height: 24px; margin-bottom: 4px; display: grid; place-items: center; border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--separator-strong); color: var(--on-accent);
+}
+.pd-reg-dot[data-present='true'] { background: var(--accent); box-shadow: none; }
+.pd-reg-day { font-size: 11px; font-weight: 600; color: var(--label-2); line-height: 1.2; }
+.pd-reg-date { font-size: 10.5px; color: var(--label-3); line-height: 1.2; }
+
+.pd-note { display: block; font-size: 13.5px; line-height: 1.55; white-space: pre-wrap; padding-block: 12px; }
+
+/* Destructive area. */
+.pd-confirm { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-4); box-shadow: var(--shadow-card), inset 0 0 0 1px color-mix(in srgb, var(--red) 35%, transparent); }
+.pd-confirm-title { font-size: 14px; font-weight: 600; color: var(--danger-text); }
+.pd-confirm-text { font-size: 13px; color: var(--label-2); line-height: 1.5; margin-bottom: var(--sp-1); }
+.pd-btn-destructive { background: var(--danger); color: white; font-weight: 600; }
+.pd-btn-destructive:hover { background: var(--danger); filter: brightness(1.08); }
+
+/* Module sections (e.g. the assistant's "Cartella e programmi"): fit them into the grouped look without restyling inside. */
+.pd-modules { display: flex; flex-direction: column; gap: var(--sp-6); }
+.pd-modules > section > .label:first-child { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--label); padding: 0 var(--sp-1); margin-bottom: 6px; }
+.pd-sheet .pd-modules > section > .box { background: var(--surface); box-shadow: var(--shadow-card); }
+
+@media (max-width: 560px) {
+  .pd-facts { grid-template-columns: minmax(0, 1fr); }
+  .pd-fact + .pd-fact { border-left: 0; border-top: 1px solid var(--separator); }
+  .pd-sheet .form-2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd-bar-title, a.pd-fact-link, button.pd-row-action { transition: none; }
+}
