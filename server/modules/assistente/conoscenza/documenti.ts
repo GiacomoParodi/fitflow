@@ -322,7 +322,11 @@ export class Documenti {
     if (a.documenti) parts.push("(d.origine = 'caricato' AND d.partecipante_id IS NULL)");
     if (a.partecipanteId) { parts.push('d.partecipante_id = ?'); params.push(a.partecipanteId); }
     const ids = (a.documentiIds ?? []).filter(n => Number.isInteger(n));
-    if (ids.length) { parts.push(`d.id IN (${ids.map(() => '?').join(',')})`); params.push(...ids); }
+    // Documents picked by id: only general ones or those in this person's own folder.
+    if (ids.length) {
+      parts.push(`(d.id IN (${ids.map(() => '?').join(',')}) AND (d.partecipante_id IS NULL OR d.partecipante_id = ?))`);
+      params.push(...ids, a.partecipanteId ?? -1);
+    }
     return { sql: parts.length ? `(${parts.join(' OR ')}) AND d.stato = 'pronto'` : '0', params };
   }
 
@@ -395,12 +399,14 @@ export class Documenti {
   }
 
   /** Primi estratti di ciascun documento (per avere una visione d'insieme della cartella). */
-  iniziDocumenti(docIds: number[], perDoc = 2): RisultatoRicerca[] {
+  iniziDocumenti(docIds: number[], perDoc: number, partecipanteId: number | null): RisultatoRicerca[] {
     const out: RisultatoRicerca[] = [];
+    // Only general documents or the given person's own folder: never another member's records.
     const q = this.db.prepare(`SELECT e.id, e.documento_id, e.testo, d.titolo, d.origine, d.partecipante_id FROM assistente_estratti e
-      JOIN assistente_documenti d ON d.id = e.documento_id WHERE e.documento_id = ? AND d.stato = 'pronto' ORDER BY e.ordine LIMIT ?`);
+      JOIN assistente_documenti d ON d.id = e.documento_id WHERE e.documento_id = ? AND d.stato = 'pronto'
+      AND (d.partecipante_id IS NULL OR d.partecipante_id = ?) ORDER BY e.ordine LIMIT ?`);
     for (const id of docIds) {
-      for (const r of q.all(id, perDoc) as Row[]) {
+      for (const r of q.all(id, partecipanteId ?? -1, perDoc) as Row[]) {
         out.push({ estrattoId: r.id as number, documentoId: id, documento: r.titolo as string, origine: r.origine as 'base' | 'caricato', partecipanteId: r.partecipante_id as number | null, testo: r.testo as string, punteggio: 0 });
       }
     }

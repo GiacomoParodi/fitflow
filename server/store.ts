@@ -165,6 +165,9 @@ export class Store {
   /** Overridable for tests. */
   today: () => string = () => todayISO();
 
+  /** Run after a participant is unsubscribed (modules clean up their data). */
+  readonly onUnsubscribe: ((participantId: number) => void)[] = [];
+
   /** `db` must already be migrated (see coreMigrations). */
   constructor(readonly db: Database, dataDir: string) {
     this.filesDir = path.join(dataDir, 'certificati');
@@ -440,6 +443,7 @@ export class Store {
         cert_file_mime = NULL, cert_file_size = NULL, cert_uploaded_at = NULL WHERE id = ?`).run(this.today(), id);
     });
     if (r.cert_file_path) this.unlinkFile(r.cert_file_path as string);
+    for (const fn of this.onUnsubscribe) fn(id);
   }
 
   // ─── Certificate files ─────────────────────────────────────────────────

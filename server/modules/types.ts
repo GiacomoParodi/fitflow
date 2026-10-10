@@ -23,4 +23,9 @@ export interface ServerModule {
   createRouter?: (ctx: ModuleContext) => Router;
   /** Called once after migrations, e.g. to seed default data. */
   init?: (ctx: ModuleContext) => void;
+  /**
+   * Called after a participant is unsubscribed: the module must delete that person's personal data it holds
+   * (documents, notes…). Their payments stay in the core for the takings.
+   */
+  onParticipantRemoved?: (ctx: ModuleContext, participantId: number) => void;
 }

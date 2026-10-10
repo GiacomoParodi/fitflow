@@ -25,6 +25,7 @@ export function creaModuloAssistente(opts: OpzioniAssistente = {}): ServerModule
     id: 'assistente',
     migrations: migrazioni,
     init: ctx => get(ctx).avvia(),
+    onParticipantRemoved: (ctx, pid) => get(ctx).rimuoviIscritto(pid),
     createRouter: ctx => creaRouter(get(ctx), ctx.today),
     istanza: db => istanze.get(db),
   };

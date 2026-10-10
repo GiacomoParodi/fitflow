@@ -51,6 +51,8 @@ function createWindow(url: string) {
       nodeIntegration: false,
       sandbox: true,
       spellcheck: false,
+      // Built-in PDF viewer for certificates and documents.
+      plugins: true,
     },
   });
   win.once('ready-to-show', () => win?.show());
@@ -58,8 +60,23 @@ function createWindow(url: string) {
 
   const wc = win.webContents;
   wc.setWindowOpenHandler(({ url: target }) => {
+    // The app's own files (documents, certificates) open in an app window, never in the system browser.
+    if (isLocal(target)) {
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          width: 1000, height: 800, autoHideMenuBar: true,
+          webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, plugins: true },
+        },
+      };
+    }
     openExternal(target);
     return { action: 'deny' };
+  });
+  // Document windows opened from the app: same rules, nothing leaves the local server.
+  wc.on('did-create-window', child => {
+    child.webContents.setWindowOpenHandler(({ url: target }) => { openExternal(target); return { action: 'deny' }; });
+    child.webContents.on('will-navigate', (event, target) => { if (!isLocal(target)) { event.preventDefault(); openExternal(target); } });
   });
   wc.on('will-navigate', (event, target) => {
     if (isLocal(target)) return;

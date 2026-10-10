@@ -33,6 +33,7 @@ Ogni funzione grande è un **modulo**, con due metà indipendenti:
 - `migrations`: modifiche allo schema del database, con id `"<id>/NNN-descrizione"`. Si aggiungono in coda e **non si modificano mai** dopo il rilascio.
 - `createRouter(ctx)`: le sue API, montate su `/api/<id>`. `ctx` dà accesso a `db`, `dataDir`, `core` (lo Store) e `today()`.
 - `init(ctx)`: opzionale, per dati iniziali.
+- `onParticipantRemoved(ctx, id)`: alla disiscrizione il modulo cancella i dati personali che conserva su quella persona (es. la cartella dell'assistente). I pagamenti restano nel core.
 - File del modulo in `<dataDir>/<id>/`. Impostazioni del modulo con `moduleSettings(db, '<id>', defaults)` (chiavi `"<id>.<chiave>"` nella tabella `settings`).
 - Gli errori per l'utente si lanciano come `new ApiError(status, 'messaggio in italiano')`.
 
@@ -49,6 +50,13 @@ Per installare un modulo basta aggiungerlo all'elenco in `server/modules/index.t
 - File: `<dataDir>/fitflow.sqlite`. All'avvio si applicano le migrazioni mancanti, ognuna in una transazione.
 - Prima di modificare un database già esistente, ne viene salvata una copia in `<dataDir>/backup/`.
 - Le date sono stringhe ISO `"AAAA-MM-GG"`; gli importi in euro come numeri.
+
+## Sicurezza
+
+- Il server ascolta solo su `127.0.0.1` e accetta solo richieste con header `Host` locale (protezione dal DNS rebinding).
+- Le richieste che modificano dati vengono rifiutate se arrivano da un altro sito (`Origin` diverso o `Sec-Fetch-Site: cross-site`).
+- File caricati salvati con nomi generati, tipi in whitelist; l'assistente AI accetta solo motori su questo computer o sulla rete locale.
+- Un modulo non deve mai mandare al modello dati di un iscritto diverso da quello scelto.
 
 ## Stile
 

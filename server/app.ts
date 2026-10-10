@@ -9,6 +9,34 @@ import { serverModules } from './modules';
 import type { ModuleContext, ServerModule } from './modules/types';
 import { Store } from './store';
 
+const LOOPBACK_HOSTS = new Set(['127.0.0.1', 'localhost', '[::1]']);
+
+/**
+ * Only this computer's own pages may use the API. Blocks DNS rebinding (a website pointing its own
+ * domain at 127.0.0.1: the Host header then names that domain) and cross-site requests that change data
+ * (another website's page firing POSTs at the local port).
+ */
+export function localOnly(checkHost: boolean): express.RequestHandler {
+  return (req, res, next) => {
+    const host = String(req.headers.host ?? '');
+    const hostname = host.replace(/:\d+$/, '').toLowerCase();
+    if (checkHost && !LOOPBACK_HOSTS.has(hostname)) {
+      return res.status(403).json({ error: 'Accesso consentito solo da questo computer.' });
+    }
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      const origin = req.headers.origin;
+      let sameOrigin = true;
+      if (origin) {
+        try { sameOrigin = new URL(origin).host.toLowerCase() === host.toLowerCase(); } catch { sameOrigin = false; }
+      }
+      if (!sameOrigin || req.headers['sec-fetch-site'] === 'cross-site') {
+        return res.status(403).json({ error: 'Richiesta da un altro sito rifiutata.' });
+      }
+    }
+    next();
+  };
+}
+
 export interface AppOptions {
   dataDir: string;
   /** Folder with the built interface (index.html). Omit when `dev` serves it through Vite. */
@@ -17,6 +45,8 @@ export interface AppOptions {
   dev?: { root: string };
   modules?: ServerModule[];
   today?: () => string;
+  /** Address the server listens on; the Host check only applies on loopback (the default). */
+  host?: string;
 }
 
 export interface OpenedData {
@@ -30,12 +60,19 @@ export interface OpenedData {
 
 /** Opens (and migrates) the data folder. Shared by the server, the demo seeder and tests. */
 export function openData(dataDir: string, modules: ServerModule[] = serverModules, today?: () => string): OpenedData {
-  const db = openDatabase(path.join(dataDir, 'fitflow.sqlite'));
+  const file = path.join(dataDir, 'fitflow.sqlite');
+  // First release used a different file name: carry it over (with its WAL files) on upgrade.
+  const legacy = path.join(dataDir, 'gestione-corsi.sqlite');
+  if (!fs.existsSync(file) && fs.existsSync(legacy)) {
+    for (const ext of ['', '-wal', '-shm']) if (fs.existsSync(legacy + ext)) fs.renameSync(legacy + ext, file + ext);
+  }
+  const db = openDatabase(file);
   const migrated = migrate(db, modules.flatMap(m => m.migrations), path.join(dataDir, 'backup'));
   const store = new Store(db, dataDir);
   if (today) store.today = today;
   const ctx: ModuleContext = { db, dataDir, core: store, today: () => store.today() };
   for (const m of modules) m.init?.(ctx);
+  store.onUnsubscribe.push(pid => { for (const m of modules) m.onParticipantRemoved?.(ctx, pid); });
   return { db, store, ctx, migrated, close: () => db.close() };
 }
 
@@ -44,6 +81,8 @@ export async function createApp(opts: AppOptions) {
   const data = openData(opts.dataDir, modules, opts.today);
   const app = express();
   app.disable('x-powered-by');
+  const host = opts.host ?? '127.0.0.1';
+  app.use(localOnly(host === '127.0.0.1' || host === 'localhost' || host === '::1'));
 
   const api = express.Router();
   for (const m of modules) {

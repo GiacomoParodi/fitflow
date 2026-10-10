@@ -101,6 +101,23 @@ describe('base di conoscenza', () => {
     expect(() => a.libreria.carica(content)).not.toThrow();
   });
 
+  it('non usa documenti della cartella di un altro iscritto e cancella la cartella alla disiscrizione', async () => {
+    const c = data.store.createCourse({ name: 'Yoga', giorni: [1], orario: '20:00', capienza: 5 });
+    const plan = data.store.plans()[0].id;
+    const nuovo = (name: string) => data.store.createParticipant({ courseId: c, name, phone: '1', livello: 'Base', note: '', planId: plan, iscrizioneScadenza: null, certScadenza: null, paid: false });
+    const anna = nuovo('Anna'), bruno = nuovo('Bruno');
+    const doc = a.documenti.carica(Buffer.from('Referto: ernia del disco L5-S1, evitare carichi assiali.'), 'referto.txt', anna);
+    await a.documenti.attendi();
+    expect(a.documenti.iniziDocumenti([doc.id], 1, bruno)).toEqual([]);
+    expect(a.documenti.iniziDocumenti([doc.id], 1, anna)).toHaveLength(1);
+    const perBruno = await a.documenti.cerca('ernia disco', { conoscenze: false, documenti: true, partecipanteId: bruno, documentiIds: [doc.id] }, 5);
+    expect(perBruno.filter(r => r.documentoId === doc.id)).toEqual([]);
+
+    data.store.unsubscribe(anna);
+    expect(a.documenti.elenco(anna)).toEqual([]);
+    expect(fs.readdirSync(path.join(dir, 'assistente'), { recursive: true }).filter(f => String(f).endsWith('.txt'))).toEqual([]);
+  });
+
   it('indicizza schede di conoscenza e documenti caricati; ricerca testuale', async () => {
     await a.documenti.attendi();
     const base = a.documenti.elenco(null).filter(d => d.origine === 'base');

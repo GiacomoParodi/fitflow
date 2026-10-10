@@ -40,7 +40,7 @@ export function createApi(store: Store) {
     (req, res) => {
       const mime = String(req.headers['content-type'] ?? '').split(';')[0].trim();
       if (!Buffer.isBuffer(req.body)) throw new ApiError(400, 'Formato non supportato: carica un file PNG, JPEG o PDF.');
-      const name = decodeURIComponent(String(req.headers['x-file-name'] ?? ''));
+      const name = fileNameHeader(req);
       store.saveCertFile(id(req), req.body, mime, name);
       send(res);
     },
@@ -55,7 +55,8 @@ export function createApi(store: Store) {
       // Inline for the viewer, but keep the original file name.
       res.setHeader('Content-Disposition', String(res.getHeader('Content-Disposition')).replace(/^attachment/, 'inline'));
     }
-    res.sendFile(f.path);
+    // dotfiles: the data folder may sit under a hidden directory (e.g. ~/.config on Linux).
+    res.sendFile(f.path, { dotfiles: 'allow' });
   });
   api.delete('/participants/:id/cert', (req, res) => { store.removeCertFile(id(req)); send(res); });
 
@@ -67,6 +68,13 @@ export function createApi(store: Store) {
 }
 
 /** Turns thrown errors into JSON answers ({ error }) for every module. */
+/** File name sent by the browser in X-File-Name (URI-encoded), without control characters. */
+export function fileNameHeader(req: Request): string {
+  let name = String(req.headers['x-file-name'] ?? '');
+  try { name = decodeURIComponent(name); } catch { throw new ApiError(400, 'Nome del file non valido.'); }
+  return name.replace(/[\u0000-\u001f\u007f]/g, '').trim();
+}
+
 export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (err instanceof ApiError) return res.status(err.status).json({ error: err.message });
   const e = err as { type?: string; status?: number };

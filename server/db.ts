@@ -71,7 +71,8 @@ export function migrate(db: Database, migrations: Migration[], backupDir: string
 export function backupDatabase(db: Database, dir: string, label: string): string {
   fs.mkdirSync(dir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  const file = path.join(dir, `${label}-${stamp}.sqlite`);
+  let file = path.join(dir, `${label}-${stamp}.sqlite`);
+  for (let n = 2; fs.existsSync(file); n++) file = path.join(dir, `${label}-${stamp}-${n}.sqlite`);
   db.prepare('VACUUM INTO ?').run(file);
   return file;
 }

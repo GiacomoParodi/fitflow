@@ -239,7 +239,7 @@ export function ParticipantDialog({ id }: { id: number }) {
         {confirmUnsub ? (
           <div className="confirm-box" role="alert">
             <div className="row-title">Disiscrivere {p.name} da {course?.name}?</div>
-            <div style={{ fontSize: 13 }}>Il partecipante verrà rimosso dal corso e dal registro presenze.</div>
+            <div style={{ fontSize: 13 }}>Il partecipante verrà rimosso dal corso e dal registro presenze; il certificato e la cartella dell'assistente (documenti e programmi) verranno cancellati. I pagamenti restano negli incassi.</div>
             <div className="btn-row-8">
               <button type="button" className="btn btn-primary" onClick={() => act(() => api.unsubscribe(p.id))}>Conferma disiscrizione</button>
               <button type="button" className="btn btn-secondary" onClick={() => setConfirmUnsub(false)}>Annulla</button>

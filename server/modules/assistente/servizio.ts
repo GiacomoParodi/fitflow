@@ -52,6 +52,12 @@ export class Assistente {
     void this.documenti.aggiornaVettori().catch(() => 0);
   }
 
+  /** Disiscrizione: la cartella (documenti, file, estratti) e i programmi della persona vengono cancellati. */
+  rimuoviIscritto(partecipanteId: number) {
+    for (const d of this.documenti.elenco(partecipanteId)) this.documenti.elimina(d.id);
+    this.db.prepare('DELETE FROM assistente_programmi WHERE partecipante_id = ?').run(partecipanteId);
+  }
+
   ferma() {
     this.documenti.ferma();
   }

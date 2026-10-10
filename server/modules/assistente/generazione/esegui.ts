@@ -115,8 +115,8 @@ export async function prepara(a: Assistente, body: Record<string, unknown>, toda
     }, agente.estratti, signal, override);
     // Per l'analisi conta avere almeno l'inizio di ogni documento della cartella.
     const inizi = compito === 'analizza_cartella' && pid
-      ? a.documenti.iniziDocumenti(a.documenti.elenco(pid).filter(d => d.stato === 'pronto').map(d => d.id), 2)
-      : input.documentiIds.length ? a.documenti.iniziDocumenti(input.documentiIds, 1) : [];
+      ? a.documenti.iniziDocumenti(a.documenti.elenco(pid).filter(d => d.stato === 'pronto').map(d => d.id), 2, pid)
+      : input.documentiIds.length ? a.documenti.iniziDocumenti(input.documentiIds, 1, input.partecipanteId ?? null) : [];
     const seen = new Set<number>();
     estratti = [...(compito === 'analizza_cartella' ? [...inizi, ...trovati] : [...trovati, ...inizi])]
       .filter(r => (seen.has(r.estrattoId) ? false : (seen.add(r.estrattoId), true)));

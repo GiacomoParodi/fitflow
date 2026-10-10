@@ -1,3 +1,4 @@
+import { fileNameHeader } from '../../api';
 import express, { type Request, type Response } from 'express';
 import { ApiError } from '../../store';
 import type { EventoDownload, EventoGenerazione } from '../../../shared/assistente';
@@ -123,7 +124,7 @@ export function creaRouter(a: Assistente, today: () => string) {
     express.raw({ type: () => true, limit: MAX_FILE_BYTES + 1024 }),
     (req, res) => {
       if (!Buffer.isBuffer(req.body)) throw new ApiError(400, 'Nessun file ricevuto.');
-      const nome = decodeURIComponent(String(req.headers['x-file-name'] ?? ''));
+      const nome = fileNameHeader(req);
       const pidH = req.headers['x-participant-id'];
       let pid: number | null = null;
       if (pidH !== undefined && pidH !== '') {
@@ -142,7 +143,7 @@ export function creaRouter(a: Assistente, today: () => string) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Cache-Control', 'no-store');
     res.attachment(f.name);
-    res.sendFile(f.path);
+    res.sendFile(f.path, { dotfiles: 'allow' });
   });
   r.get('/documenti/:id/testo', (req, res) => { res.json({ testo: a.documenti.testoCompleto(id(req)) }); });
   r.post('/documenti/:id/reindicizza', (req, res) => { a.documenti.reindicizza(id(req)); res.json(a.documenti.get(id(req))); });
