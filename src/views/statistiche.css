@@ -1,0 +1,5 @@
+/* Temporary: carried over from the Modernist look, to be redesigned. */
+/* ─── Statistiche ─── */
+.stats-top { display: grid; grid-template-columns: 1.4fr 1fr; }
+.stack { display: flex; height: 14px; margin-bottom: 14px; border-radius: var(--radius-pill); overflow: hidden; background: var(--color-neutral-200); }
+

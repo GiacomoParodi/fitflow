@@ -1,3 +1,4 @@
+import './impostazioni.css';
 import { useEffect, useState } from 'react';
 import { WEEKDAYS_SHORT } from '../../shared/dates';
 import { euro, mesiLabel } from '../../shared/rules';

@@ -20,8 +20,17 @@ export interface Plan {
   prezzo: number;
 }
 
+export const TEMI = ['auto', 'chiaro', 'scuro'] as const;
+export type Tema = (typeof TEMI)[number];
+/** Accent colors, as in macOS System Settings → Appearance. */
+export const ACCENTI = ['blu', 'viola', 'rosa', 'rosso', 'arancione', 'giallo', 'verde', 'grafite'] as const;
+export type Accento = (typeof ACCENTI)[number];
+
 export interface Settings {
   instructorName: string;
+  /** Appearance: light/dark (auto follows the system) and accent color. */
+  tema: Tema;
+  accento: Accento;
   quotaIscrizione: number;
   /** Default end of season proposed to new members. */
   scadenzaStagione: string;

@@ -1,0 +1,203 @@
+/* FitFlow design tokens — Apple-like system palette, light and dark.
+   Theme: <html data-theme="light|dark"> (absent = follow the system). Accent: <html data-accent="…">. */
+
+@import '@fontsource-variable/inter/index.css';
+
+:root {
+  color-scheme: light dark;
+
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', 'Inter', 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-pill: 9999px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+
+  --sidebar-w: 236px;
+  --content-max: 1680px;
+}
+
+/* ─── Light ─── */
+:root,
+:root[data-theme='light'] {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #fbfbfd;
+  --sidebar-bg: rgba(236, 236, 241, 0.78);
+  --fill: rgba(120, 120, 128, 0.12);
+  --fill-2: rgba(120, 120, 128, 0.07);
+  --fill-3: rgba(120, 120, 128, 0.04);
+  --label: #1d1d1f;
+  --label-2: #6e6e73;
+  --label-3: #a1a1a6;
+  --separator: rgba(0, 0, 0, 0.07);
+  --separator-strong: rgba(0, 0, 0, 0.13);
+  --overlay: rgba(0, 0, 0, 0.22);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  --shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  --shadow-pop: 0 24px 64px rgba(0, 0, 0, 0.18), 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+
+  --blue: #007aff;
+  --purple: #af52de;
+  --pink: #ff2d55;
+  --red: #ff3b30;
+  --orange: #ff9500;
+  --yellow: #ffcc00;
+  --green: #34c759;
+  --teal: #30b0c7;
+  --indigo: #5856d6;
+  --graphite: #8e8e93;
+
+  /* Status text on light tinted fills needs deeper tones for contrast. */
+  --success-text: #1f7a36;
+  --warning-text: #a35a00;
+  --danger-text: #c4271d;
+}
+
+/* ─── Dark ─── */
+:root[data-theme='dark'] {
+  --bg: #1c1c1e;
+  --surface: #2c2c2e;
+  --surface-2: #323234;
+  --sidebar-bg: rgba(38, 38, 40, 0.8);
+  --fill: rgba(118, 118, 128, 0.24);
+  --fill-2: rgba(118, 118, 128, 0.16);
+  --fill-3: rgba(118, 118, 128, 0.1);
+  --label: #f5f5f7;
+  --label-2: #a1a1a6;
+  --label-3: #6e6e73;
+  --separator: rgba(255, 255, 255, 0.08);
+  --separator-strong: rgba(255, 255, 255, 0.15);
+  --overlay: rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+  --shadow-raised: 0 2px 10px rgba(0, 0, 0, 0.35), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  --shadow-pop: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+
+  --blue: #0a84ff;
+  --purple: #bf5af2;
+  --pink: #ff375f;
+  --red: #ff453a;
+  --orange: #ff9f0a;
+  --yellow: #ffd60a;
+  --green: #30d158;
+  --teal: #40c8e0;
+  --indigo: #5e5ce6;
+  --graphite: #98989d;
+
+  --success-text: #4cd471;
+  --warning-text: #ffb340;
+  --danger-text: #ff6961;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #1c1c1e;
+    --surface: #2c2c2e;
+    --surface-2: #323234;
+    --sidebar-bg: rgba(38, 38, 40, 0.8);
+    --fill: rgba(118, 118, 128, 0.24);
+    --fill-2: rgba(118, 118, 128, 0.16);
+    --fill-3: rgba(118, 118, 128, 0.1);
+    --label: #f5f5f7;
+    --label-2: #a1a1a6;
+    --label-3: #6e6e73;
+    --separator: rgba(255, 255, 255, 0.08);
+    --separator-strong: rgba(255, 255, 255, 0.15);
+    --overlay: rgba(0, 0, 0, 0.45);
+    --shadow-card: 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+    --shadow-raised: 0 2px 10px rgba(0, 0, 0, 0.35), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+    --shadow-pop: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+    --blue: #0a84ff;
+    --purple: #bf5af2;
+    --pink: #ff375f;
+    --red: #ff453a;
+    --orange: #ff9f0a;
+    --yellow: #ffd60a;
+    --green: #30d158;
+    --teal: #40c8e0;
+    --indigo: #5e5ce6;
+    --graphite: #98989d;
+    --success-text: #4cd471;
+    --warning-text: #ffb340;
+    --danger-text: #ff6961;
+  }
+}
+
+/* ─── Accent (macOS-style choice) ─── */
+:root { --accent: var(--blue); --on-accent: #ffffff; }
+:root[data-accent='viola'] { --accent: var(--purple); }
+:root[data-accent='rosa'] { --accent: var(--pink); }
+:root[data-accent='rosso'] { --accent: var(--red); }
+:root[data-accent='arancione'] { --accent: var(--orange); }
+:root[data-accent='giallo'] { --accent: var(--yellow); --on-accent: #1d1d1f; }
+:root[data-accent='verde'] { --accent: var(--green); }
+:root[data-accent='grafite'] { --accent: var(--graphite); }
+
+:root {
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-strong: color-mix(in srgb, var(--accent) 85%, #000);
+  --accent-text: color-mix(in srgb, var(--accent) 82%, var(--label));
+
+  --success: var(--green);
+  --warning: var(--orange);
+  --danger: var(--red);
+  --success-soft: color-mix(in srgb, var(--green) 16%, transparent);
+  --warning-soft: color-mix(in srgb, var(--orange) 16%, transparent);
+  --danger-soft: color-mix(in srgb, var(--red) 14%, transparent);
+
+  /* Chart series: accent first, then distinct system hues. */
+  --chart-1: var(--accent);
+  --chart-2: var(--teal);
+  --chart-3: var(--orange);
+  --chart-4: var(--purple);
+  --chart-5: var(--green);
+  --chart-muted: color-mix(in srgb, var(--accent) 28%, var(--fill));
+}
+
+/* ─── Legacy aliases (Modernist names still used in some inline styles). Prefer the tokens above. ─── */
+:root {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text: var(--label);
+  --color-divider: var(--separator-strong);
+  --color-accent: var(--accent);
+  --color-accent-100: var(--accent-soft);
+  --color-accent-200: color-mix(in srgb, var(--accent) 22%, transparent);
+  --color-accent-300: color-mix(in srgb, var(--accent) 35%, transparent);
+  --color-accent-400: color-mix(in srgb, var(--accent) 60%, transparent);
+  --color-accent-500: var(--accent);
+  --color-accent-600: var(--accent-strong);
+  --color-accent-700: var(--accent-text);
+  --color-accent-800: var(--accent-text);
+  --color-neutral-100: var(--fill-3);
+  --color-neutral-200: var(--fill-2);
+  --color-neutral-300: var(--fill);
+  --color-neutral-400: var(--label-3);
+  --color-neutral-500: var(--label-3);
+  --color-neutral-600: var(--label-2);
+  --color-neutral-700: var(--label-2);
+  --color-neutral-800: var(--label);
+  --color-neutral-900: var(--label);
+  --font-heading: var(--font-display);
+  --font-body: var(--font);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-pill: var(--r-pill);
+  --shadow-sm: var(--shadow-card);
+  --shadow-md: var(--shadow-raised);
+  --shadow-lg: var(--shadow-pop);
+}

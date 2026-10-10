@@ -1,3 +1,4 @@
+import './dashboard.css';
 import { fmtLong, weekday } from '../../shared/dates';
 import { PageHead, SectionTitle } from '../components/PageHead';
 import { countLabel } from '../derive';

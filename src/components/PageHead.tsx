@@ -1,23 +1,24 @@
 import type { ReactNode } from 'react';
-import { kickerFor } from '../modules';
+import { pages, subtitleFor } from '../modules';
 
-/** Page title with its numbered kicker ("02 / Gestione"), derived from the page's position in the top bar. */
-export function PageHead({ page, title, aside }: { page: string; title: string; aside?: ReactNode }) {
-  const head = (
-    <div>
-      <div className="kicker">{kickerFor(page)}</div>
-      <h1 className="page-title">{title}</h1>
-    </div>
+/**
+ * Large page title (Apple "large title"), its subtitle and actions on the right.
+ * `subtitle` overrides the module's description; pass null to hide it.
+ */
+export function PageHead({ page, title, subtitle, aside }: { page: string; title?: string; subtitle?: ReactNode | null; aside?: ReactNode }) {
+  const sub = subtitle === undefined ? subtitleFor(page) : subtitle;
+  return (
+    <header className="page-head">
+      <div style={{ minWidth: 0 }}>
+        <h1 className="page-title">{title ?? pages.find(p => p.id === page)?.label}</h1>
+        {sub && <div className="page-subtitle">{sub}</div>}
+      </div>
+      {aside && <div className="page-actions">{aside}</div>}
+    </header>
   );
-  return aside
-    ? <div className="page-head page-head-row">{head}{aside}</div>
-    : <div className="page-head">{head}</div>;
 }
 
-export function SectionTitle({ num, children, tight }: { num: string; children: ReactNode; tight?: boolean }) {
-  return (
-    <h3 className="section-title" style={tight ? { marginBottom: 6 } : undefined}>
-      <span className="num">{num}</span> {children}
-    </h3>
-  );
+/** Section heading inside a page. (`num` is kept for compatibility and not shown.) */
+export function SectionTitle({ children, tight }: { num?: string; children: ReactNode; tight?: boolean }) {
+  return <h2 className="section-title" style={tight ? { marginBottom: 4 } : undefined}>{children}</h2>;
 }

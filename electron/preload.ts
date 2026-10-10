@@ -4,6 +4,7 @@ import type { FitflowDesktop } from '../src/desktop';
 
 const api: FitflowDesktop = {
   versione: ipcRenderer.sendSync('fitflow:versione') as string,
+  piattaforma: process.platform,
   apriCartellaDati: () => ipcRenderer.invoke('fitflow:apriCartellaDati'),
   creaBackup: () => ipcRenderer.invoke('fitflow:creaBackup'),
   apriCartellaBackup: () => ipcRenderer.invoke('fitflow:apriCartellaBackup'),

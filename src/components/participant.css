@@ -1,0 +1,27 @@
+
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); }
+.facts > div + div { border-left: 1px solid var(--color-divider); padding-left: 12px; }
+.facts > div:not(:last-child) { padding-right: 12px; }
+.fact-value { font-weight: 600; margin-top: 4px; }
+.fact-big { font-family: var(--font-heading); font-weight: 800; font-size: 24px; line-height: 1; margin-top: 4px; color: var(--color-accent); }
+.plan-name { font-family: var(--font-heading); font-weight: 800; font-size: 22px; line-height: 1.1; margin-top: 4px; }
+.date-input { width: 180px; }
+.cert-file { border-top: 1px solid var(--color-divider); padding-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.file-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--color-neutral-200); color: var(--color-neutral-700);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.file-icon[data-has-file='true'] { background: var(--color-accent); color: var(--color-bg); }
+.file-info { flex: 1; min-width: 160px; }
+.file-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.register { display: flex; flex-wrap: wrap; gap: 6px; }
+.register-cell { width: 52px; }
+.register-box {
+  height: 30px; border: 1.5px solid var(--color-neutral-500); border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.register-box[data-present='true'] { background: var(--color-text); }
+.register-date { font-size: 10px; margin-top: 3px; }
+.note-text { font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.danger-btn { color: var(--color-accent-700); }
+

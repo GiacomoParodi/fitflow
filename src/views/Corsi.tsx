@@ -1,3 +1,4 @@
+import './corsi.css';
 import { useState } from 'react';
 import { fmtShort } from '../../shared/dates';
 import type { Course } from '../../shared/types';

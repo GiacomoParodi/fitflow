@@ -1,0 +1,31 @@
+/* Temporary: carried over from the Modernist look, to be redesigned. */
+/* ─── Dashboard ─── */
+.greeting { font-size: 14px; line-height: 1.4; flex-shrink: 0; }
+.greeting strong { font-weight: 600; display: block; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; color: var(--color-bg); }
+.kpi { padding: 24px; border-radius: var(--radius-lg); }
+.kpi .label { margin-bottom: 10px; color: var(--color-accent-100); }
+.kpi-value { font-family: var(--font-heading); font-weight: 800; font-size: 64px; line-height: 1; }
+.kpi-1 { background: var(--color-accent); }
+.kpi-2 { background: var(--color-accent-600); }
+.kpi-3 { background: var(--color-text); }
+.kpi-3 .label { color: var(--color-accent-300); }
+.kpi-3 .kpi-value { color: var(--color-accent-500); }
+.lesson-row {
+  display: grid; grid-template-columns: 88px 1fr; margin-bottom: 8px;
+  border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface);
+}
+.lesson-time {
+  background: var(--color-accent-100); color: var(--color-accent-700); font-family: var(--font-heading);
+  font-weight: 800; font-size: 22px; padding: 14px 12px; border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.lesson-body { padding: 14px 16px; }
+.row-title { font-weight: 600; }
+.row-sub { font-size: 13px; margin-top: 2px; }
+.alert-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 14px; margin-bottom: 6px; border-radius: var(--radius-md);
+}
+.alert-row[data-severe='true'] { background: var(--color-accent-100); }
+.alert-row .tag { flex-shrink: 0; white-space: nowrap; }
+

@@ -4,10 +4,10 @@ import { CERT_LABELS, ISCR_LABELS, PAY_LABELS, isSevere, status, type Status } f
 import type { AppState, Course, Lesson, Participant, Plan } from '../shared/types';
 
 export const TAG_CLASS: Record<Status, string> = {
-  valido: 'tag tag-neutral',
-  in_scadenza: 'tag tag-outline',
-  scaduto: 'tag tag-accent',
-  mancante: 'tag tag-accent',
+  valido: 'tag tag-success',
+  in_scadenza: 'tag tag-warning',
+  scaduto: 'tag tag-danger',
+  mancante: 'tag tag-danger',
 };
 
 export interface Check {

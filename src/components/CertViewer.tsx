@@ -1,3 +1,4 @@
+import './viewer.css';
 import { useEffect } from 'react';
 import type { CertFile } from '../../shared/types';
 import { api } from '../api';

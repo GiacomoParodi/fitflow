@@ -5,7 +5,7 @@ import { transaction, type Database, type Migration } from './db';
 import { addDays, addMonths, endOfMonth, isISODate, todayISO } from '../shared/dates';
 import { paymentPeriod, renewedIscrizione } from '../shared/rules';
 import {
-  LIVELLI,
+  ACCENTI, LIVELLI, TEMI, type Accento, type Tema,
   type AppState, type Course, type Lesson, type Livello, type NewParticipantInput,
   type Participant, type Payment, type Plan, type Settings,
 } from '../shared/types';
@@ -88,6 +88,8 @@ export const coreMigrations: Migration[] = [
 
 const DEFAULT_SETTINGS: Settings = {
   instructorName: 'Marco',
+  tema: 'auto',
+  accento: 'blu',
   quotaIscrizione: 30,
   scadenzaStagione: '',
   sogliaCertificato: 30,
@@ -298,6 +300,14 @@ export class Store {
   updateSettings(patch: Record<string, unknown>) {
     const clean: Partial<Settings> = {};
     if ('instructorName' in patch) clean.instructorName = str(patch.instructorName, 'Nome istruttore', { required: false, max: 60 });
+    if ('tema' in patch) {
+      if (!TEMI.includes(patch.tema as Tema)) throw bad('Tema non valido.');
+      clean.tema = patch.tema as Tema;
+    }
+    if ('accento' in patch) {
+      if (!ACCENTI.includes(patch.accento as Accento)) throw bad('Colore non valido.');
+      clean.accento = patch.accento as Accento;
+    }
     if ('quotaIscrizione' in patch) clean.quotaIscrizione = num(patch.quotaIscrizione, 'Quota iscrizione', 0);
     if ('scadenzaStagione' in patch) clean.scadenzaStagione = reqDate(patch.scadenzaStagione, 'Scadenza stagione');
     if ('sogliaCertificato' in patch) clean.sogliaCertificato = int(patch.sogliaCertificato, 'Soglia certificato', 0, 365);

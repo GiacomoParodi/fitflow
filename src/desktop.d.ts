@@ -2,6 +2,8 @@
 export interface FitflowDesktop {
   /** Versione dell'app, es. "1.2.0". */
   versione: string;
+  /** Sistema operativo: 'darwin' (Mac), 'win32', 'linux'. */
+  piattaforma: string;
   apriCartellaDati(): Promise<void>;
   /** Salva una copia del database nella cartella backup e ne restituisce il percorso. */
   creaBackup(): Promise<string>;

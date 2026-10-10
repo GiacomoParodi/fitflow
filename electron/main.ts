@@ -1,6 +1,6 @@
 // Processo principale dell'app desktop: avvia il server locale e apre la finestra che lo mostra.
 import '../server/quiet';
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell, type IpcMainEvent, type IpcMainInvokeEvent, type MenuItemConstructorOptions } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell, type IpcMainEvent, type IpcMainInvokeEvent, type MenuItemConstructorOptions, nativeTheme } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,12 +39,14 @@ function openExternal(url: string) {
 function createWindow(url: string) {
   win = new BrowserWindow({
     title: 'FitFlow',
+    // Mac: content under the title bar, traffic lights over the sidebar (as in Apple's own apps).
+    ...(process.platform === 'darwin' ? { titleBarStyle: 'hiddenInset' as const, trafficLightPosition: { x: 18, y: 18 } } : {}),
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#1c1c1e' : '#f5f5f7',
     width: 1360,
     height: 880,
-    minWidth: 1100,
+    minWidth: 980,
     minHeight: 720,
     show: false,
-    backgroundColor: '#f3f2f2',
     webPreferences: {
       preload: path.join(here, 'preload.cjs'),
       contextIsolation: true,

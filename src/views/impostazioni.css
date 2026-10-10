@@ -1,0 +1,5 @@
+/* Temporary: carried over from the Modernist look, to be redesigned. */
+/* ─── Impostazioni ─── */
+.settings-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+.day-picker { display: inline-flex; flex-wrap: wrap; align-self: flex-start; }
+

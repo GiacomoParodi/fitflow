@@ -1,3 +1,4 @@
+import './statistiche.css';
 import { MONTHS_SHORT, monthName } from '../../shared/dates';
 import { euro } from '../../shared/rules';
 import { PageHead } from '../components/PageHead';

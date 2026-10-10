@@ -1,3 +1,4 @@
+import './participant.css';
 import { useEffect, useRef, useState } from 'react';
 import { fmt, fmtShort } from '../../shared/dates';
 import { euro, mesiLabel, paymentPeriod } from '../../shared/rules';
