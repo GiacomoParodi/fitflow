@@ -148,7 +148,7 @@ export function Guida({ stato, onVerifica, verificando }: { stato: StatoMotore; 
         )}
         <div className="ass-guide-actions">
           <button type="button" className="btn btn-primary btn-lg" onClick={onVerifica} disabled={verificando}><I.Refresh /> {verificando ? 'Verifica…' : 'Verifica di nuovo'}</button>
-          <a className="btn btn-secondary btn-lg" href="#/impostazioni">Impostazioni del motore</a>
+          <a className="btn btn-secondary btn-lg" href="#/impostazioni/motore-ai">Impostazioni del motore</a>
         </div>
       </div>
     </div>

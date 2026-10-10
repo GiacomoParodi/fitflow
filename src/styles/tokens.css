@@ -164,7 +164,7 @@
   --chart-3: var(--orange);
   --chart-4: var(--purple);
   --chart-5: var(--green);
-  --chart-muted: color-mix(in srgb, var(--accent) 28%, var(--fill));
+  --chart-muted: color-mix(in srgb, var(--accent) 38%, var(--surface));
 }
 
 /* ─── Legacy aliases (Modernist names still used in some inline styles). Prefer the tokens above. ─── */

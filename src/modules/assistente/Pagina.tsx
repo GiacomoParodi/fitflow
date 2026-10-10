@@ -38,7 +38,7 @@ export function PaginaAssistente() {
       <PageHead page="assistente" title="Assistente" aside={(
         <>
           {stato && (
-            <a className="ass-engine" href="#/impostazioni" title="Impostazioni del motore AI">
+            <a className="ass-engine" href="#/impostazioni/motore-ai" title="Impostazioni del motore AI">
               <span className="ass-dot" data-stato={livello} aria-hidden="true" />
               <span>
                 {pronto ? <>Motore locale pronto{stato.modelloChatEffettivo && <span className="ass-engine-model"> · {stato.modelloChatEffettivo}</span>}</>
