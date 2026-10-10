@@ -19,13 +19,13 @@ export function Corsi() {
   return (
     <div className="page">
       <PageHead page="corsi" title="Corsi"
-        aside={courses.length > 0 ? <a className="btn btn-secondary" href="#/impostazioni">Gestisci corsi</a> : undefined} />
+        aside={courses.length > 0 ? <a className="btn btn-secondary" href="#/impostazioni/corsi">Gestisci corsi</a> : undefined} />
       {courses.length === 0 ? (
         <div className="card corsi-empty-page">
           <span className="corsi-empty-icon"><CalendarIcon /></span>
           <div className="corsi-empty-title">Nessun corso</div>
           <div className="corsi-empty-text">Crea il primo corso in Impostazioni: nome, giorni, orario e capienza. Poi potrai aggiungere gli iscritti e segnare le presenze.</div>
-          <a className="btn btn-primary" href="#/impostazioni">Apri Impostazioni</a>
+          <a className="btn btn-primary" href="#/impostazioni/corsi">Apri Impostazioni</a>
         </div>
       ) : (
         <div className="corsi-layout">
