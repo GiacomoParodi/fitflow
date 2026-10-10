@@ -1,5 +1,223 @@
-/* Temporary: carried over from the Modernist look, to be redesigned. */
-/* ─── Impostazioni ─── */
-.settings-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+/* ─── Impostazioni: macOS System Settings layout ───
+   Section list on the left, the selected section's grouped cards on the right. */
+
+.imp-page {
+  /* Glyph on the colored section tiles, and the fixed palettes of the appearance thumbnails:
+     these must not follow the current theme, so they cannot be theme tokens. */
+  --imp-on-tile: #fff;
+  --imp-prev-light-win: #ffffff;
+  --imp-prev-light-side: #ececf1;
+  --imp-prev-light-line: #dcdce1;
+  --imp-prev-dark-win: #2c2c2e;
+  --imp-prev-dark-side: #3a3a3c;
+  --imp-prev-dark-line: #4f4f53;
+}
+
+.imp-layout {
+  display: grid;
+  grid-template-columns: clamp(184px, 17vw, 232px) minmax(0, 1fr);
+  gap: var(--sp-8);
+  align-items: start;
+}
+
+/* Section list (source list) */
+.imp-nav {
+  position: sticky; top: var(--sp-6);
+  display: flex; flex-direction: column; gap: 1px;
+}
+.imp-nav-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 32px; padding: 5px 8px;
+  font: inherit; font-size: 13.5px; font-weight: 500; color: var(--label); text-align: left;
+  background: transparent; border: 0; border-radius: 7px; cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.imp-nav-item:hover { background: var(--fill-2); }
+.imp-nav-item[aria-current='page'] { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.imp-nav-item[aria-current='page'] .imp-tile { box-shadow: 0 0 0 1px color-mix(in srgb, var(--on-accent) 35%, transparent); }
+.imp-nav-gap { margin-top: var(--sp-4); }
+.imp-nav-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Rounded colored tile with a white glyph, as in System Settings. */
+.imp-tile {
+  flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px;
+  color: var(--imp-on-tile);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tile) 82%, var(--imp-on-tile)), var(--tile));
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--label) 10%, transparent);
+}
+.imp-tile svg { display: block; }
+.imp-tile-lg { width: 40px; height: 40px; border-radius: 10px; }
+.imp-tile-lg svg { width: 22px; height: 22px; }
+
+/* Selected section */
+.imp-pane { min-width: 0; container-type: inline-size; animation: imp-in 0.18s ease; }
+@keyframes imp-in { from { opacity: 0; transform: translateY(3px); } }
+.imp-pane-head { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-6); }
+.imp-pane-head-text { min-width: 0; }
+.imp-pane-title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.016em; }
+.imp-pane-desc { margin: 2px 0 0; font-size: 13px; color: var(--label-2); max-width: 72ch; }
+.imp-body { display: flex; flex-direction: column; gap: var(--sp-6); }
+.imp-module { min-width: 0; }
+
+/* Two columns side by side when the pane is wide enough. */
+.imp-split { display: grid; gap: var(--sp-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
+.imp-cols { display: grid; gap: var(--sp-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
+@container (min-width: 1000px) {
+  .imp-split { grid-template-columns: minmax(0, 1.65fr) minmax(320px, 1fr); }
+}
+@container (min-width: 820px) {
+  .imp-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Grouped card: title above, rows inside, footnote below */
+.imp-group-wrap { min-width: 0; }
+.imp-group-title { margin: 0 0 var(--sp-2) 2px; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.imp-group {
+  background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-card);
+  padding: 0 var(--sp-4); min-width: 0; container-type: inline-size;
+}
+.imp-group-flush { padding: 0; overflow: hidden; }
+.imp-group-foot { margin: var(--sp-2) 2px 0; font-size: 12px; color: var(--label-2); }
+
+.imp-row {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3) var(--sp-5); flex-wrap: wrap;
+  min-height: 48px; padding: 9px 0;
+  border-top: 1px solid var(--separator);
+}
+.imp-row:first-child { border-top: 0; }
+.imp-row-tall { padding: var(--sp-4) 0; align-items: flex-start; }
+.imp-row-text { min-width: 0; flex: 1 1 180px; }
+.imp-row-label { display: block; font-size: 13.5px; font-weight: 500; color: var(--label); }
+.imp-row-hint { font-size: 12px; color: var(--label-2); margin-top: 2px; }
+.imp-row-control { display: flex; align-items: center; gap: var(--sp-2); flex: none; }
+.imp-input { min-height: 30px; padding: 4px 9px; text-align: right; font-variant-numeric: tabular-nums; }
+.imp-input-text { width: 240px; text-align: left; }
+.imp-input-number { width: 84px; }
+.imp-input-date { width: 160px; }
+.imp-unit { min-width: 38px; font-size: 13px; color: var(--label-2); }
+
+/* Forms inside a group */
+.imp-form-grid { display: grid; gap: var(--sp-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.imp-form-wide { grid-column: 1 / -1; }
+@container (min-width: 600px) {
+  .imp-form-grid { grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)); }
+  .imp-form-wide { grid-column: auto; }
+}
+.imp-form { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-4) 0; }
+.imp-form-actions { display: flex; justify-content: flex-end; gap: var(--sp-2); flex-wrap: wrap; margin-top: var(--sp-1); }
+.imp-days { display: flex; flex-wrap: wrap; gap: 6px; }
+.imp-day { min-width: 46px; justify-content: center; }
+.imp-inline-error { margin: var(--sp-3) var(--sp-4); }
+
+/* Tables inside a flush group */
+.imp-table th { background: var(--surface-2); }
+.imp-table th:first-child, .imp-table td:first-child { padding-left: var(--sp-4); }
+.imp-table th:last-child, .imp-table td:last-child { padding-right: var(--sp-3); }
+.imp-table tbody tr[data-editing] td { background: var(--accent-soft); }
+.imp-actions { text-align: right; white-space: nowrap; width: 1%; }
+.imp-btn-sm { min-height: 26px; padding: 3px 8px; font-size: 12.5px; border-radius: var(--r-sm); }
+.imp-btn-danger { color: var(--danger-text); }
+.imp-btn-danger:hover { background: var(--danger-soft); }
+.imp-cap { display: inline-flex; align-items: center; gap: var(--sp-2); font-variant-numeric: tabular-nums; }
+.imp-cap-track { width: 44px; height: 5px; border-radius: var(--r-pill); background: var(--fill); overflow: hidden; }
+.imp-cap-fill { display: block; height: 100%; border-radius: var(--r-pill); background: var(--accent); }
+.imp-cap-fill[data-full] { background: var(--warning); }
+
+.imp-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--sp-10) var(--sp-4); text-align: center; font-size: 13px; }
+.imp-empty-icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: var(--sp-2); border-radius: 50%; background: var(--fill-2); color: var(--label-2); }
+.imp-empty-icon svg { width: 20px; height: 20px; }
+.imp-empty-title { font-size: 14px; font-weight: 600; color: var(--label); }
+
+/* ─── Aspetto ─── */
+.imp-themes { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
+.imp-theme {
+  display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 0;
+  background: none; border: 0; cursor: pointer; font: inherit; color: var(--label);
+}
+.imp-thumb {
+  position: relative; display: block; width: 124px; height: 80px; overflow: hidden;
+  border-radius: var(--r-md);
+  background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 45%, var(--imp-prev-light-win)), var(--accent));
+  box-shadow: 0 0 0 1px var(--separator-strong);
+  transition: box-shadow 0.15s ease;
+}
+.imp-thumb[data-look='scuro'], .imp-thumb-half {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 55%, var(--imp-prev-dark-win)), color-mix(in srgb, var(--accent) 35%, var(--imp-prev-dark-win)));
+}
+.imp-thumb-half { position: absolute; inset: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.imp-theme:hover .imp-thumb { box-shadow: 0 0 0 1px var(--separator-strong), 0 2px 8px color-mix(in srgb, var(--label) 12%, transparent); }
+.imp-theme[aria-pressed='true'] .imp-thumb { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.imp-theme:focus-visible { outline: none; }
+.imp-theme:focus-visible .imp-thumb { box-shadow: 0 0 0 2px var(--surface), 0 0 0 5px color-mix(in srgb, var(--accent) 50%, transparent); }
+.imp-theme-label { font-size: 12.5px; color: var(--label-2); }
+.imp-theme[aria-pressed='true'] .imp-theme-label { color: var(--label); font-weight: 600; }
+
+/* Mini window inside a thumbnail */
+.imp-mini {
+  position: absolute; left: 14px; top: 12px; right: -8px; bottom: -8px;
+  display: flex; flex-direction: column; border-radius: 5px; overflow: hidden;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--imp-prev-dark-win) 30%, transparent);
+}
+.imp-mini-light { background: var(--imp-prev-light-win); --line: var(--imp-prev-light-line); --side: var(--imp-prev-light-side); }
+.imp-mini-dark { background: var(--imp-prev-dark-win); --line: var(--imp-prev-dark-line); --side: var(--imp-prev-dark-side); }
+.imp-mini i { display: block; font-style: normal; }
+.imp-mini-bar { display: flex; gap: 2px; padding: 4px 5px 3px; background: var(--side); }
+.imp-mini-bar i { width: 4px; height: 4px; border-radius: 50%; background: var(--line); }
+.imp-mini-body { flex: 1; display: flex; }
+.imp-mini-side { width: 28px; display: flex; flex-direction: column; gap: 3px; padding: 4px; background: var(--side); }
+.imp-mini-side i { height: 3px; border-radius: 2px; background: var(--line); }
+.imp-mini-side .imp-mini-sel { background: var(--accent); }
+.imp-mini-main { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 6px; }
+.imp-mini-main i { height: 4px; border-radius: 2px; background: var(--line); }
+.imp-mini-main .imp-mini-acc { width: 26px; height: 7px; border-radius: 2px; background: var(--accent); }
+.imp-mini-main .imp-mini-short { width: 60%; }
+.imp-thumb-half .imp-mini { box-shadow: none; }
+
+/* Accent swatches: a row of dots, ring and name on the selected one */
+.imp-accents { display: flex; gap: 10px; flex-wrap: wrap; padding: 4px 10px 20px 4px; }
+.imp-swatch {
+  position: relative; display: grid; place-items: center; width: 24px; height: 24px; padding: 0;
+  background: none; border: 0; border-radius: 50%; cursor: pointer;
+}
+.imp-swatch-dot {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--sw);
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--label) 18%, transparent);
+  display: grid; place-items: center; transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+.imp-swatch:hover .imp-swatch-dot { transform: scale(1.08); }
+.imp-swatch[aria-pressed='true'] .imp-swatch-dot { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--sw); }
+.imp-swatch[aria-pressed='true'] .imp-swatch-dot::after {
+  content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--imp-on-tile);
+}
+.imp-swatch:focus-visible { outline: none; }
+.imp-swatch:focus-visible .imp-swatch-dot { box-shadow: 0 0 0 2px var(--surface), 0 0 0 5px color-mix(in srgb, var(--sw) 55%, transparent); }
+.imp-swatch-name {
+  position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  font-size: 11.5px; color: var(--label-2); white-space: nowrap; visibility: hidden;
+}
+.imp-swatch[aria-pressed='true'] .imp-swatch-name { visibility: visible; }
+
+/* ─── App desktop (src/modules/desktop) ─── */
+.imp-desk-buttons { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: flex-end; }
+.imp-desk-msg { margin: 0 0 var(--sp-4); word-break: break-all; }
+.imp-version { font-size: 13px; color: var(--label-2); font-variant-numeric: tabular-nums; }
+
+/* ─── Shared by modules hosted here (Motore AI uses .settings-grid) ─── */
+.settings-grid { display: grid; gap: var(--sp-6); grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+@container (max-width: 760px) {
+  .settings-grid { grid-template-columns: minmax(0, 1fr); }
+}
 .day-picker { display: inline-flex; flex-wrap: wrap; align-self: flex-start; }
 
+/* ─── Narrow windows: the section list becomes a horizontal strip ─── */
+@media (max-width: 760px) {
+  .imp-layout { grid-template-columns: minmax(0, 1fr); gap: var(--sp-5); }
+  .imp-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .imp-nav-item { width: auto; }
+  .imp-nav-gap { margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imp-pane { animation: none; }
+  .imp-nav-item, .imp-thumb, .imp-swatch-dot { transition: none; }
+  .imp-swatch:hover .imp-swatch-dot { transform: none; }
+}
