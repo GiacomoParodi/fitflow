@@ -36,7 +36,7 @@ export function DesktopSettings() {
   return (
     <div className="imp-body">
       <div className="imp-group-wrap">
-        <h3 className="imp-group-title">FitFlow</h3>
+        <h3 className="imp-group-title">GymPlan</h3>
         <div className="imp-group">
           <div className="imp-row">
             <div className="imp-row-text">

@@ -1,6 +1,6 @@
 # Contenuti dell'assistente AI
 
-Questa cartella contiene la **base di conoscenza** consultata dall'assistente AI di FitFlow prima di rispondere all'istruttore. Il modello locale è piccolo: la qualità delle risposte dipende in gran parte da questi file.
+Questa cartella contiene la **base di conoscenza** consultata dall'assistente AI di GymPlan prima di rispondere all'istruttore. Il modello locale è piccolo: la qualità delle risposte dipende in gran parte da questi file.
 
 ```
 content/

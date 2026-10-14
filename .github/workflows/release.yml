@@ -53,13 +53,13 @@ jobs:
           fi
           if ! gh release view "$TAG" > /dev/null 2>&1; then
             gh release create "$TAG" --draft $target \
-              --title "FitFlow ${TAG#v}" \
+              --title "GymPlan ${TAG#v}" \
               --notes "Come installare o aggiornare: https://github.com/${{ github.repository }}/blob/main/docs/INSTALLAZIONE.md
 
-          - **Windows**: FitFlow-Setup-${TAG#v}.exe
-          - **Mac con chip Apple (M1, M2, M3…)**: FitFlow-${TAG#v}-arm64.dmg
-          - **Mac con processore Intel**: FitFlow-${TAG#v}-x64.dmg
-          - **Ubuntu / Debian**: FitFlow-${TAG#v}-amd64.deb (oppure FitFlow-${TAG#v}-x86_64.AppImage)" \
+          - **Windows**: GymPlan-Setup-${TAG#v}.exe
+          - **Mac con chip Apple (M1, M2, M3…)**: GymPlan-${TAG#v}-arm64.dmg
+          - **Mac con processore Intel**: GymPlan-${TAG#v}-x64.dmg
+          - **Ubuntu / Debian**: GymPlan-${TAG#v}-amd64.deb (oppure GymPlan-${TAG#v}-x86_64.AppImage)" \
               --generate-notes
           fi
 

@@ -1,6 +1,6 @@
-# Architettura di FitFlow
+# Architettura di GymPlan
 
-FitFlow è un'app **tutta locale**: un server Node (Express + SQLite) e un'interfaccia React, che girano sullo stesso computer. Niente cloud, niente account. In futuro il tutto viene impacchettato come app desktop (Electron) per Mac e Windows.
+GymPlan è un'app **tutta locale**: un server Node (Express + SQLite) e un'interfaccia React, che girano sullo stesso computer. Niente cloud, niente account. In futuro il tutto viene impacchettato come app desktop (Electron) per Mac e Windows.
 
 ## Cartelle
 
@@ -20,7 +20,7 @@ src/
   components/      componenti condivisi (finestre, scheda iscritto, intestazioni)
   store.tsx        stato dell'app e navigazione (useApp)
   api.ts           chiamate al server (request<T>() per i moduli)
-  styles/          modernist.css (design system) + app.css (variante FitFlow)
+  styles/          modernist.css (design system) + app.css (variante GymPlan)
 tests/             test automatici (vitest)
 design/            prototipo e specifiche di design (solo riferimento)
 ```

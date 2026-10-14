@@ -17,7 +17,7 @@ try {
     ...(dev ? { dev: { root } } : { staticDir: path.join(root, 'dist') }),
   });
   if (server.data.migrated.length) console.log(`Database aggiornato: ${server.data.migrated.join(', ')}`);
-  console.log(`FitFlow pronta su ${server.url}`);
+  console.log(`GymPlan pronta su ${server.url}`);
   console.log(`Dati salvati in ${dataDir}`);
   const shutdown = () => { server.close().then(() => process.exit(0)); };
   process.on('SIGINT', shutdown);

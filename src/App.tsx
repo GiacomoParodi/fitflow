@@ -21,7 +21,7 @@ function Sidebar({ current }: { current: Tab | null }) {
       <div className="sidebar-brand">
         <AppIcon />
         <span className="sidebar-brand-text">
-          <div className="sidebar-brand-name">FitFlow</div>
+          <div className="sidebar-brand-name">GymPlan</div>
           <div className="sidebar-brand-sub">Corsi di ginnastica</div>
         </span>
       </div>

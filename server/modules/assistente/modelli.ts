@@ -8,7 +8,7 @@ export const MODELLO_EMBEDDING_PREDEFINITO = '';
 type Voce = Omit<ModelloConsigliato, 'installato' | 'consigliato' | 'adatto'>;
 
 /**
- * Modelli della libreria Ollama scelti per FitFlow (ottobre 2026): buon italiano, risposte JSON affidabili,
+ * Modelli della libreria Ollama scelti per GymPlan (ottobre 2026): buon italiano, risposte JSON affidabili,
  * leggeri abbastanza per un Mac M1 con 8 GB o un PC senza scheda video. Dimensioni indicative (quantizzazione Q4).
  */
 export const CATALOGO: Voce[] = [
@@ -38,7 +38,7 @@ export const CATALOGO: Voce[] = [
   },
   {
     nome: 'qwen3-embedding:0.6b', tipo: 'embedding', titolo: 'Qwen3 Embedding · 0.6B', dimensioneGb: 0.6, ramMinGb: 4,
-    descrizione: 'Alternativa multilingue con contesto più lungo; equivalente per l\'uso in FitFlow.',
+    descrizione: 'Alternativa multilingue con contesto più lungo; equivalente per l\'uso in GymPlan.',
   },
 ];
 

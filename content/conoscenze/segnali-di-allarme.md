@@ -44,4 +44,4 @@ Dopo un episodio annotare data, ora, cosa stava facendo la persona, i sintomi ri
 
 ## Il ruolo dell'assistente AI
 
-L'assistente di FitFlow aiuta l'istruttore a scegliere e adattare esercizi, ma non sostituisce il giudizio professionale né una valutazione medica. Davanti a uno dei segnali di questa scheda l'indicazione è sempre la stessa: sospendere l'esercizio e indirizzare al medico o chiamare i soccorsi.
+L'assistente di GymPlan aiuta l'istruttore a scegliere e adattare esercizi, ma non sostituisce il giudizio professionale né una valutazione medica. Davanti a uno dei segnali di questa scheda l'indicazione è sempre la stessa: sospendere l'esercizio e indirizzare al medico o chiamare i soccorsi.

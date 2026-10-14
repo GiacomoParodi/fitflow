@@ -9,7 +9,7 @@ import * as X from './icone';
 
 const FONTI: { k: keyof FontiAgente; label: string; help: string }[] = [
   { k: 'esercizi', label: 'Libreria esercizi', help: 'Propone esercizi della libreria, filtrati per attrezzi, livello e cautele.' },
-  { k: 'conoscenze', label: 'Schede di conoscenza', help: 'Le schede di base incluse in FitFlow.' },
+  { k: 'conoscenze', label: 'Schede di conoscenza', help: 'Le schede di base incluse in GymPlan.' },
   { k: 'documenti', label: 'Documenti della libreria', help: 'Manuali, dispense e altri file caricati in Libreria.' },
   { k: 'cartella', label: 'Cartella dell\'iscritto', help: 'Scheda, note e documenti caricati nella scheda della persona.' },
 ];

@@ -1,4 +1,4 @@
-/* FitFlow app layer: window shell (sidebar + content) and the layout vocabulary shared by all pages.
+/* GymPlan app layer: window shell (sidebar + content) and the layout vocabulary shared by all pages.
    Page-specific rules live next to each page (src/views/*.css, src/modules/<id>/*.css). */
 
 /* ─── Shell ─── */

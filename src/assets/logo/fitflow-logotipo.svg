@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="160" viewBox="0 0 560 160" color="#1d1d1f">
-  <g transform="translate(8 8) scale(6)" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M7 20V9a5 5 0 0 1 5-5h6M7 12.5h7"/>
-    <circle cx="17.5" cy="18.5" r="1.9" fill="#ff3b30" stroke="none"/>
-  </g>
-  <text x="168" y="104" fill="currentColor" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', Inter, 'Segoe UI', system-ui, sans-serif" font-size="84" font-weight="700" letter-spacing="-2.5">FitFlow</text>
-</svg>

@@ -42,7 +42,7 @@
     "vite": "^7.1.0",
     "vitest": "^3.2.0"
   },
-  "productName": "FitFlow",
+  "productName": "GymPlan",
   "description": "Gestione di corsi di ginnastica: iscritti, presenze, pagamenti, certificati e assistente AI locale.",
   "author": {
     "name": "Giacomo Parodi"

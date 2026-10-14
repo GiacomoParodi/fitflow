@@ -1,6 +1,6 @@
-# Installare FitFlow
+# Installare GymPlan
 
-FitFlow è un programma gratuito per gestire i corsi di ginnastica. Funziona sul tuo computer, anche senza Internet: i dati non vengono mandati da nessuna parte.
+GymPlan è un programma gratuito per gestire i corsi di ginnastica. Funziona sul tuo computer, anche senza Internet: i dati non vengono mandati da nessuna parte.
 
 Funziona su:
 
@@ -15,10 +15,10 @@ Funziona su:
 
 | Computer | File da scaricare |
 | --- | --- |
-| Windows | `FitFlow-Setup-X.Y.Z.exe` |
-| Mac con chip Apple (M1, M2, M3…) | `FitFlow-X.Y.Z-arm64.dmg` |
-| Mac con processore Intel | `FitFlow-X.Y.Z-x64.dmg` |
-| Ubuntu / Debian | `FitFlow-X.Y.Z-amd64.deb` |
+| Windows | `GymPlan-Setup-X.Y.Z.exe` |
+| Mac con chip Apple (M1, M2, M3…) | `GymPlan-X.Y.Z-arm64.dmg` |
+| Mac con processore Intel | `GymPlan-X.Y.Z-x64.dmg` |
+| Ubuntu / Debian | `GymPlan-X.Y.Z-amd64.deb` |
 
 (`X.Y.Z` è il numero della versione, per esempio `1.2.0`.)
 
@@ -26,61 +26,61 @@ Funziona su:
 
 ## 2a. Installare su Windows
 
-1. Fai doppio clic sul file `FitFlow-Setup-….exe` appena scaricato.
-2. Windows potrebbe mostrare una finestra blu **"Windows ha protetto il PC"** (SmartScreen). Succede perché FitFlow è gratuito e non ha un certificato a pagamento, non perché sia pericoloso. Per proseguire:
+1. Fai doppio clic sul file `GymPlan-Setup-….exe` appena scaricato.
+2. Windows potrebbe mostrare una finestra blu **"Windows ha protetto il PC"** (SmartScreen). Succede perché GymPlan è gratuito e non ha un certificato a pagamento, non perché sia pericoloso. Per proseguire:
    1. clicca sulla scritta **Altre informazioni**;
    2. clicca sul pulsante **Esegui comunque**.
-3. L'installazione è automatica e dura pochi secondi. Alla fine FitFlow si apre da solo e trovi l'icona sul Desktop e nel menu Start.
+3. L'installazione è automatica e dura pochi secondi. Alla fine GymPlan si apre da solo e trovi l'icona sul Desktop e nel menu Start.
 
 Non servono permessi di amministratore.
 
 ## 2b. Installare su Mac
 
 1. Fai doppio clic sul file `.dmg` appena scaricato: si apre una finestra.
-2. Trascina l'icona di **FitFlow** sulla cartella **Applicazioni**.
-3. Apri la cartella **Applicazioni** e fai doppio clic su **FitFlow**.
+2. Trascina l'icona di **GymPlan** sulla cartella **Applicazioni**.
+3. Apri la cartella **Applicazioni** e fai doppio clic su **GymPlan**.
 
-### La prima volta: "Impossibile aprire FitFlow"
+### La prima volta: "Impossibile aprire GymPlan"
 
-Al primo avvio il Mac blocca FitFlow perché non è firmato con un certificato Apple a pagamento. Compare un messaggio come *"Impossibile aprire FitFlow perché Apple non può verificare…"*. Clicca **Fine** (o **OK**), poi:
+Al primo avvio il Mac blocca GymPlan perché non è firmato con un certificato Apple a pagamento. Compare un messaggio come *"Impossibile aprire GymPlan perché Apple non può verificare…"*. Clicca **Fine** (o **OK**), poi:
 
 1. apri **Impostazioni di Sistema** (la rotella grigia nel Dock, oppure menu Apple → Impostazioni di Sistema);
 2. nella colonna a sinistra scegli **Privacy e sicurezza**;
-3. scorri in basso fino alla sezione **Sicurezza**: c'è scritto che "FitFlow" è stato bloccato;
+3. scorri in basso fino alla sezione **Sicurezza**: c'è scritto che "GymPlan" è stato bloccato;
 4. clicca **Apri comunque** e conferma con la password del Mac (o Touch ID);
 5. nella finestra che compare clicca ancora **Apri comunque**.
 
-Va fatto solo la prima volta: dopo FitFlow si apre normalmente.
+Va fatto solo la prima volta: dopo GymPlan si apre normalmente.
 
-### Se compare "FitFlow è danneggiato e non può essere aperto"
+### Se compare "GymPlan è danneggiato e non può essere aperto"
 
 Non è davvero danneggiato: il Mac mette un "segno di quarantena" sui programmi scaricati da Internet e a volte, per quelli non firmati da Apple, mostra questo messaggio. Si toglie così:
 
 1. clicca **Annulla** (non "Sposta nel Cestino");
-2. assicurati di aver già trascinato FitFlow in **Applicazioni**;
+2. assicurati di aver già trascinato GymPlan in **Applicazioni**;
 3. apri il **Terminale**: Finder → **Applicazioni** → **Utility** → **Terminale** (oppure premi `Cmd ⌘ + Spazio`, scrivi `Terminale` e premi Invio);
 4. copia questa riga, incollala nel Terminale e premi **Invio**:
 
    ```
-   xattr -cr /Applications/FitFlow.app
+   xattr -cr /Applications/GymPlan.app
    ```
 
    Non compare nessun messaggio: è normale, vuol dire che ha funzionato;
-5. chiudi il Terminale e apri di nuovo FitFlow da Applicazioni (se richiesto, segui anche i passi di "Apri comunque" qui sopra).
+5. chiudi il Terminale e apri di nuovo GymPlan da Applicazioni (se richiesto, segui anche i passi di "Apri comunque" qui sopra).
 
 ## 2c. Installare su Ubuntu
 
-1. Scarica `FitFlow-X.Y.Z-amd64.deb`.
+1. Scarica `GymPlan-X.Y.Z-amd64.deb`.
 2. Apri il **Terminale** nella cartella Scaricati e scrivi (ti chiede la password del computer):
    ```
-   sudo apt install ./FitFlow-X.Y.Z-amd64.deb
+   sudo apt install ./GymPlan-X.Y.Z-amd64.deb
    ```
    In alternativa fai doppio clic sul file e scegli **Installa** in "Centro software" / "App Center".
-3. Avvia **FitFlow** dall'elenco delle applicazioni (tasto Super, poi scrivi "FitFlow").
+3. Avvia **GymPlan** dall'elenco delle applicazioni (tasto Super, poi scrivi "GymPlan").
 
-Il pacchetto `.deb` installa anche il profilo di sicurezza richiesto da Ubuntu 24.04: senza, le app come FitFlow non partono.
+Il pacchetto `.deb` installa anche il profilo di sicurezza richiesto da Ubuntu 24.04: senza, le app come GymPlan non partono.
 
-**Alternativa senza installazione:** il file `FitFlow-X.Y.Z-x86_64.AppImage` si avvia con un doppio clic dopo averlo reso eseguibile (clic destro → Proprietà → "Consenti l'esecuzione come programma"). Su Ubuntu 22.04 serve `sudo apt install libfuse2`; su 24.04 è più semplice usare il `.deb`.
+**Alternativa senza installazione:** il file `GymPlan-X.Y.Z-x86_64.AppImage` si avvia con un doppio clic dopo averlo reso eseguibile (clic destro → Proprietà → "Consenti l'esecuzione come programma"). Su Ubuntu 22.04 serve `sudo apt install libfuse2`; su 24.04 è più semplice usare il `.deb`.
 
 **Assistente AI su Ubuntu:** installa Ollama dal Terminale con `curl -fsSL https://ollama.com/install.sh | sh` (parte da solo all'avvio del computer).
 
@@ -90,11 +90,11 @@ Tutti i dati (corsi, iscritti, pagamenti, presenze, certificati medici) stanno i
 
 | Sistema | Cartella |
 | --- | --- |
-| Windows | `C:\Users\<il tuo nome>\AppData\Roaming\FitFlow\dati` |
-| Mac | `/Users/<il tuo nome>/Library/Application Support/FitFlow/dati` |
-| Ubuntu | `~/.config/FitFlow/dati` (cartella nascosta: in File premi Ctrl+H per vederla) |
+| Windows | `C:\Users\<il tuo nome>\AppData\Roaming\GymPlan\dati` |
+| Mac | `/Users/<il tuo nome>/Library/Application Support/GymPlan/dati` |
+| Ubuntu | `~/.config/GymPlan/dati` (cartella nascosta: in File premi Ctrl+H per vederla) |
 
-Il modo più semplice per aprirla: in FitFlow vai in **Impostazioni → App desktop → Apri cartella dati** (oppure dal menu **File → Apri cartella dati**).
+Il modo più semplice per aprirla: in GymPlan vai in **Impostazioni → App desktop → Apri cartella dati** (oppure dal menu **File → Apri cartella dati**).
 
 Dentro trovi:
 
@@ -102,40 +102,40 @@ Dentro trovi:
 - `certificati/`: i file dei certificati medici;
 - `backup/`: le copie di sicurezza del database.
 
-Disinstallare o aggiornare FitFlow **non** cancella questa cartella.
+Disinstallare o aggiornare GymPlan **non** cancella questa cartella.
 
 ## 4. Backup e ripristino
 
 **Backup veloce (solo il database):** in **Impostazioni → App desktop** clicca **Crea backup ora**. Una copia del database viene salvata nella cartella `dati/backup/`, con data e ora nel nome. Il pulsante **Apri cartella backup** la mostra.
 
-FitFlow fa anche da solo una copia in `dati/backup/` prima di ogni aggiornamento che modifica il database (file che iniziano con `pre-aggiornamento-`).
+GymPlan fa anche da solo una copia in `dati/backup/` prima di ogni aggiornamento che modifica il database (file che iniziano con `pre-aggiornamento-`).
 
-**Backup completo (consigliato ogni tanto):** chiudi FitFlow e copia l'intera cartella `dati` su una chiavetta USB, un disco esterno o un servizio come iCloud Drive, Google Drive o OneDrive. Così salvi anche i certificati medici.
+**Backup completo (consigliato ogni tanto):** chiudi GymPlan e copia l'intera cartella `dati` su una chiavetta USB, un disco esterno o un servizio come iCloud Drive, Google Drive o OneDrive. Così salvi anche i certificati medici.
 
 **Ripristinare un backup completo:**
 
-1. chiudi FitFlow (su Mac: menu FitFlow → Esci da FitFlow);
+1. chiudi GymPlan (su Mac: menu GymPlan → Esci da GymPlan);
 2. rinomina la cartella `dati` attuale (per esempio in `dati-vecchi`) invece di cancellarla;
 3. copia al suo posto la cartella `dati` del backup;
-4. riapri FitFlow.
+4. riapri GymPlan.
 
 **Ripristinare un backup veloce** (un file `.sqlite` della cartella `backup`):
 
-1. chiudi FitFlow;
+1. chiudi GymPlan;
 2. nella cartella `dati`, rinomina `fitflow.sqlite` in `fitflow-vecchio.sqlite`; se ci sono anche i file `fitflow.sqlite-wal` e `fitflow.sqlite-shm`, spostali nella stessa cartella di riserva o cancellali (sono file temporanei del database vecchio);
 3. copia il file di backup nella cartella `dati` e rinominalo in `fitflow.sqlite`;
-4. riapri FitFlow.
+4. riapri GymPlan.
 
-Per spostare FitFlow su un altro computer: installalo sul nuovo computer, aprilo e chiudilo una volta, poi ripristina lì un backup completo.
+Per spostare GymPlan su un altro computer: installalo sul nuovo computer, aprilo e chiudilo una volta, poi ripristina lì un backup completo.
 
 ## 5. Aggiornamenti
 
-Il repository è **privato**, quindi FitFlow non può vedere da solo se c'è una versione nuova: lo controlli tu.
+Il repository è **privato**, quindi GymPlan non può vedere da solo se c'è una versione nuova: lo controlli tu.
 
-1. In FitFlow apri **Impostazioni → App desktop → Controlla aggiornamenti** (oppure dal menu: Mac **FitFlow → Controlla aggiornamenti…**, Windows **Aiuto → Controlla aggiornamenti…**). Si apre la pagina delle versioni su GitHub.
+1. In GymPlan apri **Impostazioni → App desktop → Controlla aggiornamenti** (oppure dal menu: Mac **GymPlan → Controlla aggiornamenti…**, Windows **Aiuto → Controlla aggiornamenti…**). Si apre la pagina delle versioni su GitHub.
 2. Se c'è una versione più recente di quella che usi (la vedi in Impostazioni → App desktop), scarica l'installer per il tuo computer:
-   - **Windows:** scarica `FitFlow-Setup-X.Y.Z.exe`, chiudi FitFlow e aprilo: sostituisce la versione installata.
-   - **Ubuntu:** scarica il nuovo `.deb` e installalo come la prima volta (`sudo apt install ./FitFlow-X.Y.Z-amd64.deb`): sostituisce la versione installata.
-   - **Mac:** scarica il `.dmg` (lo stesso tipo che avevi scelto la prima volta), chiudi FitFlow, aprilo e trascina FitFlow in **Applicazioni** scegliendo **Sostituisci**. Se al primo avvio della nuova versione il Mac la blocca di nuovo, ripeti i passi del punto 2b.
+   - **Windows:** scarica `GymPlan-Setup-X.Y.Z.exe`, chiudi GymPlan e aprilo: sostituisce la versione installata.
+   - **Ubuntu:** scarica il nuovo `.deb` e installalo come la prima volta (`sudo apt install ./GymPlan-X.Y.Z-amd64.deb`): sostituisce la versione installata.
+   - **Mac:** scarica il `.dmg` (lo stesso tipo che avevi scelto la prima volta), chiudi GymPlan, aprilo e trascina GymPlan in **Applicazioni** scegliendo **Sostituisci**. Se al primo avvio della nuova versione il Mac la blocca di nuovo, ripeti i passi del punto 2b.
 
 In ogni caso **i tuoi dati restano dove sono**: gli aggiornamenti cambiano solo il programma. Se la nuova versione deve modificare il database, prima ne salva una copia in `dati/backup/`.

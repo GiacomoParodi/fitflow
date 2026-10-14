@@ -1,4 +1,4 @@
-/** API dell'app desktop (Electron), esposta dal preload. Assente quando FitFlow gira nel browser. */
+/** API dell'app desktop (Electron), esposta dal preload. Assente quando GymPlan gira nel browser. */
 export interface FitflowDesktop {
   /** Versione dell'app, es. "1.2.0". */
   versione: string;

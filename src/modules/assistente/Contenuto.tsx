@@ -323,7 +323,7 @@ export function Stampa({ c, iscritto, data, onDone }: { c: Contenuto; iscritto: 
     <div className="ass-print">
       <div className="ass-print-head">
         <div>
-          <div className="ass-print-kicker">FitFlow · {c.tipo === 'programma' ? 'Programma di allenamento' : c.tipo === 'analisi' ? 'Analisi della cartella' : 'Nota'}</div>
+          <div className="ass-print-kicker">GymPlan · {c.tipo === 'programma' ? 'Programma di allenamento' : c.tipo === 'analisi' ? 'Analisi della cartella' : 'Nota'}</div>
           {iscritto && <div className="ass-print-name">{iscritto}</div>}
         </div>
         <div className="ass-print-date">{data}</div>

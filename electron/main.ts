@@ -12,7 +12,14 @@ type Server = Awaited<ReturnType<typeof startServer>>;
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 // In sviluppo (`npm run desktop`) i dati stanno in una cartella separata, per non toccare quelli dell'app installata.
-if (!app.isPackaged) app.setPath('userData', path.join(app.getPath('appData'), 'FitFlow-sviluppo'));
+if (!app.isPackaged) app.setPath('userData', path.join(app.getPath('appData'), 'GymPlan-sviluppo'));
+// L'app si chiamava FitFlow: chi aveva già dei dati li ritrova nella nuova cartella.
+if (app.isPackaged) {
+  const vecchia = path.join(app.getPath('appData'), 'FitFlow');
+  if (fs.existsSync(vecchia) && !fs.existsSync(app.getPath('userData'))) {
+    try { fs.renameSync(vecchia, app.getPath('userData')); } catch { /* si riparte con una cartella nuova */ }
+  }
+}
 const dataDir = path.join(app.getPath('userData'), 'dati');
 const backupDir = path.join(dataDir, 'backup');
 
@@ -38,7 +45,7 @@ function openExternal(url: string) {
 
 function createWindow(url: string) {
   win = new BrowserWindow({
-    title: 'FitFlow',
+    title: 'GymPlan',
     // Mac: content under the title bar, traffic lights over the sidebar (as in Apple's own apps).
     ...(process.platform === 'darwin' ? { titleBarStyle: 'hiddenInset' as const, trafficLightPosition: { x: 18, y: 18 } } : {}),
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#1c1c1e' : '#f5f5f7',
@@ -107,16 +114,16 @@ function buildMenu() {
   const updates: MenuItemConstructorOptions = { label: 'Controlla aggiornamenti…', click: () => void checkForUpdates(true) };
   const template: MenuItemConstructorOptions[] = [
     ...(isMac ? [{
-      label: 'FitFlow',
+      label: 'GymPlan',
       submenu: [
-        { role: 'about', label: 'Informazioni su FitFlow' },
+        { role: 'about', label: 'Informazioni su GymPlan' },
         updates,
         { type: 'separator' },
-        { role: 'hide', label: 'Nascondi FitFlow' },
+        { role: 'hide', label: 'Nascondi GymPlan' },
         { role: 'hideOthers', label: 'Nascondi altre' },
         { role: 'unhide', label: 'Mostra tutte' },
         { type: 'separator' },
-        { role: 'quit', label: 'Esci da FitFlow' },
+        { role: 'quit', label: 'Esci da GymPlan' },
       ],
     } satisfies MenuItemConstructorOptions] : []),
     {
@@ -193,12 +200,12 @@ async function start() {
   try {
     server = await startServer({ dataDir, port: 0, host: '127.0.0.1', staticDir: path.join(app.getAppPath(), 'dist') });
   } catch (e) {
-    dialog.showErrorBox('FitFlow non si è avviata', `${e instanceof Error ? e.message : String(e)}\n\nCartella dati: ${dataDir}`);
+    dialog.showErrorBox('GymPlan non si è avviata', `${e instanceof Error ? e.message : String(e)}\n\nCartella dati: ${dataDir}`);
     app.exit(1);
     return;
   }
   if (server.data.migrated.length) console.log(`Database aggiornato: ${server.data.migrated.join(', ')}`);
-  console.log(`FitFlow pronta su ${server.url}`);
+  console.log(`GymPlan pronta su ${server.url}`);
   console.log(`Dati salvati in ${dataDir}`);
   // Diagnostica per i test automatici (es. avvio senza schermo): verifica che le API rispondano.
   if (process.env.FITFLOW_SELFTEST) {

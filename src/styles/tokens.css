@@ -1,4 +1,4 @@
-/* FitFlow design tokens — Apple-like system palette, light and dark.
+/* GymPlan design tokens — Apple-like system palette, light and dark.
    Theme: <html data-theme="light|dark"> (absent = follow the system). Accent: <html data-accent="…">. */
 
 @import '@fontsource-variable/inter/index.css';

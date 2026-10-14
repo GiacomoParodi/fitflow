@@ -112,7 +112,7 @@ export function Guida({ stato, onVerifica, verificando }: { stato: StatoMotore; 
             <h2 className="ass-guide-title">{ollama ? 'Per iniziare serve Ollama' : 'Il server del modello non risponde'}</h2>
             <p className="ass-guide-text">
               L'assistente usa un modello linguistico che gira <strong>su questo computer</strong>: i dati degli iscritti non escono mai.
-              {ollama ? ' Il motore gratuito che lo fa funzionare si chiama Ollama.' : ` FitFlow lo cerca su ${stato.url}.`}
+              {ollama ? ' Il motore gratuito che lo fa funzionare si chiama Ollama.' : ` GymPlan lo cerca su ${stato.url}.`}
             </p>
             {ollama ? (
               <Passi voci={[
@@ -202,7 +202,7 @@ export function ImpostazioniMotore() {
 
   return (
     <div className="ass-settings">
-      <p className="ass-settings-desc">Il modello linguistico gira su questo computer (o sulla rete locale): FitFlow non usa servizi su internet.</p>
+      <p className="ass-settings-desc">Il modello linguistico gira su questo computer (o sulla rete locale): GymPlan non usa servizi su internet.</p>
       <div className="ass-settings-grid">
         <div className="ass-settings-col">
           <div className="card card-flush ass-group">

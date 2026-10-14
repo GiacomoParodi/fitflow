@@ -75,7 +75,7 @@ export function creaRouter(a: Assistente, today: () => string) {
     const nome = typeof req.body?.nome === 'string' ? req.body.nome.trim() : '';
     if (!nome || nome.length > 200 || /[\s"'<>]/.test(nome)) throw new ApiError(400, 'Nome del modello non valido.');
     const p = a.provider();
-    if (!p.pull) throw new ApiError(400, 'Con questo motore i modelli si scaricano dal suo programma (es. LM Studio), non da FitFlow.');
+    if (!p.pull) throw new ApiError(400, 'Con questo motore i modelli si scaricano dal suo programma (es. LM Studio), non da GymPlan.');
     await p.version();
     const ac = segnaleDa(req, res);
     iniziaNdjson(res);

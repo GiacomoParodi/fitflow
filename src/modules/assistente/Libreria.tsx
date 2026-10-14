@@ -107,7 +107,7 @@ export function ListaDocumenti({ partecipanteId, compatta }: { partecipanteId: n
       {errore && <div className="error-box" role="alert">{errore}</div>}
       {base.length > 0 && (
         <details className="ass-details ass-docs-base">
-          <summary><X.Freccia size={14} /> Schede di conoscenza incluse in FitFlow <span className="ass-seg-count">{base.length}</span></summary>
+          <summary><X.Freccia size={14} /> Schede di conoscenza incluse in GymPlan <span className="ass-seg-count">{base.length}</span></summary>
           <ul className="ass-rows" aria-label="Schede di conoscenza">{base.map(riga)}</ul>
         </details>
       )}

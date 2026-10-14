@@ -42,8 +42,8 @@ Il workflow `.github/workflows/release.yml` parte da solo al push di un tag `vX.
 
 1. **prepara** – controlla che tag e versione coincidano e crea la release in **bozza**, con le istruzioni di installazione e l'elenco delle modifiche generato dai commit;
 2. **pacchetti** – in parallelo:
-   - su macOS costruisce `FitFlow-X.Y.Z-arm64.dmg` (Apple Silicon) e `FitFlow-X.Y.Z-x64.dmg` (Intel), più i relativi `.zip`, con firma ad-hoc;
-   - su Windows costruisce l'installer `FitFlow-Setup-X.Y.Z.exe`;
+   - su macOS costruisce `GymPlan-X.Y.Z-arm64.dmg` (Apple Silicon) e `GymPlan-X.Y.Z-x64.dmg` (Intel), più i relativi `.zip`, con firma ad-hoc;
+   - su Windows costruisce l'installer `GymPlan-Setup-X.Y.Z.exe`;
    - carica tutto nella bozza, insieme a `latest.yml` / `latest-mac.yml` (servono agli aggiornamenti automatici);
 3. **pubblica** – se entrambi i pacchetti sono riusciti, pubblica la release e la segna come "Latest".
 
@@ -65,7 +65,7 @@ Dura circa 10–15 minuti. Per un repository pubblico i minuti di GitHub Actions
 ## Prova in locale
 
 ```bash
-npm run desktop   # compila tutto e apre l'app (dati in una cartella "FitFlow-sviluppo", separata da quelli veri)
+npm run desktop   # compila tutto e apre l'app (dati in una cartella "GymPlan-sviluppo", separata da quelli veri)
 npm run dist      # crea il pacchetto per il sistema in uso in release/, senza pubblicare
 ```
 

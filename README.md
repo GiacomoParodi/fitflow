@@ -1,4 +1,4 @@
-# FitFlow
+# GymPlan
 
 Web app per gestire corsi di ginnastica, iscritti, presenze, pagamenti, iscrizioni annuali e certificati medici.
 Gira sul tuo PC: un piccolo server Node salva tutto in un database SQLite e i certificati in una cartella, quindi i dati restano anche chiudendo il browser o spegnendo il computer.
@@ -7,7 +7,7 @@ Implementa il design `design/Gestione Corsi Ginnastica.dc.html` (specifiche in `
 
 ## App desktop (Mac e Windows)
 
-Per usare FitFlow non serve installare nient'altro: scarica l'app da **[GitHub Releases](https://github.com/GiacomoParodi/fitflow/releases/latest)** e segui la guida **[docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)** (Windows, Mac Apple Silicon e Intel, dove stanno i dati, backup, aggiornamenti).
+Per usare GymPlan non serve installare nient'altro: scarica l'app da **[GitHub Releases](https://github.com/GiacomoParodi/fitflow/releases/latest)** e segui la guida **[docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)** (Windows, Mac Apple Silicon e Intel, dove stanno i dati, backup, aggiornamenti).
 L'app si aggiorna da sola (Windows) o avvisa quando c'è una nuova versione (Mac). Per pubblicare una versione: [docs/RILASCIO.md](docs/RILASCIO.md).
 
 ## Sviluppo
@@ -23,11 +23,11 @@ npm start          # nel browser, su http://localhost:3000
 oppure, come app desktop (Electron):
 
 ```bash
-npm run desktop    # compila tutto e apre la finestra di FitFlow
+npm run desktop    # compila tutto e apre la finestra di GymPlan
 npm run dist       # crea il pacchetto per il sistema in uso in release/, senza pubblicarlo
 ```
 
-L'app desktop avvia lo stesso server su una porta libera di `127.0.0.1` e salva i dati nella cartella utente del sistema (vedi [docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)); lanciata con `npm run desktop` usa invece una cartella separata `FitFlow-sviluppo`, per non toccare i dati veri.
+L'app desktop avvia lo stesso server su una porta libera di `127.0.0.1` e salva i dati nella cartella utente del sistema (vedi [docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)); lanciata con `npm run desktop` usa invece una cartella separata `GymPlan-sviluppo`, per non toccare i dati veri.
 Il codice dell'app desktop è in `electron/` (processo principale, preload, aggiornamenti), la configurazione dei pacchetti in `electron-builder.yml`.
 
 Per sviluppatori: la struttura del codice e il sistema a moduli sono descritti in [docs/ARCHITETTURA.md](docs/ARCHITETTURA.md).
