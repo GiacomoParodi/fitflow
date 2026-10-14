@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { ParticipantDialog } from './components/ParticipantDialog';
-import * as I from './icons';
+import { AppIcon } from './logo';
 import { pages, settingsPage, sidebarGroups } from './modules';
 import { AppProvider, useApp, type Tab } from './store';
 
@@ -19,7 +19,7 @@ function Sidebar({ current }: { current: Tab | null }) {
   return (
     <nav className="sidebar" aria-label="Sezioni">
       <div className="sidebar-brand">
-        <span className="app-icon"><I.Pulse size={16} /></span>
+        <AppIcon />
         <span className="sidebar-brand-text">
           <div className="sidebar-brand-name">FitFlow</div>
           <div className="sidebar-brand-sub">Corsi di ginnastica</div>
